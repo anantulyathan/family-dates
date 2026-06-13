@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Family Dates">
+<meta name="theme-color" content="#111827">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Family Dates</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+:root {
+  --bg:        #f5f5f7;
+  --card:      #ffffff;
+  --deep:      #111827;
+  --deep2:     #1f2937;
+  --text:      #1f2937;
+  --sub:       #6b7280;
+  --muted:     #9ca3af;
+  --border:    #e5e7eb;
+  --border-lt: #f3f4f6;
+  --red:       #ef4444;
+  --red-bg:    #fef2f2;
+  --red-bd:    #fecaca;
+  --amber:     #d97706;
+  --amber-bg:  #fffbeb;
+  --amber-bd:  #fde68a;
+  --green:     #059669;
+  --green-bg:  #ecfdf5;
+  --green-bd:  #a7f3d0;
+  --blue:      #2563eb;
+  --blue-bg:   #eff6ff;
+  --blue-bd:   #bfdbfe;
+  --purple:    #7c3aed;
+  --purple-bg: #f5f3ff;
+  --purple-bd: #ddd6fe;
+  --accent:    #1d4ed8;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ── HEADER ── */
+.header {
+  background: var(--deep);
+  padding: 52px 20px 0;
+}
+.header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.header-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 26px;
+  color: #fff;
+  font-weight: 400;
+  line-height: 1.2;
+}
+.header-sub {
+  font-size: 13px;
+  color: rgba(255,255,255,0.4);
+  margin-top: 4px;
+}
+.header-right { display:flex; flex-direction:column; align-items:flex-end; gap:6px; }
+.live-dot {
+  display:flex; align-items:center; gap:6px;
+  font-size:12px; color:rgba(255,255,255,0.5);
+}
+.live-dot .dot {
+  width:7px; height:7px; border-radius:50%;
+  background:#6b7280;
+  box-shadow: 0 0 0 3px rgba(107,114,128,0.2);
+  transition: background 0.3s, box-shadow 0.3s;
+}
+.live-dot .dot.connected { background:#34d399; box-shadow:0 0 0 3px rgba(52,211,153,0.2); }
+.live-dot .dot.error     { background:#f87171; box-shadow:0 0 0 3px rgba(248,113,113,0.2); }
+.header-date { font-size:11px; color:rgba(255,255,255,0.3); }
+
+.header-stats {
+  display:grid; grid-template-columns:repeat(4,1fr);
+  gap:1px; background:rgba(255,255,255,0.06);
+  border-radius:12px 12px 0 0; overflow:hidden;
+}
+.hstat { padding:14px 8px; background:rgba(255,255,255,0.04); text-align:center; }
+.hstat-num { font-size:20px; font-weight:700; color:#fff; line-height:1; }
+.hstat-num.red    { color:#f87171; }
+.hstat-num.amber  { color:#fbbf24; }
+.hstat-num.green  { color:#34d399; }
+.hstat-num.blue   { color:#93c5fd; }
+.hstat-lbl { font-size:10px; color:rgba(255,255,255,0.35); margin-top:4px; line-height:1.3; }
+
+/* ── TABS ── */
+.tabs {
+  background:var(--card);
+  border-bottom:1px solid var(--border);
+  display:flex; padding:0 16px;
+  position:sticky; top:0; z-index:50;
+  box-shadow:0 1px 3px rgba(0,0,0,0.06);
+  overflow-x:auto; scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar { display:none; }
+.tab {
+  padding:14px 14px;
+  font-size:13px; font-weight:500;
+  color:var(--muted);
+  border-bottom:2px solid transparent;
+  white-space:nowrap; cursor:pointer;
+  display:flex; align-items:center; gap:6px;
+  transition:color 0.15s;
+  flex-shrink:0;
+}
+.tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+.tab-badge {
+  background:var(--red); color:#fff;
+  font-size:10px; font-weight:700;
+  padding:1px 6px; border-radius:10px;
+}
+
+/* ── MAIN ── */
+.main { max-width:680px; margin:0 auto; padding:16px 16px 100px; }
+.page { display:none; }
+.page.active { display:block; }
+
+/* ── SECTION LABEL ── */
+.section-label {
+  display:flex; align-items:center; gap:8px;
+  margin:20px 0 10px;
+}
+.section-label-text {
+  font-size:11px; font-weight:700;
+  color:var(--muted); text-transform:uppercase; letter-spacing:0.09em;
+  white-space:nowrap;
+}
+.section-label-line { flex:1; height:1px; background:var(--border); }
+.section-label-count {
+  font-size:11px; color:var(--muted);
+  background:var(--border-lt); border:1px solid var(--border);
+  padding:1px 8px; border-radius:10px; white-space:nowrap;
+}
+
+/* ── EVENT ROW ── */
+.event-row {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:14px 16px;
+  margin-bottom:6px;
+  display:flex; align-items:center; gap:14px;
+  cursor:pointer; transition:box-shadow 0.15s;
+}
+.event-row:hover { box-shadow:0 2px 12px rgba(0,0,0,0.07); }
+.event-row.urgent  { border-left:3px solid var(--red); }
+.event-row.warning { border-left:3px solid var(--amber); }
+.event-row.safe    { border-left:3px solid var(--green); }
+.event-row.future  { border-left:3px solid var(--blue); }
+
+.event-icon {
+  width:42px; height:42px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:19px; flex-shrink:0;
+}
+.icon-red    { background:var(--red-bg); }
+.icon-amber  { background:var(--amber-bg); }
+.icon-green  { background:var(--green-bg); }
+.icon-blue   { background:var(--blue-bg); }
+.icon-purple { background:var(--purple-bg); }
+
+.event-body { flex:1; min-width:0; }
+.event-name {
+  font-size:14px; font-weight:600; color:var(--text);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.event-detail {
+  font-size:12px; color:var(--muted); margin-top:3px;
+  display:flex; align-items:center; gap:6px; flex-wrap:wrap;
+}
+.detail-sep { color:var(--border); }
+.member-chip {
+  display:inline-flex; align-items:center; gap:4px;
+  font-size:11px; font-weight:500; color:var(--sub);
+  background:var(--border-lt); border:1px solid var(--border);
+  padding:2px 8px; border-radius:6px; margin-top:5px;
+}
+
+.urgency-pill {
+  font-size:12px; font-weight:600;
+  padding:5px 10px; border-radius:20px;
+  flex-shrink:0; min-width:58px; text-align:center; line-height:1.4;
+}
+.urgency-pill small { display:block; font-size:10px; font-weight:400; opacity:0.7; }
+.pill-red    { background:var(--red-bg);    color:var(--red);   border:1px solid var(--red-bd); }
+.pill-amber  { background:var(--amber-bg);  color:var(--amber); border:1px solid var(--amber-bd); }
+.pill-green  { background:var(--green-bg);  color:var(--green); border:1px solid var(--green-bd); }
+.pill-blue   { background:var(--blue-bg);   color:var(--blue);  border:1px solid var(--blue-bd); }
+
+/* ── EMPTY STATE ── */
+.empty {
+  text-align:center; padding:48px 24px;
+  color:var(--muted); font-size:14px;
+}
+.empty-icon { font-size:40px; margin-bottom:12px; }
+.empty-title { font-size:15px; font-weight:600; color:var(--sub); margin-bottom:6px; }
+
+/* ── FILTER BAR ── */
+.filter-bar {
+  display:flex; gap:8px; margin-bottom:16px;
+  overflow-x:auto; scrollbar-width:none; padding-bottom:2px;
+}
+.filter-bar::-webkit-scrollbar { display:none; }
+.filter-chip {
+  padding:6px 14px; border-radius:20px; font-size:12px; font-weight:500;
+  border:1px solid var(--border); background:var(--card); color:var(--sub);
+  cursor:pointer; white-space:nowrap; flex-shrink:0; transition:all 0.15s;
+}
+.filter-chip.active {
+  background:var(--accent); color:#fff; border-color:var(--accent);
+}
+
+/* ── SEARCH ── */
+.search-wrap { position:relative; margin-bottom:14px; }
+.search-wrap input {
+  width:100%; padding:10px 16px 10px 38px;
+  border:1px solid var(--border); border-radius:10px;
+  font-size:14px; font-family:'Inter',sans-serif;
+  background:var(--card); color:var(--text);
+  outline:none; transition:border 0.15s;
+}
+.search-wrap input:focus { border-color:var(--accent); }
+.search-icon {
+  position:absolute; left:12px; top:50%; transform:translateY(-50%);
+  color:var(--muted); font-size:16px; pointer-events:none;
+}
+
+/* ── FAB ── */
+.fab {
+  position:fixed; bottom:calc(28px + env(safe-area-inset-bottom)); right:20px;
+  height:48px; background:var(--accent); color:#fff;
+  border-radius:24px; display:flex; align-items:center; gap:8px;
+  padding:0 20px; font-size:14px; font-weight:600;
+  box-shadow:0 4px 20px rgba(29,78,216,0.35);
+  cursor:pointer; z-index:40; letter-spacing:0.01em;
+  font-family:'Inter',sans-serif; border:none;
+}
+
+/* ── MODAL ── */
+.modal-overlay {
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,0.5); z-index:100;
+  align-items:flex-end; justify-content:center;
+}
+.modal-overlay.open { display:flex; }
+.modal {
+  background:var(--card); border-radius:20px 20px 0 0;
+  width:100%; max-width:680px;
+  padding:24px 20px calc(24px + env(safe-area-inset-bottom));
+  max-height:90vh; overflow-y:auto;
+}
+.modal-handle {
+  width:40px; height:4px; background:var(--border);
+  border-radius:2px; margin:0 auto 20px;
+}
+.modal-title {
+  font-size:18px; font-weight:700; color:var(--text); margin-bottom:20px;
+}
+
+/* ── FORM ── */
+.form-group { margin-bottom:16px; }
+.form-label {
+  display:block; font-size:12px; font-weight:600;
+  color:var(--sub); text-transform:uppercase; letter-spacing:0.06em;
+  margin-bottom:6px;
+}
+.form-input, .form-select, .form-textarea {
+  width:100%; padding:10px 14px;
+  border:1px solid var(--border); border-radius:10px;
+  font-size:14px; font-family:'Inter',sans-serif;
+  color:var(--text); background:var(--card);
+  outline:none; transition:border 0.15s;
+  -webkit-appearance:none;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color:var(--accent);
+}
+.form-textarea { resize:vertical; min-height:80px; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.toggle-row {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 14px; background:var(--border-lt);
+  border:1px solid var(--border); border-radius:10px;
+}
+.toggle-label { font-size:14px; color:var(--text); font-weight:500; }
+.toggle-sub { font-size:11px; color:var(--muted); margin-top:2px; }
+.toggle {
+  width:44px; height:26px; background:var(--border);
+  border-radius:13px; cursor:pointer; position:relative;
+  transition:background 0.2s; flex-shrink:0;
+}
+.toggle.on { background:var(--accent); }
+.toggle::after {
+  content:''; position:absolute;
+  width:20px; height:20px; border-radius:50%;
+  background:#fff; top:3px; left:3px;
+  transition:transform 0.2s;
+  box-shadow:0 1px 3px rgba(0,0,0,0.2);
+}
+.toggle.on::after { transform:translateX(18px); }
+
+.btn-row { display:flex; gap:10px; margin-top:20px; }
+.btn {
+  flex:1; padding:13px; border-radius:10px;
+  font-size:14px; font-weight:600; cursor:pointer;
+  border:none; font-family:'Inter',sans-serif; transition:opacity 0.15s;
+}
+.btn:active { opacity:0.8; }
+.btn-primary { background:var(--accent); color:#fff; }
+.btn-secondary { background:var(--border-lt); color:var(--sub); border:1px solid var(--border); }
+.btn-danger { background:#fef2f2; color:var(--red); border:1px solid var(--red-bd); }
+
+/* ── SETTINGS ── */
+.settings-section { margin-bottom:24px; }
+.settings-title {
+  font-size:13px; font-weight:700; color:var(--sub);
+  text-transform:uppercase; letter-spacing:0.08em; margin-bottom:12px;
+}
+.settings-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:12px; overflow:hidden;
+}
+.settings-row {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 16px; border-bottom:1px solid var(--border-lt);
+}
+.settings-row:last-child { border-bottom:none; }
+.settings-row-label { font-size:14px; font-weight:500; color:var(--text); }
+.settings-row-sub { font-size:12px; color:var(--muted); margin-top:2px; }
+.settings-row-action { color:var(--accent); font-size:13px; font-weight:600; cursor:pointer; }
+
+.tag-list { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+.tag {
+  display:inline-flex; align-items:center; gap:6px;
+  background:var(--border-lt); border:1px solid var(--border);
+  border-radius:8px; padding:6px 12px; font-size:13px; font-weight:500;
+}
+.tag-remove {
+  color:var(--muted); cursor:pointer; font-size:16px; line-height:1;
+  transition:color 0.15s;
+}
+.tag-remove:hover { color:var(--red); }
+.tag-add-row { display:flex; gap:8px; margin-top:10px; }
+.tag-add-input {
+  flex:1; padding:8px 12px;
+  border:1px solid var(--border); border-radius:8px;
+  font-size:13px; font-family:'Inter',sans-serif;
+  outline:none; transition:border 0.15s;
+}
+.tag-add-input:focus { border-color:var(--accent); }
+.tag-add-btn {
+  padding:8px 16px; background:var(--accent); color:#fff;
+  border:none; border-radius:8px; font-size:13px; font-weight:600;
+  cursor:pointer; font-family:'Inter',sans-serif;
+}
+
+/* ── TOAST ── */
+.toast-wrap {
+  position:fixed; bottom:calc(90px + env(safe-area-inset-bottom)); right:16px;
+  z-index:200; display:flex; flex-direction:column; gap:8px; align-items:flex-end;
+}
+.toast {
+  background:var(--deep2); color:#fff;
+  padding:10px 16px; border-radius:10px;
+  font-size:13px; font-weight:500;
+  box-shadow:0 4px 16px rgba(0,0,0,0.2);
+  animation:slideIn 0.2s ease;
+  max-width:280px;
+}
+.toast.success { background:#065f46; }
+.toast.error   { background:#991b1b; }
+@keyframes slideIn {
+  from { transform:translateX(120%); opacity:0; }
+  to   { transform:translateX(0);    opacity:1; }
+}
+
+/* ── DETAIL MODAL ── */
+.detail-field { margin-bottom:14px; }
+.detail-field-label {
+  font-size:11px; font-weight:700; color:var(--muted);
+  text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px;
+}
+.detail-field-value { font-size:15px; color:var(--text); font-weight:500; }
+.detail-badge {
+  display:inline-block; padding:4px 12px; border-radius:20px;
+  font-size:12px; font-weight:600;
+}
+
+/* ── LOADING ── */
+.loading {
+  display:flex; align-items:center; justify-content:center;
+  padding:48px; color:var(--muted); gap:10px; font-size:14px;
+}
+.spinner {
+  width:20px; height:20px; border:2px solid var(--border);
+  border-top-color:var(--accent); border-radius:50%;
+  animation:spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-top">
+    <div>
+      <div class="header-title">Family Dates</div>
+      <div class="header-sub">Anan & Prangkwan</div>
+    </div>
+    <div class="header-right">
+      <div class="live-dot"><div class="dot" id="statusDot"></div> <span id="statusText">Connecting</span></div>
+      <div class="header-date" id="headerDate"></div>
+    </div>
+  </div>
+  <div class="header-stats">
+    <div class="hstat"><div class="hstat-num red" id="statWeek">—</div><div class="hstat-lbl">This week</div></div>
+    <div class="hstat"><div class="hstat-num amber" id="statMonth">—</div><div class="hstat-lbl">This month</div></div>
+    <div class="hstat"><div class="hstat-num green" id="statTotal">—</div><div class="hstat-lbl">Total</div></div>
+    <div class="hstat"><div class="hstat-num blue" id="statNext">—</div><div class="hstat-lbl">Next event</div></div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('dashboard')">Dashboard</div>
+  <div class="tab" onclick="switchTab('upcoming')">Upcoming <span class="tab-badge" id="urgentBadge" style="display:none">0</span></div>
+  <div class="tab" onclick="switchTab('all')">All Events</div>
+  <div class="tab" onclick="switchTab('settings')">Settings</div>
+</div>
+
+<!-- PAGES -->
+<div class="main">
+
+  <!-- DASHBOARD -->
+  <div class="page active" id="page-dashboard">
+    <div id="dashContent"><div class="loading"><div class="spinner"></div> Loading…</div></div>
+  </div>
+
+  <!-- UPCOMING -->
+  <div class="page" id="page-upcoming">
+    <div class="filter-bar" id="upcomingFilters">
+      <div class="filter-chip active" onclick="setUpcomingFilter(30,this)">Next 30 days</div>
+      <div class="filter-chip" onclick="setUpcomingFilter(60,this)">60 days</div>
+      <div class="filter-chip" onclick="setUpcomingFilter(90,this)">90 days</div>
+      <div class="filter-chip" onclick="setUpcomingFilter(365,this)">All upcoming</div>
+    </div>
+    <div id="upcomingContent"><div class="loading"><div class="spinner"></div> Loading…</div></div>
+  </div>
+
+  <!-- ALL EVENTS -->
+  <div class="page" id="page-all">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="form-input" type="text" id="searchInput" placeholder="Search events…" oninput="renderAll()">
+    </div>
+    <div class="filter-bar" id="categoryFilters">
+      <div class="filter-chip active" onclick="setCatFilter('all',this)">All</div>
+      <div class="filter-chip" onclick="setCatFilter('car',this)">🚗 Car</div>
+      <div class="filter-chip" onclick="setCatFilter('health',this)">💉 Health</div>
+      <div class="filter-chip" onclick="setCatFilter('birthday',this)">🎂 Birthday</div>
+      <div class="filter-chip" onclick="setCatFilter('home',this)">🏠 Home</div>
+      <div class="filter-chip" onclick="setCatFilter('document',this)">📄 Documents</div>
+      <div class="filter-chip" onclick="setCatFilter('other',this)">⭐ Other</div>
+    </div>
+    <div id="allContent"><div class="loading"><div class="spinner"></div> Loading…</div></div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="page" id="page-settings">
+    <div id="settingsContent"><div class="loading"><div class="spinner"></div> Loading…</div></div>
+  </div>
+
+</div>
+
+<!-- FAB -->
+<button class="fab" onclick="openAddModal()">＋ Add Event</button>
+
+<!-- TOAST -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- ADD/EDIT MODAL -->
+<div class="modal-overlay" id="eventModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modalTitle">Add Event</div>
+    <input type="hidden" id="editId">
+
+    <div class="form-group">
+      <label class="form-label">Title *</label>
+      <input class="form-input" id="fTitle" placeholder="e.g. Car Insurance Renewal">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Date *</label>
+        <input class="form-input" id="fDate" type="date">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <select class="form-select" id="fCategory">
+          <option value="car">🚗 Car</option>
+          <option value="health">💉 Health</option>
+          <option value="birthday">🎂 Birthday</option>
+          <option value="home">🏠 Home</option>
+          <option value="document">📄 Document</option>
+          <option value="other">⭐ Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Family Member</label>
+      <select class="form-select" id="fMember"></select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notes</label>
+      <textarea class="form-textarea" id="fNotes" placeholder="Optional notes…"></textarea>
+    </div>
+    <div class="form-group">
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label">Repeats every year</div>
+          <div class="toggle-sub">Automatically rolls over to next year</div>
+        </div>
+        <div class="toggle on" id="fRepeat" onclick="this.classList.toggle('on')"></div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="closeModal('eventModal')">Cancel</button>
+      <button class="btn btn-danger" id="deleteBtn" style="display:none" onclick="deleteEvent()">Delete</button>
+      <button class="btn btn-primary" onclick="saveEvent()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div id="detailContent"></div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="closeModal('detailModal')">Close</button>
+      <button class="btn btn-primary" onclick="editFromDetail()">Edit</button>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS MODALS -->
+<div class="modal-overlay" id="emailModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Notification Emails</div>
+    <div id="emailTagList" class="tag-list"></div>
+    <div class="tag-add-row">
+      <input class="tag-add-input" id="newEmailInput" type="email" placeholder="Add email address…">
+      <button class="tag-add-btn" onclick="addEmail()">Add</button>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="closeModal('emailModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEmails()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="reminderModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Reminder Days</div>
+    <div class="form-group" style="margin-bottom:8px">
+      <label class="form-label">Send reminders this many days before</label>
+    </div>
+    <div id="reminderTagList" class="tag-list"></div>
+    <div class="tag-add-row">
+      <input class="tag-add-input" id="newReminderInput" type="number" min="1" max="365" placeholder="Days before (e.g. 14)">
+      <button class="tag-add-btn" onclick="addReminder()">Add</button>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="closeModal('reminderModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveReminders()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="memberModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Family Members</div>
+    <div id="memberTagList" class="tag-list"></div>
+    <div class="tag-add-row">
+      <input class="tag-add-input" id="newMemberInput" type="text" placeholder="Add member name…">
+      <button class="tag-add-btn" onclick="addMember()">Add</button>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="closeModal('memberModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveMembers()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CONFIG ──
+const SUPABASE_URL  = 'https://fkcjjprewnjrwobyaglb.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZrY2pqcHJld25qcndvYnlhZ2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzNTc4OTAsImV4cCI6MjA5NjkzMzg5MH0.VANzCQDqqSeLIbVbTx30eN53P2rdwtKRNv2b2MlxZDg';
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+// ── STATE ──
+let events   = [];
+let settings = {};
+let currentTab        = 'dashboard';
+let upcomingDays      = 30;
+let categoryFilter    = 'all';
+let currentDetailId   = null;
+
+// ── CATEGORY CONFIG ──
+const CATS = {
+  car:      { icon:'🚗', label:'Car',       color:'red'    },
+  health:   { icon:'💉', label:'Health',    color:'red'    },
+  birthday: { icon:'🎂', label:'Birthday',  color:'amber'  },
+  home:     { icon:'🏠', label:'Home',      color:'green'  },
+  document: { icon:'📄', label:'Document',  color:'blue'   },
+  other:    { icon:'⭐', label:'Other',     color:'purple' },
+};
+
+// ── INIT ──
+async function init() {
+  setHeaderDate();
+  await loadAll();
+  setStatus('connected');
+}
+
+function setHeaderDate() {
+  const d = new Date();
+  document.getElementById('headerDate').textContent =
+    d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+}
+
+async function loadAll() {
+  try {
+    const [evRes, setRes] = await Promise.all([
+      db.from('family_events').select('*').order('event_date'),
+      db.from('family_settings').select('*').limit(1)
+    ]);
+    if (evRes.error)  throw evRes.error;
+    if (setRes.error) throw setRes.error;
+    events   = evRes.data  || [];
+    settings = setRes.data[0] || { reminder_days:[30,14,7,3,1], notify_emails:[], members:['Anan','Prangkwan'] };
+    updateStats();
+    renderCurrentPage();
+  } catch(e) {
+    setStatus('error');
+    toast('Could not load data: ' + e.message, 'error');
+  }
+}
+
+// ── STATUS ──
+function setStatus(s) {
+  const dot  = document.getElementById('statusDot');
+  const text = document.getElementById('statusText');
+  dot.className = 'dot ' + s;
+  text.textContent = s === 'connected' ? 'Connected' : s === 'error' ? 'Error' : 'Connecting';
+}
+
+// ── DAYS UNTIL ──
+function daysUntil(dateStr) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  let d = new Date(dateStr); d.setHours(0,0,0,0);
+  // if yearly and date has passed, roll to next year
+  // handled per-event in getEffectiveDate
+  return Math.round((d - today) / 86400000);
+}
+
+function getEffectiveDate(ev) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  let d = new Date(ev.event_date); d.setHours(0,0,0,0);
+  if (ev.repeat_yearly) {
+    d.setFullYear(today.getFullYear());
+    if (d < today) d.setFullYear(today.getFullYear() + 1);
+  }
+  return d;
+}
+
+function getEffectiveDays(ev) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const d = getEffectiveDate(ev);
+  return Math.round((d - today) / 86400000);
+}
+
+function urgencyClass(days) {
+  if (days <= 7)  return 'urgent';
+  if (days <= 30) return 'warning';
+  if (days <= 90) return 'safe';
+  return 'future';
+}
+function pillClass(days) {
+  if (days <= 7)  return 'pill-red';
+  if (days <= 30) return 'pill-amber';
+  if (days <= 90) return 'pill-green';
+  return 'pill-blue';
+}
+function daysLabel(days) {
+  if (days === 0) return 'Today';
+  if (days === 1) return '1 day';
+  return days + ' days';
+}
+
+// ── STATS ──
+function updateStats() {
+  const upcoming = events.map(e => ({ e, days: getEffectiveDays(e) }))
+    .filter(x => x.days >= 0).sort((a,b) => a.days - b.days);
+
+  const week  = upcoming.filter(x => x.days <= 7).length;
+  const month = upcoming.filter(x => x.days <= 30).length;
+  const total = events.length;
+  const next  = upcoming[0];
+
+  document.getElementById('statWeek').textContent  = week;
+  document.getElementById('statMonth').textContent = month;
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statNext').textContent  = next
+    ? getEffectiveDate(next.e).toLocaleDateString('en-GB',{day:'numeric',month:'short'})
+    : '—';
+
+  const badge = document.getElementById('urgentBadge');
+  if (week > 0) { badge.textContent = week; badge.style.display = ''; }
+  else          { badge.style.display = 'none'; }
+}
+
+// ── TAB SWITCHING ──
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    const tabs = ['dashboard','upcoming','all','settings'];
+    t.classList.toggle('active', tabs[i] === tab);
+  });
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + tab).classList.add('active');
+  renderCurrentPage();
+}
+
+function renderCurrentPage() {
+  if (currentTab === 'dashboard') renderDashboard();
+  if (currentTab === 'upcoming')  renderUpcoming();
+  if (currentTab === 'all')       renderAll();
+  if (currentTab === 'settings')  renderSettings();
+}
+
+// ── RENDER HELPERS ──
+function eventRowHTML(ev, days) {
+  const cat  = CATS[ev.category] || CATS.other;
+  const d    = getEffectiveDate(ev);
+  const dateStr = d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+  return `
+    <div class="event-row ${urgencyClass(days)}" onclick="openDetail('${ev.id}')">
+      <div class="event-icon icon-${cat.color}">${cat.icon}</div>
+      <div class="event-body">
+        <div class="event-name">${esc(ev.title)}</div>
+        <div class="event-detail">${dateStr}<span class="detail-sep">·</span>${ev.repeat_yearly ? 'Yearly' : 'One-time'}</div>
+        ${ev.member ? `<div class="member-chip">👤 ${esc(ev.member)}</div>` : ''}
+      </div>
+      <div class="urgency-pill ${pillClass(days)}">${daysLabel(days)}<small>${d.toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</small></div>
+    </div>`;
+}
+
+function sectionHTML(label, items, count) {
+  if (!items.length) return '';
+  return `
+    <div class="section-label">
+      <div class="section-label-text">${label}</div>
+      <div class="section-label-line"></div>
+      <div class="section-label-count">${count} event${count!==1?'s':''}</div>
+    </div>
+    ${items.join('')}`;
+}
+
+// ── DASHBOARD ──
+function renderDashboard() {
+  const sorted = events
+    .map(e => ({ e, days: getEffectiveDays(e) }))
+    .filter(x => x.days >= 0)
+    .sort((a,b) => a.days - b.days);
+
+  const urgent  = sorted.filter(x => x.days <= 7);
+  const warning = sorted.filter(x => x.days > 7  && x.days <= 30);
+  const safe    = sorted.filter(x => x.days > 30 && x.days <= 90);
+
+  let html = '';
+  html += sectionHTML('🔴 Needs attention — within 7 days',
+    urgent.map(x => eventRowHTML(x.e, x.days)), urgent.length);
+  html += sectionHTML('🟡 Coming up — within 30 days',
+    warning.map(x => eventRowHTML(x.e, x.days)), warning.length);
+  html += sectionHTML('🟢 On the horizon — within 90 days',
+    safe.map(x => eventRowHTML(x.e, x.days)), safe.length);
+
+  if (!html) html = `<div class="empty"><div class="empty-icon">🎉</div><div class="empty-title">Nothing urgent</div>No events due soon. Add events using the + button.</div>`;
+  document.getElementById('dashContent').innerHTML = html;
+}
+
+// ── UPCOMING ──
+function setUpcomingFilter(days, el) {
+  upcomingDays = days;
+  document.querySelectorAll('#upcomingFilters .filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderUpcoming();
+}
+
+function renderUpcoming() {
+  const sorted = events
+    .map(e => ({ e, days: getEffectiveDays(e) }))
+    .filter(x => x.days >= 0 && x.days <= upcomingDays)
+    .sort((a,b) => a.days - b.days);
+
+  if (!sorted.length) {
+    document.getElementById('upcomingContent').innerHTML =
+      `<div class="empty"><div class="empty-icon">📅</div><div class="empty-title">Nothing in this range</div>No events in the next ${upcomingDays} days.</div>`;
+    return;
+  }
+  document.getElementById('upcomingContent').innerHTML =
+    sorted.map(x => eventRowHTML(x.e, x.days)).join('');
+}
+
+// ── ALL EVENTS ──
+function setCatFilter(cat, el) {
+  categoryFilter = cat;
+  document.querySelectorAll('#categoryFilters .filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderAll();
+}
+
+function renderAll() {
+  const q = (document.getElementById('searchInput')?.value || '').toLowerCase();
+  let filtered = events.filter(e => {
+    const matchCat  = categoryFilter === 'all' || e.category === categoryFilter;
+    const matchSearch = !q || e.title.toLowerCase().includes(q) || (e.member||'').toLowerCase().includes(q);
+    return matchCat && matchSearch;
+  }).map(e => ({ e, days: getEffectiveDays(e) }))
+    .sort((a,b) => a.days - b.days);
+
+  if (!filtered.length) {
+    document.getElementById('allContent').innerHTML =
+      `<div class="empty"><div class="empty-icon">🔍</div><div class="empty-title">No events found</div>Try a different filter or search term.</div>`;
+    return;
+  }
+  document.getElementById('allContent').innerHTML =
+    filtered.map(x => eventRowHTML(x.e, x.days)).join('');
+}
+
+// ── SETTINGS ──
+function renderSettings() {
+  const s = settings;
+  const emails   = (s.notify_emails || []).join(', ') || '—';
+  const reminders = (s.reminder_days || []).sort((a,b)=>b-a).join(', ') + ' days before';
+  const members  = (s.members || []).join(', ') || '—';
+
+  document.getElementById('settingsContent').innerHTML = `
+    <div class="settings-section">
+      <div class="settings-title">Notifications</div>
+      <div class="settings-card">
+        <div class="settings-row">
+          <div>
+            <div class="settings-row-label">📧 Email Recipients</div>
+            <div class="settings-row-sub">${esc(emails)}</div>
+          </div>
+          <div class="settings-row-action" onclick="openEmailModal()">Edit</div>
+        </div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-row-label">⏰ Reminder Schedule</div>
+            <div class="settings-row-sub">${esc(reminders)}</div>
+          </div>
+          <div class="settings-row-action" onclick="openReminderModal()">Edit</div>
+        </div>
+      </div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-title">Family</div>
+      <div class="settings-card">
+        <div class="settings-row">
+          <div>
+            <div class="settings-row-label">👨‍👩‍👦 Family Members</div>
+            <div class="settings-row-sub">${esc(members)}</div>
+          </div>
+          <div class="settings-row-action" onclick="openMemberModal()">Edit</div>
+        </div>
+      </div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-title">About</div>
+      <div class="settings-card">
+        <div class="settings-row">
+          <div>
+            <div class="settings-row-label">App Version</div>
+            <div class="settings-row-sub">Family Dates v1.0</div>
+          </div>
+        </div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-row-label">Total Events</div>
+            <div class="settings-row-sub">${events.length} events tracked</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ── DETAIL ──
+function openDetail(id) {
+  currentDetailId = id;
+  const ev  = events.find(e => e.id === id);
+  if (!ev) return;
+  const cat  = CATS[ev.category] || CATS.other;
+  const days = getEffectiveDays(ev);
+  const d    = getEffectiveDate(ev);
+  const dateStr = d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+  document.getElementById('detailContent').innerHTML = `
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px">
+      <div class="event-icon icon-${cat.color}" style="width:52px;height:52px;font-size:24px;border-radius:14px">${cat.icon}</div>
+      <div>
+        <div style="font-size:18px;font-weight:700;color:var(--text)">${esc(ev.title)}</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:3px">${cat.label}</div>
+      </div>
+    </div>
+    <div class="detail-field">
+      <div class="detail-field-label">Date</div>
+      <div class="detail-field-value">${dateStr}</div>
+    </div>
+    <div class="detail-field">
+      <div class="detail-field-label">Countdown</div>
+      <div><span class="detail-badge ${pillClass(days)}" style="font-size:14px;padding:6px 14px">${daysLabel(days)}</span></div>
+    </div>
+    ${ev.member ? `<div class="detail-field"><div class="detail-field-label">Member</div><div class="detail-field-value">👤 ${esc(ev.member)}</div></div>` : ''}
+    ${ev.notes  ? `<div class="detail-field"><div class="detail-field-label">Notes</div><div class="detail-field-value" style="font-size:14px;color:var(--sub)">${esc(ev.notes)}</div></div>` : ''}
+    <div class="detail-field">
+      <div class="detail-field-label">Recurrence</div>
+      <div class="detail-field-value">${ev.repeat_yearly ? '🔁 Repeats every year' : '📌 One-time event'}</div>
+    </div>`;
+
+  document.getElementById('detailModal').classList.add('open');
+}
+
+function editFromDetail() {
+  closeModal('detailModal');
+  openEditModal(currentDetailId);
+}
+
+// ── ADD / EDIT ──
+function openAddModal() {
+  document.getElementById('modalTitle').textContent = 'Add Event';
+  document.getElementById('editId').value = '';
+  document.getElementById('fTitle').value = '';
+  document.getElementById('fDate').value  = '';
+  document.getElementById('fCategory').value = 'car';
+  document.getElementById('fNotes').value = '';
+  document.getElementById('fRepeat').classList.add('on');
+  document.getElementById('deleteBtn').style.display = 'none';
+  populateMemberSelect('');
+  document.getElementById('eventModal').classList.add('open');
+}
+
+function openEditModal(id) {
+  const ev = events.find(e => e.id === id);
+  if (!ev) return;
+  document.getElementById('modalTitle').textContent = 'Edit Event';
+  document.getElementById('editId').value    = ev.id;
+  document.getElementById('fTitle').value    = ev.title;
+  document.getElementById('fDate').value     = ev.event_date;
+  document.getElementById('fCategory').value = ev.category;
+  document.getElementById('fNotes').value    = ev.notes || '';
+  if (ev.repeat_yearly) document.getElementById('fRepeat').classList.add('on');
+  else                  document.getElementById('fRepeat').classList.remove('on');
+  document.getElementById('deleteBtn').style.display = '';
+  populateMemberSelect(ev.member || '');
+  document.getElementById('eventModal').classList.add('open');
+}
+
+function populateMemberSelect(selected) {
+  const members = settings.members || ['Anan','Prangkwan'];
+  const sel = document.getElementById('fMember');
+  sel.innerHTML = `<option value="">— No member —</option>` +
+    members.map(m => `<option value="${esc(m)}" ${m===selected?'selected':''}>${esc(m)}</option>`).join('');
+}
+
+async function saveEvent() {
+  const id       = document.getElementById('editId').value;
+  const title    = document.getElementById('fTitle').value.trim();
+  const date     = document.getElementById('fDate').value;
+  const category = document.getElementById('fCategory').value;
+  const member   = document.getElementById('fMember').value;
+  const notes    = document.getElementById('fNotes').value.trim();
+  const yearly   = document.getElementById('fRepeat').classList.contains('on');
+
+  if (!title) { toast('Please enter a title', 'error'); return; }
+  if (!date)  { toast('Please select a date', 'error'); return; }
+
+  const payload = { title, event_date:date, category, member:member||null, notes:notes||null, repeat_yearly:yearly, updated_at:new Date().toISOString() };
+
+  try {
+    if (id) {
+      const { error } = await db.from('family_events').update(payload).eq('id', id);
+      if (error) throw error;
+      toast('Event updated ✓', 'success');
+    } else {
+      const { error } = await db.from('family_events').insert(payload);
+      if (error) throw error;
+      toast('Event added ✓', 'success');
+    }
+    closeModal('eventModal');
+    await loadAll();
+  } catch(e) {
+    toast('Error: ' + e.message, 'error');
+  }
+}
+
+async function deleteEvent() {
+  const id = document.getElementById('editId').value;
+  if (!id) return;
+  if (!confirm('Delete this event?')) return;
+  try {
+    const { error } = await db.from('family_events').delete().eq('id', id);
+    if (error) throw error;
+    toast('Event deleted', 'success');
+    closeModal('eventModal');
+    await loadAll();
+  } catch(e) {
+    toast('Error: ' + e.message, 'error');
+  }
+}
+
+// ── SETTINGS MODALS ──
+function openEmailModal() {
+  const emails = [...(settings.notify_emails || [])];
+  renderTagList('emailTagList', emails, 'email');
+  document.getElementById('newEmailInput').value = '';
+  document.getElementById('emailModal').classList.add('open');
+}
+function addEmail() {
+  const v = document.getElementById('newEmailInput').value.trim();
+  if (!v || !v.includes('@')) { toast('Enter a valid email', 'error'); return; }
+  const tags = getTagValues('emailTagList');
+  if (tags.includes(v)) { toast('Already added', 'error'); return; }
+  tags.push(v);
+  renderTagList('emailTagList', tags, 'email');
+  document.getElementById('newEmailInput').value = '';
+}
+async function saveEmails() {
+  const emails = getTagValues('emailTagList');
+  try {
+    const { error } = await db.from('family_settings').update({ notify_emails: emails, updated_at: new Date().toISOString() }).eq('id', settings.id);
+    if (error) throw error;
+    settings.notify_emails = emails;
+    toast('Emails saved ✓', 'success');
+    closeModal('emailModal');
+    renderSettings();
+  } catch(e) { toast('Error: ' + e.message, 'error'); }
+}
+
+function openReminderModal() {
+  const days = [...(settings.reminder_days || [])].sort((a,b)=>b-a);
+  renderTagList('reminderTagList', days.map(String), 'reminder');
+  document.getElementById('newReminderInput').value = '';
+  document.getElementById('reminderModal').classList.add('open');
+}
+function addReminder() {
+  const v = parseInt(document.getElementById('newReminderInput').value);
+  if (!v || v < 1 || v > 365) { toast('Enter a number between 1 and 365', 'error'); return; }
+  const tags = getTagValues('reminderTagList');
+  if (tags.includes(String(v))) { toast('Already added', 'error'); return; }
+  tags.push(String(v));
+  renderTagList('reminderTagList', tags.sort((a,b)=>b-a), 'reminder');
+  document.getElementById('newReminderInput').value = '';
+}
+async function saveReminders() {
+  const days = getTagValues('reminderTagList').map(Number).filter(Boolean);
+  try {
+    const { error } = await db.from('family_settings').update({ reminder_days: days, updated_at: new Date().toISOString() }).eq('id', settings.id);
+    if (error) throw error;
+    settings.reminder_days = days;
+    toast('Reminder schedule saved ✓', 'success');
+    closeModal('reminderModal');
+    renderSettings();
+  } catch(e) { toast('Error: ' + e.message, 'error'); }
+}
+
+function openMemberModal() {
+  const members = [...(settings.members || [])];
+  renderTagList('memberTagList', members, 'member');
+  document.getElementById('newMemberInput').value = '';
+  document.getElementById('memberModal').classList.add('open');
+}
+function addMember() {
+  const v = document.getElementById('newMemberInput').value.trim();
+  if (!v) { toast('Enter a name', 'error'); return; }
+  const tags = getTagValues('memberTagList');
+  if (tags.includes(v)) { toast('Already added', 'error'); return; }
+  tags.push(v);
+  renderTagList('memberTagList', tags, 'member');
+  document.getElementById('newMemberInput').value = '';
+}
+async function saveMembers() {
+  const members = getTagValues('memberTagList');
+  try {
+    const { error } = await db.from('family_settings').update({ members, updated_at: new Date().toISOString() }).eq('id', settings.id);
+    if (error) throw error;
+    settings.members = members;
+    toast('Members saved ✓', 'success');
+    closeModal('memberModal');
+    renderSettings();
+  } catch(e) { toast('Error: ' + e.message, 'error'); }
+}
+
+// ── TAG LIST HELPERS ──
+function renderTagList(containerId, values, type) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = values.map((v,i) => `
+    <div class="tag" data-value="${esc(v)}">
+      ${type === 'reminder' ? v + ' days' : esc(v)}
+      <span class="tag-remove" onclick="removeTag('${containerId}',${i})">×</span>
+    </div>`).join('');
+}
+function removeTag(containerId, idx) {
+  const tags = getTagValues(containerId);
+  tags.splice(idx, 1);
+  const type = containerId.includes('email') ? 'email' : containerId.includes('reminder') ? 'reminder' : 'member';
+  renderTagList(containerId, tags, type);
+}
+function getTagValues(containerId) {
+  return Array.from(document.querySelectorAll(`#${containerId} .tag`)).map(t => t.dataset.value);
+}
+
+// ── MODAL HELPERS ──
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+});
+
+// ── TOAST ──
+function toast(msg, type='') {
+  const wrap = document.getElementById('toastWrap');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  wrap.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+// ── ESCAPE ──
+function esc(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── START ──
+init();
+</script>
+</body>
+</html>
