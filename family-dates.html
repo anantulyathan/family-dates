@@ -93,6 +93,16 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .month-cell.urgent .month-count{color:var(--red)}
 .year-chip{padding:3px 8px;border-radius:6px;font-size:11px;font-weight:600;color:var(--muted);border:1px solid var(--border);background:var(--card);cursor:pointer;transition:all .15s}
 .year-chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.year-filter-bar{display:flex;gap:8px;padding:12px 16px 4px;overflow-x:auto;scrollbar-width:none;background:var(--bg)}
+.year-filter-bar::-webkit-scrollbar{display:none}
+.year-filter-btn{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid var(--border);background:var(--card);color:var(--sub);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .15s}
+.year-filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.member-filter-bar{display:flex;gap:8px;padding:8px 16px 0;overflow-x:auto;scrollbar-width:none}
+.member-filter-bar::-webkit-scrollbar{display:none}
+.member-btn{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid var(--border);background:var(--card);color:var(--sub);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .15s;display:flex;align-items:center;gap:4px}
+.member-btn.active{background:var(--deep);color:#fff;border-color:var(--deep)}
+
+
 
 
 /* EVENT ROW */
@@ -258,7 +268,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 </div>
 
 <div class="main">
-  <div class="page active" id="page-dashboard"><div id="dashContent"><div class="loading"><div class="spinner"></div>Loading…</div></div></div>
+  <div class="page active" id="page-dashboard">
+    <div class="year-filter-bar" id="yearFilterBar"></div>
+    <div class="member-filter-bar" id="dashMemberBar"></div>
+    <div id="dashContent"><div class="loading"><div class="spinner"></div>Loading…</div></div>
+  </div>
   <div class="page" id="page-upcoming">
     <div class="filter-bar" id="upcomingFilters">
       <div class="filter-chip active" onclick="setUpcomingFilter(30,this)">30 days</div>
@@ -267,6 +281,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
       <div class="filter-chip" onclick="setUpcomingFilter(365,this)">1 year</div>
       <div class="filter-chip" onclick="setUpcomingFilter(9999,this)">All</div>
     </div>
+    <div class="member-filter-bar" id="upcomingMemberBar"></div>
     <div id="upcomingContent"><div class="loading"><div class="spinner"></div>Loading…</div></div>
   </div>
   <div class="page" id="page-all">
@@ -285,6 +300,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
       <div class="filter-chip" onclick="setCatFilter('document',this)">📄</div>
       <div class="filter-chip" onclick="setCatFilter('other',this)">⭐</div>
     </div>
+    <div class="member-filter-bar" id="allMemberBar"></div>
     <div id="allContent"><div class="loading"><div class="spinner"></div>Loading…</div></div>
   </div>
   <div class="page" id="page-settings"><div id="settingsContent"><div class="loading"><div class="spinner"></div>Loading…</div></div></div>
@@ -450,7 +466,7 @@ const RESEND_KEY    = 're_afX9rcCP_J84MXFCkpXeRSMkuvurcj9vG';
 const {createClient}=supabase;
 const db=createClient(SUPABASE_URL,SUPABASE_ANON);
 
-let events=[],settings={},currentTab='dashboard',upcomingDays=30,categoryFilter='all',currentDetailId=null;
+let events=[],settings={},currentTab='dashboard',upcomingDays=30,categoryFilter='all',currentDetailId=null,dashYear='all',memberFilter='all',upcomingMemberFilter='all',dashMemberFilter='all';
 
 const CATS={
   birthday:{icon:'🎂',label:'Birthday',color:'amber'},
@@ -609,33 +625,152 @@ function sectionHTML(label,items,count){
 }
 
 // ── DASHBOARD ──
+function buildDashMemberBar(){buildMemberBar('dashMemberBar',dashMemberFilter,'setDashMember');}
+
+function buildYearFilterBar(){
+  const today=new Date();
+  const thisYear=today.getFullYear();
+  const bar=document.getElementById('yearFilterBar');
+  if(!bar)return;
+  // collect all years from events
+  const yearsSet=new Set();
+  events.forEach(e=>{
+    if(isPastEvent(e)){yearsSet.add(new Date(e.event_date).getFullYear());return;}
+    const d=getEffectiveDate(e);
+    yearsSet.add(d.getFullYear());
+    // for repeating events add next few occurrences
+    const rd=getRepeatDays(e);
+    if(rd>0){
+      let dd=new Date(d.getTime());
+      for(let i=0;i<10;i++){dd=new Date(dd.getTime()+rd*86400000);yearsSet.add(dd.getFullYear());if(dd.getFullYear()>thisYear+10)break;}
+    }
+  });
+  const years=['all',...Array.from(yearsSet).sort((a,b)=>a-b)];
+  bar.innerHTML=years.map(y=>`<div class="year-filter-btn${dashYear===y?' active':''}" onclick="setDashYear(${y==='all'?'\'all\'':y},this)">${y==='all'?'All Years':y}</div>`).join('');
+}
+
+function setDashYear(y,el){
+  dashYear=y;
+  document.querySelectorAll('.year-filter-btn').forEach(b=>b.classList.remove('active'));
+  if(el)el.classList.add('active');
+  renderDashboard();
+}
+
+function getEventsForYear(year){
+  if(year==='all')return events.filter(e=>!isPastEvent(e));
+  return events.filter(e=>{
+    if(isPastEvent(e))return false;
+    const d=getEffectiveDate(e);
+    if(d.getFullYear()===year)return true;
+    // for repeating events check if any occurrence lands in that year
+    const rd=getRepeatDays(e);
+    if(rd>0){
+      let dd=new Date(d.getTime());
+      for(let i=0;i<20;i++){
+        if(dd.getFullYear()===year)return true;
+        if(dd.getFullYear()>year)return false;
+        dd=new Date(dd.getTime()+rd*86400000);
+      }
+    }
+    return false;
+  });
+}
+
+function getEffectiveDateForYear(ev,year){
+  if(year==='all')return getEffectiveDate(ev);
+  const d=getEffectiveDate(ev);
+  if(d.getFullYear()===year)return d;
+  // advance repeating event to the given year
+  const rd=getRepeatDays(ev);
+  if(rd>0){
+    let dd=new Date(d.getTime());
+    for(let i=0;i<50;i++){
+      if(dd.getFullYear()===year)return dd;
+      if(dd.getFullYear()>year)return null;
+      dd=new Date(dd.getTime()+rd*86400000);
+    }
+  }
+  return null;
+}
+
 function renderDashboard(){
   const today=new Date();today.setHours(0,0,0,0);
   const thisYear=today.getFullYear();
 
-  // Separate past vs future
-  const pastEvents=events.filter(e=>isPastEvent(e)).sort((a,b)=>new Date(b.event_date)-new Date(a.event_date));
-  const futureEvents=events.filter(e=>!isPastEvent(e));
-  const sorted=futureEvents.map(e=>({e,days:getEffectiveDays(e)})).filter(x=>x.days>=0).sort((a,b)=>a.days-b.days);
+  buildYearFilterBar();
+  buildDashMemberBar();
+
+  const isAllYears=dashYear==='all';
+  const yearLabel=isAllYears?'All Years':String(dashYear);
+
+  // Filtered events for selected year + member
+  const yearEvents=getEventsForYear(dashYear).filter(e=>memberMatchFn(e,dashMemberFilter));
+
+  // Separate past vs future (past only relevant for All Years / current year)
+  const pastEvents=isAllYears||dashYear===thisYear
+    ? events.filter(e=>isPastEvent(e)).sort((a,b)=>new Date(b.event_date)-new Date(a.event_date))
+    : [];
+
+  // For urgency sections — only show when All Years or current year selected
+  const sorted=isAllYears||dashYear===thisYear
+    ? yearEvents.map(e=>({e,days:getEffectiveDays(e)})).filter(x=>x.days>=0).sort((a,b)=>a.days-b.days)
+    : [];
 
   let html='';
-  html+=sectionHTML('🔴 Needs attention — within 7 days',sorted.filter(x=>x.days<=7).map(x=>eventRowHTML(x.e,x.days)),sorted.filter(x=>x.days<=7).length);
-  html+=sectionHTML('🟡 Coming up — within 30 days',sorted.filter(x=>x.days>7&&x.days<=30).map(x=>eventRowHTML(x.e,x.days)),sorted.filter(x=>x.days>7&&x.days<=30).length);
 
-  // ── METRICS ──
-  html+=`<div class="section-label" style="margin-top:24px"><div class="section-label-text">📊 Metrics & Insights</div><div class="section-label-line"></div></div>`;
-
-  const withExpense=futureEvents.filter(e=>parseFloat(e.expense_estimate)>0);
-  const totalAnnual=futureEvents.reduce((s,e)=>s+annualExpense(e),0);
-  const recurringCount=futureEvents.filter(e=>e.repeat_type&&e.repeat_type!=='none'&&e.repeat_type!=='customdate').length;
-  html+=`<div class="metric-grid">
-    <div class="metric-card"><div class="metric-card-title">Active Events</div><div class="metric-num accent">${futureEvents.length}</div><div class="metric-sub">${recurringCount} recurring · ${futureEvents.length-recurringCount} one-time</div></div>
-    <div class="metric-card"><div class="metric-card-title">Est. Annual Cost</div><div class="metric-num teal">${totalAnnual>0?fmtMoney(totalAnnual):'฿0'}</div><div class="metric-sub">${withExpense.length} events with cost</div></div>
+  // Year badge
+  html+=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+    <span style="font-size:12px;font-weight:700;color:var(--accent);background:var(--blue-bg);border:1px solid var(--blue-bd);padding:3px 10px;border-radius:20px">📅 ${yearLabel}</span>
+    <span style="font-size:12px;color:var(--muted)">${yearEvents.length} event${yearEvents.length!==1?'s':''}</span>
   </div>`;
 
-  // Events by member (future only)
+  // Urgency sections (current year / all years only)
+  if(isAllYears||dashYear===thisYear){
+    html+=sectionHTML('🔴 Needs attention — within 7 days',sorted.filter(x=>x.days<=7).map(x=>eventRowHTML(x.e,x.days)),sorted.filter(x=>x.days<=7).length);
+    html+=sectionHTML('🟡 Coming up — within 30 days',sorted.filter(x=>x.days>7&&x.days<=30).map(x=>eventRowHTML(x.e,x.days)),sorted.filter(x=>x.days>7&&x.days<=30).length);
+  } else {
+    // Show all events for that year sorted by month
+    const yearSorted=yearEvents.map(e=>{
+      const d=getEffectiveDateForYear(e,dashYear);
+      return{e,d};
+    }).filter(x=>x.d).sort((a,b)=>a.d-b.d);
+    if(yearSorted.length){
+      html+=`<div class="section-label"><div class="section-label-text">📋 Events in ${dashYear}</div><div class="section-label-line"></div><div class="section-label-count">${yearSorted.length}</div></div>`;
+      html+=yearSorted.map(({e,d})=>{
+        const cat=CATS[e.category]||CATS.other;
+        const dateStr=d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+        const members=Array.isArray(e.members)&&e.members.length?e.members:(e.member?[e.member]:[]);
+        const exp=parseFloat(e.expense_estimate)||0;
+        return`<div class="event-row safe" onclick="openDetail('${e.id}')">
+          <div class="event-icon icon-${cat.color}">${cat.icon}</div>
+          <div class="event-body">
+            <div class="event-name">${esc(e.title)}</div>
+            <div class="event-detail">${dateStr}<span class="detail-sep">·</span>${repeatShort(e)}</div>
+            ${members.length?`<div class="member-chips">${members.map(m=>`<span class="member-chip">👤 ${esc(m)}</span>`).join('')}</div>`:''}
+            ${exp>0?`<div class="expense-chip">฿${exp.toLocaleString('en')}</div>`:''}
+          </div>
+          <div class="urgency-pill pill-green">${d.toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</div>
+        </div>`;
+      }).join('');
+    } else {
+      html+=`<div class="empty"><div class="empty-icon">📅</div><div class="empty-title">No events in ${dashYear}</div></div>`;
+    }
+  }
+
+  // ── METRICS ──
+  html+=`<div class="section-label" style="margin-top:20px"><div class="section-label-text">📊 Metrics — ${yearLabel}</div><div class="section-label-line"></div></div>`;
+
+  const withExpense=yearEvents.filter(e=>parseFloat(e.expense_estimate)>0);
+  const totalCost=yearEvents.reduce((s,e)=>s+(parseFloat(e.expense_estimate)||0),0);
+  const recurringCount=yearEvents.filter(e=>e.repeat_type&&e.repeat_type!=='none'&&e.repeat_type!=='customdate').length;
+  html+=`<div class="metric-grid">
+    <div class="metric-card"><div class="metric-card-title">${isAllYears?'Total Active':'Events in '+dashYear}</div><div class="metric-num accent">${yearEvents.length}</div><div class="metric-sub">${recurringCount} recurring · ${yearEvents.length-recurringCount} one-time</div></div>
+    <div class="metric-card"><div class="metric-card-title">Est. ${isAllYears?'Annual':'Year'} Cost</div><div class="metric-num teal">${totalCost>0?fmtMoney(totalCost):'฿0'}</div><div class="metric-sub">${withExpense.length} events with cost</div></div>
+  </div>`;
+
+  // Events by member
   const memberCounts={};
-  futureEvents.forEach(e=>{
+  yearEvents.forEach(e=>{
     const m=Array.isArray(e.members)&&e.members.length?e.members:(e.member?[e.member]:['Unassigned']);
     m.forEach(x=>{memberCounts[x]=(memberCounts[x]||0)+1;});
   });
@@ -652,12 +787,12 @@ function renderDashboard(){
     </div>`;
   }
 
-  // Events by category (future only)
+  // Events by category
   const catCounts={};const catExpense={};
-  futureEvents.forEach(e=>{
+  yearEvents.forEach(e=>{
     const c=e.category||'other';
     catCounts[c]=(catCounts[c]||0)+1;
-    catExpense[c]=(catExpense[c]||0)+annualExpense(e);
+    catExpense[c]=(catExpense[c]||0)+(parseFloat(e.expense_estimate)||0);
   });
   if(Object.keys(catCounts).length){
     const maxC=Math.max(...Object.values(catCounts),1);
@@ -674,31 +809,32 @@ function renderDashboard(){
     </div>`;
   }
 
-
-  // Events by month — with year selector
-  const yearRange=[];
-  for(let y=thisYear;y<=thisYear+5;y++)yearRange.push(y);
-  html+=`<div class="metric-card" style="margin-bottom:10px">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-      <div class="metric-card-title" style="margin-bottom:0">📅 Events by Month</div>
-      <div style="display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end">
-        ${yearRange.map(y=>`<div class="year-chip${y===thisYear?' active':''}" onclick="selectMonthYear(${y},this)">${y}</div>`).join('')}
-      </div>
+  // Events by month for selected year
+  const mCounts=new Array(12).fill(0);
+  yearEvents.forEach(e=>{
+    const d=isAllYears?getEffectiveDate(e):getEffectiveDateForYear(e,dashYear);
+    if(d)mCounts[d.getMonth()]++;
+  });
+  html+=`<div class="metric-card" style="margin-bottom:10px"><div class="metric-card-title">📅 Events by Month — ${yearLabel}</div>
+    <div class="month-grid">
+      ${MONTHS.map((m,i)=>{
+        const count=mCounts[i];
+        const cls=count===0?'':(count>=3?'urgent':'has-events');
+        return`<div class="month-cell ${cls}"><div class="month-name">${m}</div><div class="month-count">${count||'·'}</div></div>`;
+      }).join('')}
     </div>
-    <div class="month-grid" id="monthGrid">${buildMonthGrid(thisYear,events)}</div>
   </div>`;
 
   // Expense by member
-  const withExpenseF=futureEvents.filter(e=>parseFloat(e.expense_estimate)>0);
-  if(withExpenseF.length>0){
+  if(withExpense.length>0){
     const memberExp={};
-    futureEvents.forEach(e=>{
-      const amt=annualExpense(e);if(!amt)return;
+    yearEvents.forEach(e=>{
+      const amt=parseFloat(e.expense_estimate)||0;if(!amt)return;
       const m=Array.isArray(e.members)&&e.members.length?e.members:(e.member?[e.member]:['Unassigned']);
       m.forEach(x=>{memberExp[x]=(memberExp[x]||0)+amt/m.length;});
     });
     const maxE=Math.max(...Object.values(memberExp),1);
-    html+=`<div class="metric-card" style="margin-bottom:10px"><div class="metric-card-title">💰 Est. Annual Cost by Member</div>
+    html+=`<div class="metric-card" style="margin-bottom:10px"><div class="metric-card-title">💰 Est. Cost by Member — ${yearLabel}</div>
       ${Object.entries(memberExp).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`
         <div class="bar-row">
           <div class="bar-label">${esc(k)}</div>
@@ -708,22 +844,24 @@ function renderDashboard(){
     </div>`;
   }
 
-  // Quarter summary
-  const q1=sorted.filter(x=>x.days<=90).length;
-  const q2=sorted.filter(x=>x.days>90&&x.days<=180).length;
-  const q3=sorted.filter(x=>x.days>180&&x.days<=270).length;
-  const q4=sorted.filter(x=>x.days>270&&x.days<=365).length;
-  html+=`<div class="metric-card full" style="margin-bottom:4px"><div class="metric-card-title">📆 Events by Quarter (Next 12 Months)</div>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px">
-      ${[['Next 3mo',q1,'accent'],['3–6mo',q2,'green'],['6–9mo',q3,'amber'],['9–12mo',q4,'blue']].map(([label,count,color])=>`
-        <div style="text-align:center;padding:10px 6px;background:var(--border-lt);border-radius:10px;border:1px solid var(--border)">
-          <div style="font-size:20px;font-weight:700;color:var(--${color})">${count}</div>
-          <div style="font-size:10px;color:var(--muted);margin-top:3px">${label}</div>
-        </div>`).join('')}
-    </div>
-  </div>`;
+  // Quarter summary (only for current year / all years)
+  if(isAllYears||dashYear===thisYear){
+    const q1=sorted.filter(x=>x.days<=90).length;
+    const q2=sorted.filter(x=>x.days>90&&x.days<=180).length;
+    const q3=sorted.filter(x=>x.days>180&&x.days<=270).length;
+    const q4=sorted.filter(x=>x.days>270&&x.days<=365).length;
+    html+=`<div class="metric-card full" style="margin-bottom:4px"><div class="metric-card-title">📆 Events by Quarter (Next 12 Months)</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px">
+        ${[['Next 3mo',q1,'accent'],['3–6mo',q2,'green'],['6–9mo',q3,'amber'],['9–12mo',q4,'blue']].map(([label,count,color])=>`
+          <div style="text-align:center;padding:10px 6px;background:var(--border-lt);border-radius:10px;border:1px solid var(--border)">
+            <div style="font-size:20px;font-weight:700;color:var(--${color})">${count}</div>
+            <div style="font-size:10px;color:var(--muted);margin-top:3px">${label}</div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+  }
 
-  // ── PAST EVENTS ──
+  // Past events (always shown at bottom)
   if(pastEvents.length){
     html+=`<div class="section-label" style="margin-top:24px"><div class="section-label-text" style="color:var(--muted)">🕰 Past Events</div><div class="section-label-line"></div><div class="section-label-count">${pastEvents.length}</div></div>`;
     html+=pastEvents.map(ev=>{
@@ -747,13 +885,50 @@ function renderDashboard(){
   document.getElementById('dashContent').innerHTML=html;
 }
 
+
+// ── MEMBER FILTER HELPERS ──
+function memberMatchFn(e, mFilter){
+  if(mFilter==='all')return true;
+  const mArr=Array.isArray(e.members)&&e.members.length?e.members:(e.member?[e.member]:[]);
+  if(mFilter==='unassigned')return mArr.length===0;
+  return mArr.includes(mFilter);
+}
+
+function buildMemberBar(barId, currentFilter, onClickFn){
+  const bar=document.getElementById(barId);
+  if(!bar)return;
+  const members=settings.members||[];
+  const btns=[{val:'all',label:'👥 All'},...members.map(m=>({val:m,label:'👤 '+m})),{val:'unassigned',label:'— None'}];
+  bar.innerHTML=btns.map(b=>`<div class="member-btn${b.val===currentFilter?' active':''}" onclick="${onClickFn}('${b.val}',this)">${b.label}</div>`).join('');
+}
+
+function setDashMember(m,el){
+  dashMemberFilter=m;
+  document.querySelectorAll('#dashMemberBar .member-btn').forEach(b=>b.classList.remove('active'));
+  if(el)el.classList.add('active');
+  renderDashboard();
+}
+function setUpcomingMember(m,el){
+  upcomingMemberFilter=m;
+  document.querySelectorAll('#upcomingMemberBar .member-btn').forEach(b=>b.classList.remove('active'));
+  if(el)el.classList.add('active');
+  renderUpcoming();
+}
+function setAllMember(m,el){
+  memberFilter=m;
+  document.querySelectorAll('#allMemberBar .member-btn').forEach(b=>b.classList.remove('active'));
+  if(el)el.classList.add('active');
+  renderAll();
+}
+
 function setUpcomingFilter(days,el){
   upcomingDays=days;
   document.querySelectorAll('#upcomingFilters .filter-chip').forEach(c=>c.classList.remove('active'));
   el.classList.add('active');renderUpcoming();
 }
 function renderUpcoming(){
-  const sorted=events.filter(e=>!isPastEvent(e)).map(e=>({e,days:getEffectiveDays(e)})).filter(x=>x.days>=0&&x.days<=upcomingDays).sort((a,b)=>a.days-b.days);
+  buildMemberBar('upcomingMemberBar', upcomingMemberFilter, 'setUpcomingMember');
+  const sorted=events.filter(e=>!isPastEvent(e)&&memberMatchFn(e,upcomingMemberFilter)).map(e=>({e,days:getEffectiveDays(e)})).filter(x=>x.days>=0&&x.days<=upcomingDays).sort((a,b)=>a.days-b.days);
   if(!sorted.length){document.getElementById('upcomingContent').innerHTML=`<div class="empty"><div class="empty-icon">📅</div><div class="empty-title">Nothing in this range</div></div>`;return;}
   document.getElementById('upcomingContent').innerHTML=sorted.map(x=>eventRowHTML(x.e,x.days)).join('');
 }
@@ -763,11 +938,13 @@ function setCatFilter(cat,el){
   el.classList.add('active');renderAll();
 }
 function renderAll(){
+  buildMemberBar('allMemberBar', memberFilter, 'setAllMember');
   const q=(document.getElementById('searchInput')?.value||'').toLowerCase();
   const matchFn=e=>{
     const mArr=Array.isArray(e.members)?e.members:(e.member?[e.member]:[]);
     return(categoryFilter==='all'||e.category===categoryFilter)&&
-      (!q||e.title.toLowerCase().includes(q)||mArr.join(' ').toLowerCase().includes(q));
+      (!q||e.title.toLowerCase().includes(q)||mArr.join(' ').toLowerCase().includes(q))&&
+      memberMatchFn(e,memberFilter);
   };
   const future=events.filter(e=>!isPastEvent(e)&&matchFn(e)).map(e=>({e,days:getEffectiveDays(e)})).sort((a,b)=>a.days-b.days);
   const past=events.filter(e=>isPastEvent(e)&&matchFn(e)).sort((a,b)=>new Date(b.event_date)-new Date(a.event_date));
@@ -1105,32 +1282,6 @@ function toast(msg,type=''){
 function esc(str){if(!str)return'';return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 
-// ── MONTH GRID HELPERS ──
-function buildMonthGrid(year, evList){
-  const counts=new Array(12).fill(0);
-  const eventsByMonth=new Array(12).fill(null).map(()=>[]);
-  evList.forEach(e=>{
-    if(isPastEvent(e))return;
-    const d=getEffectiveDate(e);
-    if(d.getFullYear()===year){
-      counts[d.getMonth()]++;
-      eventsByMonth[d.getMonth()].push(e.title);
-    }
-  });
-  return MONTHS.map((m,i)=>{
-    const count=counts[i];
-    const cls=count===0?'':(count>=3?'urgent':'has-events');
-    const titles=eventsByMonth[i].slice(0,3).map(t=>t.length>20?t.slice(0,18)+'…':t).join('&#10;');
-    return`<div class="month-cell ${cls}" title="${titles}"><div class="month-name">${m}</div><div class="month-count">${count||'·'}</div></div>`;
-  }).join('');
-}
-
-function selectMonthYear(year, el){
-  document.querySelectorAll('.year-chip').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');
-  const grid=document.getElementById('monthGrid');
-  if(grid)grid.innerHTML=buildMonthGrid(year,events);
-}
 
 init();
 </script>
