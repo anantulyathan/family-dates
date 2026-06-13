@@ -1415,7 +1415,7 @@ function renderCalendar(){
       }).join('');
       return`<div class="${cls}" style="${selStyle}" onclick="selectCalDay(new Date(${date.getFullYear()},${date.getMonth()},${date.getDate()}))">
         <div class="cal-day-num">${date.getDate()}</div>
-        ${dots?`<div class="cal-dots">${dots}</div>`:''}
+        ${dots?('<div class="cal-dots">'+dots+'</div>'):''}
       </div>`;
     }).join('')}
   </div>`;
@@ -1505,37 +1505,30 @@ function renderBirthdays(){
     html+=`<div class="empty"><div class="empty-icon">🎂</div><div class="empty-title">No birthdays yet</div>Add birthday events with the 🎂 Birthday category</div>`;
   } else {
     html+=`<div class="section-label"><div class="section-label-text">🎂 Upcoming Birthdays</div><div class="section-label-line"></div><div class="section-label-count">${bdayEvents.length}</div></div>`;
-    html+=bdayEvents.map(({e,d,days,age},idx)=>{
-      const members=Array.isArray(e.members)&&e.members.length?e.members:(e.member?[e.member]:[]);
-      const name=members.length?members[0]:e.title;
-      const avatarColor=AVATAR_COLORS[idx%AVATAR_COLORS.length];
-      const initials=name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-      const dateStr=d.toLocaleDateString('en-GB',{day:'numeric',month:'long'});
-      const isToday=days===0;
-      const isSoon=days<=7;
-      const daysColorClass=isToday?'today-color':isSoon?'soon-color':'ok-color';
-
-      // Big countdown display
-      let countdownDisplay='';
-      let countdownLabel='';
-      if(days===0){countdownDisplay='🎉';countdownLabel='TODAY!';}
-      else if(days===1){countdownDisplay='1';countdownLabel='day away';}
-      else{countdownDisplay=String(days);countdownLabel='days away';}
-
-      return`<div class="bday-card" onclick="openDetail('${e.id}')">
-        <div class="bday-avatar" style="background:${avatarColor}">${initials||'🎂'}</div>
-        <div class="bday-info">
-          <div class="bday-name">${esc(e.title)}</div>
-          <div class="bday-date">📅 ${dateStr}</div>
-          ${age?`<div class="bday-age">Turning ${age} year${age!==1?'s':''} old</div>`:''}
-          ${members.length>1?`<div class="member-chips" style="margin-top:6px">${members.map(m=>`<span class="member-chip">👤 ${esc(m)}</span>`).join('')}</div>`:''}
-        </div>
-        <div class="bday-countdown">
-          <div class="bday-days ${daysColorClass}">${countdownDisplay}</div>
-          <div class="bday-days-label">${countdownLabel}</div>
-        </div>
-      </div>`;
-    }).join('')}
+    html+=bdayEvents.map(function(item,idx){
+      var e=item.e,d=item.d,days=item.days,age=item.age;
+      var members=Array.isArray(e.members)&&e.members.length?e.members:(e.member?[e.member]:[]);
+      var name=members.length?members[0]:e.title;
+      var avatarColor=AVATAR_COLORS[idx%AVATAR_COLORS.length];
+      var initials=name.split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase();
+      var dateStr=d.toLocaleDateString('en-GB',{day:'numeric',month:'long'});
+      var daysColorClass=days===0?'today-color':days<=7?'soon-color':'ok-color';
+      var countdownDisplay=days===0?'🎉':String(days);
+      var countdownLabel=days===0?'TODAY!':days===1?'day away':'days away';
+      var ageHtml=age?('<div class="bday-age">Turning '+age+' year'+(age!==1?'s':'')+' old</div>'):'';
+      var memberHtml=members.length>1?('<div class="member-chips" style="margin-top:6px">'+members.map(function(m){return '<span class="member-chip">👤 '+esc(m)+'</span>';}).join('')+'</div>'):'';
+      return '<div class="bday-card" onclick="openDetail(\"'+e.id+'\")">'
+        +'<div class="bday-avatar" style="background:'+avatarColor+'">'+(initials||'🎂')+'</div>'
+        +'<div class="bday-info">'
+        +'<div class="bday-name">'+esc(e.title)+'</div>'
+        +'<div class="bday-date">📅 '+dateStr+'</div>'
+        +ageHtml+memberHtml
+        +'</div>'
+        +'<div class="bday-countdown">'
+        +'<div class="bday-days '+daysColorClass+'">'+countdownDisplay+'</div>'
+        +'<div class="bday-days-label">'+countdownLabel+'</div>'
+        +'</div></div>';
+    }).join('');
   }
 
   // Non-birthday repeating events as "milestones"
