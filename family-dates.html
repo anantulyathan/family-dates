@@ -489,6 +489,13 @@ function getEffectiveDays(ev){
   const today=new Date();today.setHours(0,0,0,0);
   return Math.round((getEffectiveDate(ev)-today)/86400000);
 }
+function isPastEvent(ev){
+  // One-time or custom-date events where the date has already passed
+  const r=ev.repeat_type||'none';
+  const isRepeating=r!=='none'&&r!=='customdate'&&getRepeatDays(ev)>0;
+  if(isRepeating)return false;
+  return getEffectiveDays(ev)<0;
+}
 function repeatLabel(ev){
   const r=ev.repeat_type||'none';
   if(r==='none')return'📌 One-time';if(r==='monthly')return'📅 Every month';
@@ -542,13 +549,14 @@ function setStatus(s){
 
 // ── STATS ──
 function updateStats(){
-  const upcoming=events.map(e=>({e,days:getEffectiveDays(e)})).filter(x=>x.days>=0).sort((a,b)=>a.days-b.days);
+  const futureEvents=events.filter(e=>!isPastEvent(e));
+  const upcoming=futureEvents.map(e=>({e,days:getEffectiveDays(e)})).filter(x=>x.days>=0).sort((a,b)=>a.days-b.days);
   const week=upcoming.filter(x=>x.days<=7).length;
   const month=upcoming.filter(x=>x.days<=30).length;
-  const totalAnnual=events.reduce((s,e)=>s+annualExpense(e),0);
+  const totalAnnual=futureEvents.reduce((s,e)=>s+annualExpense(e),0);
   document.getElementById('statWeek').textContent=week;
   document.getElementById('statMonth').textContent=month;
-  document.getElementById('statTotal').textContent=events.length;
+  document.getElementById('statTotal').textContent=futureEvents.length;
   document.getElementById('statExpense').textContent=totalAnnual>0?fmtMoney(totalAnnual):'—';
   const badge=document.getElementById('urgentBadge');
   if(week>0){badge.textContent=week;badge.style.display='';}else badge.style.display='none';
@@ -601,70 +609,75 @@ function sectionHTML(label,items,count){
 function renderDashboard(){
   const today=new Date();today.setHours(0,0,0,0);
   const thisYear=today.getFullYear();
-  const sorted=events.map(e=>({e,days:getEffectiveDays(e)})).filter(x=>x.days>=0).sort((a,b)=>a.days-b.days);
 
-  // ── URGENT SECTIONS ──
+  // Separate past vs future
+  const pastEvents=events.filter(e=>isPastEvent(e)).sort((a,b)=>new Date(b.event_date)-new Date(a.event_date));
+  const futureEvents=events.filter(e=>!isPastEvent(e));
+  const sorted=futureEvents.map(e=>({e,days:getEffectiveDays(e)})).filter(x=>x.days>=0).sort((a,b)=>a.days-b.days);
+
   let html='';
   html+=sectionHTML('🔴 Needs attention — within 7 days',sorted.filter(x=>x.days<=7).map(x=>eventRowHTML(x.e,x.days)),sorted.filter(x=>x.days<=7).length);
   html+=sectionHTML('🟡 Coming up — within 30 days',sorted.filter(x=>x.days>7&&x.days<=30).map(x=>eventRowHTML(x.e,x.days)),sorted.filter(x=>x.days>7&&x.days<=30).length);
 
-  // ── METRICS SECTION ──
+  // ── METRICS ──
   html+=`<div class="section-label" style="margin-top:24px"><div class="section-label-text">📊 Metrics & Insights</div><div class="section-label-line"></div></div>`;
 
-  // Total events summary cards
-  const withExpense=events.filter(e=>parseFloat(e.expense_estimate)>0);
-  const totalAnnual=events.reduce((s,e)=>s+annualExpense(e),0);
-  const recurringCount=events.filter(e=>e.repeat_type&&e.repeat_type!=='none'&&e.repeat_type!=='customdate').length;
+  const withExpense=futureEvents.filter(e=>parseFloat(e.expense_estimate)>0);
+  const totalAnnual=futureEvents.reduce((s,e)=>s+annualExpense(e),0);
+  const recurringCount=futureEvents.filter(e=>e.repeat_type&&e.repeat_type!=='none'&&e.repeat_type!=='customdate').length;
   html+=`<div class="metric-grid">
-    <div class="metric-card"><div class="metric-card-title">Total Events</div><div class="metric-num accent">${events.length}</div><div class="metric-sub">${recurringCount} recurring · ${events.length-recurringCount} one-time</div></div>
+    <div class="metric-card"><div class="metric-card-title">Active Events</div><div class="metric-num accent">${futureEvents.length}</div><div class="metric-sub">${recurringCount} recurring · ${futureEvents.length-recurringCount} one-time</div></div>
     <div class="metric-card"><div class="metric-card-title">Est. Annual Cost</div><div class="metric-num teal">${totalAnnual>0?fmtMoney(totalAnnual):'฿0'}</div><div class="metric-sub">${withExpense.length} events with cost</div></div>
   </div>`;
 
-  // Events by member
+  // Events by member (future only)
   const memberCounts={};
-  events.forEach(e=>{
+  futureEvents.forEach(e=>{
     const m=Array.isArray(e.members)&&e.members.length?e.members:(e.member?[e.member]:['Unassigned']);
     m.forEach(x=>{memberCounts[x]=(memberCounts[x]||0)+1;});
   });
-  const maxM=Math.max(...Object.values(memberCounts),1);
-  const memberColors=['accent','green','amber','teal','purple'];
-  html+=`<div class="metric-card" style="margin-bottom:10px"><div class="metric-card-title">👨‍👩‍👦 Events by Member</div>
-    ${Object.entries(memberCounts).sort((a,b)=>b[1]-a[1]).map(([k,v],i)=>`
-      <div class="bar-row">
-        <div class="bar-label">${esc(k)}</div>
-        <div class="bar-track"><div class="bar-fill ${memberColors[i%memberColors.length]}" style="width:${Math.round(v/maxM*100)}%"></div></div>
-        <div class="bar-val">${v}</div>
-      </div>`).join('')}
-  </div>`;
+  if(Object.keys(memberCounts).length){
+    const maxM=Math.max(...Object.values(memberCounts),1);
+    const memberColors=['accent','green','amber','teal','purple'];
+    html+=`<div class="metric-card" style="margin-bottom:10px"><div class="metric-card-title">👨‍👩‍👦 Events by Member</div>
+      ${Object.entries(memberCounts).sort((a,b)=>b[1]-a[1]).map(([k,v],i)=>`
+        <div class="bar-row">
+          <div class="bar-label">${esc(k)}</div>
+          <div class="bar-track"><div class="bar-fill ${memberColors[i%memberColors.length]}" style="width:${Math.round(v/maxM*100)}%"></div></div>
+          <div class="bar-val">${v}</div>
+        </div>`).join('')}
+    </div>`;
+  }
 
-  // Events by category
+  // Events by category (future only)
   const catCounts={};const catExpense={};
-  events.forEach(e=>{
+  futureEvents.forEach(e=>{
     const c=e.category||'other';
     catCounts[c]=(catCounts[c]||0)+1;
     catExpense[c]=(catExpense[c]||0)+annualExpense(e);
   });
-  const maxC=Math.max(...Object.values(catCounts),1);
-  const catColorArr=['accent','green','amber','teal','purple','red'];
-  html+=`<div class="metric-card" style="margin-bottom:10px"><div class="metric-card-title">📂 Events by Category</div>
-    ${Object.entries(catCounts).sort((a,b)=>b[1]-a[1]).map(([k,v],i)=>{
-      const cat=CATS[k]||CATS.other;
-      const exp=catExpense[k]||0;
-      return`<div class="bar-row">
-        <div class="bar-label">${cat.icon} ${cat.label}</div>
-        <div class="bar-track"><div class="bar-fill ${catColorArr[i%catColorArr.length]}" style="width:${Math.round(v/maxC*100)}%"></div></div>
-        <div class="bar-val">${v}${exp>0?'<br><span style="font-size:9px;color:var(--teal)">'+fmtMoney(exp)+'</span>':''}</div>
-      </div>`;}).join('')}
-  </div>`;
+  if(Object.keys(catCounts).length){
+    const maxC=Math.max(...Object.values(catCounts),1);
+    const catColorArr=['accent','green','amber','teal','purple','red'];
+    html+=`<div class="metric-card" style="margin-bottom:10px"><div class="metric-card-title">📂 Events by Category</div>
+      ${Object.entries(catCounts).sort((a,b)=>b[1]-a[1]).map(([k,v],i)=>{
+        const cat=CATS[k]||CATS.other;
+        const exp=catExpense[k]||0;
+        return`<div class="bar-row">
+          <div class="bar-label">${cat.icon} ${cat.label}</div>
+          <div class="bar-track"><div class="bar-fill ${catColorArr[i%catColorArr.length]}" style="width:${Math.round(v/maxC*100)}%"></div></div>
+          <div class="bar-val">${v}${exp>0?'<br><span style="font-size:9px;color:var(--teal)">'+fmtMoney(exp)+'</span>':''}</div>
+        </div>`;}).join('')}
+    </div>`;
+  }
 
-  // Events by month (next 12 months)
+  // Events by month
   const monthCounts=new Array(12).fill(0);
-  events.forEach(e=>{
+  futureEvents.forEach(e=>{
     const d=getEffectiveDate(e);
     const diffMonths=(d.getFullYear()-thisYear)*12+(d.getMonth()-today.getMonth());
     if(diffMonths>=0&&diffMonths<12)monthCounts[d.getMonth()]++;
   });
-  const maxMonth=Math.max(...monthCounts,1);
   html+=`<div class="metric-card" style="margin-bottom:10px"><div class="metric-card-title">📅 Events by Month</div>
     <div class="month-grid">
       ${MONTHS.map((m,i)=>{
@@ -677,16 +690,17 @@ function renderDashboard(){
   </div>`;
 
   // Expense by member
-  if(withExpense.length>0){
+  const withExpenseF=futureEvents.filter(e=>parseFloat(e.expense_estimate)>0);
+  if(withExpenseF.length>0){
     const memberExp={};
-    events.forEach(e=>{
+    futureEvents.forEach(e=>{
       const amt=annualExpense(e);if(!amt)return;
       const m=Array.isArray(e.members)&&e.members.length?e.members:(e.member?[e.member]:['Unassigned']);
       m.forEach(x=>{memberExp[x]=(memberExp[x]||0)+amt/m.length;});
     });
     const maxE=Math.max(...Object.values(memberExp),1);
     html+=`<div class="metric-card" style="margin-bottom:10px"><div class="metric-card-title">💰 Est. Annual Cost by Member</div>
-      ${Object.entries(memberExp).sort((a,b)=>b[1]-a[1]).map(([k,v],i)=>`
+      ${Object.entries(memberExp).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`
         <div class="bar-row">
           <div class="bar-label">${esc(k)}</div>
           <div class="bar-track"><div class="bar-fill teal" style="width:${Math.round(v/maxE*100)}%"></div></div>
@@ -695,7 +709,7 @@ function renderDashboard(){
     </div>`;
   }
 
-  // Upcoming Q summary
+  // Quarter summary
   const q1=sorted.filter(x=>x.days<=90).length;
   const q2=sorted.filter(x=>x.days>90&&x.days<=180).length;
   const q3=sorted.filter(x=>x.days>180&&x.days<=270).length;
@@ -710,7 +724,27 @@ function renderDashboard(){
     </div>
   </div>`;
 
-  if(!sorted.length&&!events.length)html=`<div class="empty"><div class="empty-icon">📅</div><div class="empty-title">No events yet</div>Tap + to add your first event.</div>`;
+  // ── PAST EVENTS ──
+  if(pastEvents.length){
+    html+=`<div class="section-label" style="margin-top:24px"><div class="section-label-text" style="color:var(--muted)">🕰 Past Events</div><div class="section-label-line"></div><div class="section-label-count">${pastEvents.length}</div></div>`;
+    html+=pastEvents.map(ev=>{
+      const cat=CATS[ev.category]||CATS.other;
+      const d=new Date(ev.event_date);
+      const daysAgo=Math.abs(Math.round((d-new Date().setHours(0,0,0,0))/86400000));
+      const members=Array.isArray(ev.members)&&ev.members.length?ev.members:(ev.member?[ev.member]:[]);
+      return`<div class="event-row future" style="opacity:0.5;cursor:pointer" onclick="openDetail('${ev.id}')">
+        <div class="event-icon" style="background:var(--border-lt)">${cat.icon}</div>
+        <div class="event-body">
+          <div class="event-name" style="color:var(--muted)">${esc(ev.title)}</div>
+          <div class="event-detail" style="color:var(--muted)">${d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}<span class="detail-sep">·</span>${repeatShort(ev)}</div>
+          ${members.length?`<div class="member-chips">${members.map(m=>`<span class="member-chip" style="opacity:0.6">👤 ${esc(m)}</span>`).join('')}</div>`:''}
+        </div>
+        <div class="urgency-pill" style="background:var(--border-lt);color:var(--muted);border:1px solid var(--border)">${daysAgo}d ago</div>
+      </div>`;
+    }).join('');
+  }
+
+  if(!html)html=`<div class="empty"><div class="empty-icon">📅</div><div class="empty-title">No events yet</div>Tap + to add your first event.</div>`;
   document.getElementById('dashContent').innerHTML=html;
 }
 
@@ -720,7 +754,7 @@ function setUpcomingFilter(days,el){
   el.classList.add('active');renderUpcoming();
 }
 function renderUpcoming(){
-  const sorted=events.map(e=>({e,days:getEffectiveDays(e)})).filter(x=>x.days>=0&&x.days<=upcomingDays).sort((a,b)=>a.days-b.days);
+  const sorted=events.filter(e=>!isPastEvent(e)).map(e=>({e,days:getEffectiveDays(e)})).filter(x=>x.days>=0&&x.days<=upcomingDays).sort((a,b)=>a.days-b.days);
   if(!sorted.length){document.getElementById('upcomingContent').innerHTML=`<div class="empty"><div class="empty-icon">📅</div><div class="empty-title">Nothing in this range</div></div>`;return;}
   document.getElementById('upcomingContent').innerHTML=sorted.map(x=>eventRowHTML(x.e,x.days)).join('');
 }
@@ -731,13 +765,34 @@ function setCatFilter(cat,el){
 }
 function renderAll(){
   const q=(document.getElementById('searchInput')?.value||'').toLowerCase();
-  const filtered=events.filter(e=>{
+  const matchFn=e=>{
     const mArr=Array.isArray(e.members)?e.members:(e.member?[e.member]:[]);
     return(categoryFilter==='all'||e.category===categoryFilter)&&
       (!q||e.title.toLowerCase().includes(q)||mArr.join(' ').toLowerCase().includes(q));
-  }).map(e=>({e,days:getEffectiveDays(e)})).sort((a,b)=>a.days-b.days);
-  if(!filtered.length){document.getElementById('allContent').innerHTML=`<div class="empty"><div class="empty-icon">🔍</div><div class="empty-title">No events found</div></div>`;return;}
-  document.getElementById('allContent').innerHTML=filtered.map(x=>eventRowHTML(x.e,x.days)).join('');
+  };
+  const future=events.filter(e=>!isPastEvent(e)&&matchFn(e)).map(e=>({e,days:getEffectiveDays(e)})).sort((a,b)=>a.days-b.days);
+  const past=events.filter(e=>isPastEvent(e)&&matchFn(e)).sort((a,b)=>new Date(b.event_date)-new Date(a.event_date));
+  if(!future.length&&!past.length){document.getElementById('allContent').innerHTML=`<div class="empty"><div class="empty-icon">🔍</div><div class="empty-title">No events found</div></div>`;return;}
+  let html=future.map(x=>eventRowHTML(x.e,x.days)).join('');
+  if(past.length){
+    html+=`<div class="section-label" style="margin-top:16px"><div class="section-label-text" style="color:var(--muted)">🕰 Past Events</div><div class="section-label-line"></div><div class="section-label-count">${past.length}</div></div>`;
+    html+=past.map(ev=>{
+      const cat=CATS[ev.category]||CATS.other;
+      const d=new Date(ev.event_date);
+      const daysAgo=Math.abs(Math.round((d-new Date().setHours(0,0,0,0))/86400000));
+      const members=Array.isArray(ev.members)&&ev.members.length?ev.members:(ev.member?[ev.member]:[]);
+      return`<div class="event-row future" style="opacity:0.5" onclick="openDetail('${ev.id}')">
+        <div class="event-icon" style="background:var(--border-lt)">${cat.icon}</div>
+        <div class="event-body">
+          <div class="event-name" style="color:var(--muted)">${esc(ev.title)}</div>
+          <div class="event-detail" style="color:var(--muted)">${d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</div>
+          ${members.length?`<div class="member-chips">${members.map(m=>`<span class="member-chip" style="opacity:0.6">👤 ${esc(m)}</span>`).join('')}</div>`:''}
+        </div>
+        <div class="urgency-pill" style="background:var(--border-lt);color:var(--muted);border:1px solid var(--border)">${daysAgo}d ago</div>
+      </div>`;
+    }).join('');
+  }
+  document.getElementById('allContent').innerHTML=html;
 }
 
 // ── SETTINGS ──
