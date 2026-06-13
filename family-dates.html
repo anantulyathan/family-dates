@@ -13,166 +13,196 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-:root {
-  --bg:#f5f5f7; --card:#ffffff; --deep:#111827; --deep2:#1f2937;
-  --text:#1f2937; --sub:#6b7280; --muted:#9ca3af;
-  --border:#e5e7eb; --border-lt:#f3f4f6;
-  --red:#ef4444; --red-bg:#fef2f2; --red-bd:#fecaca;
-  --amber:#d97706; --amber-bg:#fffbeb; --amber-bd:#fde68a;
-  --green:#059669; --green-bg:#ecfdf5; --green-bd:#a7f3d0;
-  --blue:#2563eb; --blue-bg:#eff6ff; --blue-bd:#bfdbfe;
-  --purple:#7c3aed; --purple-bg:#f5f3ff; --purple-bd:#ddd6fe;
-  --accent:#1d4ed8;
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#f5f5f7;--card:#fff;--deep:#111827;--deep2:#1f2937;
+  --text:#1f2937;--sub:#6b7280;--muted:#9ca3af;
+  --border:#e5e7eb;--border-lt:#f3f4f6;
+  --red:#ef4444;--red-bg:#fef2f2;--red-bd:#fecaca;
+  --amber:#d97706;--amber-bg:#fffbeb;--amber-bd:#fde68a;
+  --green:#059669;--green-bg:#ecfdf5;--green-bd:#a7f3d0;
+  --blue:#2563eb;--blue-bg:#eff6ff;--blue-bd:#bfdbfe;
+  --purple:#7c3aed;--purple-bg:#f5f3ff;--purple-bd:#ddd6fe;
+  --teal:#0d9488;--teal-bg:#f0fdfa;--teal-bd:#99f6e4;
+  --accent:#1d4ed8
 }
-body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; -webkit-font-smoothing:antialiased; padding-bottom:env(safe-area-inset-bottom); }
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;padding-bottom:env(safe-area-inset-bottom)}
 
 /* HEADER */
-.header { background:var(--deep); padding:52px 20px 0; }
-.header-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:20px; }
-.header-title { font-family:'DM Serif Display',serif; font-size:26px; color:#fff; font-weight:400; line-height:1.2; }
-.header-sub { font-size:13px; color:rgba(255,255,255,0.4); margin-top:4px; }
-.header-right { display:flex; flex-direction:column; align-items:flex-end; gap:6px; }
-.live-dot { display:flex; align-items:center; gap:6px; font-size:12px; color:rgba(255,255,255,0.5); }
-.live-dot .dot { width:7px; height:7px; border-radius:50%; background:#6b7280; box-shadow:0 0 0 3px rgba(107,114,128,0.2); transition:background 0.3s,box-shadow 0.3s; }
-.live-dot .dot.connected { background:#34d399; box-shadow:0 0 0 3px rgba(52,211,153,0.2); }
-.live-dot .dot.error { background:#f87171; box-shadow:0 0 0 3px rgba(248,113,113,0.2); }
-.header-date { font-size:11px; color:rgba(255,255,255,0.3); }
-.header-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:rgba(255,255,255,0.06); border-radius:12px 12px 0 0; overflow:hidden; }
-.hstat { padding:14px 8px; background:rgba(255,255,255,0.04); text-align:center; }
-.hstat-num { font-size:20px; font-weight:700; color:#fff; line-height:1; }
-.hstat-num.red { color:#f87171; } .hstat-num.amber { color:#fbbf24; } .hstat-num.green { color:#34d399; } .hstat-num.blue { color:#93c5fd; }
-.hstat-lbl { font-size:10px; color:rgba(255,255,255,0.35); margin-top:4px; line-height:1.3; }
+.header{background:var(--deep);padding:52px 20px 0}
+.header-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px}
+.header-title{font-family:'DM Serif Display',serif;font-size:26px;color:#fff;font-weight:400;line-height:1.2}
+.header-sub{font-size:13px;color:rgba(255,255,255,0.4);margin-top:4px}
+.header-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.live-dot{display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,0.5)}
+.live-dot .dot{width:7px;height:7px;border-radius:50%;background:#6b7280;box-shadow:0 0 0 3px rgba(107,114,128,0.2);transition:background .3s,box-shadow .3s}
+.live-dot .dot.connected{background:#34d399;box-shadow:0 0 0 3px rgba(52,211,153,0.2)}
+.live-dot .dot.error{background:#f87171;box-shadow:0 0 0 3px rgba(248,113,113,0.2)}
+.header-date{font-size:11px;color:rgba(255,255,255,0.3)}
+.header-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,0.06);border-radius:12px 12px 0 0;overflow:hidden}
+.hstat{padding:12px 6px;background:rgba(255,255,255,0.04);text-align:center}
+.hstat-num{font-size:18px;font-weight:700;color:#fff;line-height:1}
+.hstat-num.red{color:#f87171}.hstat-num.amber{color:#fbbf24}.hstat-num.green{color:#34d399}.hstat-num.blue{color:#93c5fd}.hstat-num.teal{color:#5eead4}
+.hstat-lbl{font-size:9px;color:rgba(255,255,255,0.35);margin-top:3px;line-height:1.3}
 
 /* TABS */
-.tabs { background:var(--card); border-bottom:1px solid var(--border); display:flex; padding:0 16px; position:sticky; top:0; z-index:50; box-shadow:0 1px 3px rgba(0,0,0,0.06); overflow-x:auto; scrollbar-width:none; }
-.tabs::-webkit-scrollbar { display:none; }
-.tab { padding:14px 14px; font-size:13px; font-weight:500; color:var(--muted); border-bottom:2px solid transparent; white-space:nowrap; cursor:pointer; display:flex; align-items:center; gap:6px; transition:color 0.15s; flex-shrink:0; }
-.tab.active { color:var(--accent); border-bottom-color:var(--accent); }
-.tab-badge { background:var(--red); color:#fff; font-size:10px; font-weight:700; padding:1px 6px; border-radius:10px; }
+.tabs{background:var(--card);border-bottom:1px solid var(--border);display:flex;padding:0 16px;position:sticky;top:0;z-index:50;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:14px 12px;font-size:13px;font-weight:500;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;cursor:pointer;display:flex;align-items:center;gap:5px;transition:color .15s;flex-shrink:0}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-badge{background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px}
 
 /* MAIN */
-.main { max-width:680px; margin:0 auto; padding:16px 16px 100px; }
-.page { display:none; } .page.active { display:block; }
+.main{max-width:680px;margin:0 auto;padding:16px 16px 100px}
+.page{display:none}.page.active{display:block}
 
 /* SECTION LABEL */
-.section-label { display:flex; align-items:center; gap:8px; margin:20px 0 10px; }
-.section-label-text { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.09em; white-space:nowrap; }
-.section-label-line { flex:1; height:1px; background:var(--border); }
-.section-label-count { font-size:11px; color:var(--muted); background:var(--border-lt); border:1px solid var(--border); padding:1px 8px; border-radius:10px; white-space:nowrap; }
+.section-label{display:flex;align-items:center;gap:8px;margin:20px 0 10px}
+.section-label-text{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.09em;white-space:nowrap}
+.section-label-line{flex:1;height:1px;background:var(--border)}
+.section-label-count{font-size:11px;color:var(--muted);background:var(--border-lt);border:1px solid var(--border);padding:1px 8px;border-radius:10px;white-space:nowrap}
 
 /* EVENT ROW */
-.event-row { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px 16px; margin-bottom:6px; display:flex; align-items:center; gap:14px; cursor:pointer; transition:box-shadow 0.15s; }
-.event-row:hover { box-shadow:0 2px 12px rgba(0,0,0,0.07); }
-.event-row.urgent { border-left:3px solid var(--red); }
-.event-row.warning { border-left:3px solid var(--amber); }
-.event-row.safe { border-left:3px solid var(--green); }
-.event-row.future { border-left:3px solid var(--blue); }
-.event-icon { width:42px; height:42px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:19px; flex-shrink:0; }
-.icon-red { background:var(--red-bg); } .icon-amber { background:var(--amber-bg); } .icon-green { background:var(--green-bg); } .icon-blue { background:var(--blue-bg); } .icon-purple { background:var(--purple-bg); }
-.event-body { flex:1; min-width:0; }
-.event-name { font-size:14px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.event-detail { font-size:12px; color:var(--muted); margin-top:3px; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
-.detail-sep { color:var(--border); }
-.member-chip { display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:500; color:var(--sub); background:var(--border-lt); border:1px solid var(--border); padding:2px 8px; border-radius:6px; margin-top:5px; }
-.urgency-pill { font-size:12px; font-weight:600; padding:5px 10px; border-radius:20px; flex-shrink:0; min-width:58px; text-align:center; line-height:1.4; }
-.urgency-pill small { display:block; font-size:10px; font-weight:400; opacity:0.7; }
-.pill-red { background:var(--red-bg); color:var(--red); border:1px solid var(--red-bd); }
-.pill-amber { background:var(--amber-bg); color:var(--amber); border:1px solid var(--amber-bd); }
-.pill-green { background:var(--green-bg); color:var(--green); border:1px solid var(--green-bd); }
-.pill-blue { background:var(--blue-bg); color:var(--blue); border:1px solid var(--blue-bd); }
+.event-row{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 14px;margin-bottom:6px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:box-shadow .15s}
+.event-row:hover{box-shadow:0 2px 12px rgba(0,0,0,0.07)}
+.event-row.urgent{border-left:3px solid var(--red)}
+.event-row.warning{border-left:3px solid var(--amber)}
+.event-row.safe{border-left:3px solid var(--green)}
+.event-row.future{border-left:3px solid var(--blue)}
+.event-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.icon-red{background:var(--red-bg)}.icon-amber{background:var(--amber-bg)}.icon-green{background:var(--green-bg)}.icon-blue{background:var(--blue-bg)}.icon-purple{background:var(--purple-bg)}.icon-teal{background:var(--teal-bg)}
+.event-body{flex:1;min-width:0}
+.event-name{font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.event-detail{font-size:12px;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.detail-sep{color:var(--border)}
+.member-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.member-chip{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:500;color:var(--sub);background:var(--border-lt);border:1px solid var(--border);padding:1px 7px;border-radius:5px}
+.expense-chip{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;color:var(--teal);background:var(--teal-bg);border:1px solid var(--teal-bd);padding:1px 7px;border-radius:5px;margin-top:4px}
+.urgency-pill{font-size:11px;font-weight:600;padding:5px 9px;border-radius:20px;flex-shrink:0;min-width:54px;text-align:center;line-height:1.4}
+.urgency-pill small{display:block;font-size:10px;font-weight:400;opacity:.7}
+.pill-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd)}
+.pill-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bd)}
+.pill-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd)}
+.pill-blue{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-bd)}
+
+/* DASHBOARD EXPENSE CARD */
+.expense-summary{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:8px}
+.expense-summary-title{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px}
+.expense-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border-lt)}
+.expense-row:last-child{border-bottom:none;padding-bottom:0}
+.expense-row-label{font-size:13px;color:var(--text)}
+.expense-row-val{font-size:13px;font-weight:600;color:var(--teal)}
+.expense-total{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:2px solid var(--border)}
+.expense-total-label{font-size:13px;font-weight:700;color:var(--text)}
+.expense-total-val{font-size:16px;font-weight:700;color:var(--accent)}
 
 /* EMPTY */
-.empty { text-align:center; padding:48px 24px; color:var(--muted); font-size:14px; }
-.empty-icon { font-size:40px; margin-bottom:12px; }
-.empty-title { font-size:15px; font-weight:600; color:var(--sub); margin-bottom:6px; }
+.empty{text-align:center;padding:48px 24px;color:var(--muted);font-size:14px}
+.empty-icon{font-size:40px;margin-bottom:12px}
+.empty-title{font-size:15px;font-weight:600;color:var(--sub);margin-bottom:6px}
 
 /* FILTER BAR */
-.filter-bar { display:flex; gap:8px; margin-bottom:16px; overflow-x:auto; scrollbar-width:none; padding-bottom:2px; }
-.filter-bar::-webkit-scrollbar { display:none; }
-.filter-chip { padding:6px 14px; border-radius:20px; font-size:12px; font-weight:500; border:1px solid var(--border); background:var(--card); color:var(--sub); cursor:pointer; white-space:nowrap; flex-shrink:0; transition:all 0.15s; }
-.filter-chip.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+.filter-bar{display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.filter-bar::-webkit-scrollbar{display:none}
+.filter-chip{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid var(--border);background:var(--card);color:var(--sub);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .15s}
+.filter-chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
 
 /* SEARCH */
-.search-wrap { position:relative; margin-bottom:14px; }
-.search-wrap input { width:100%; padding:10px 16px 10px 38px; border:1px solid var(--border); border-radius:10px; font-size:14px; font-family:'Inter',sans-serif; background:var(--card); color:var(--text); outline:none; transition:border 0.15s; }
-.search-wrap input:focus { border-color:var(--accent); }
-.search-icon { position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--muted); font-size:16px; pointer-events:none; }
+.search-wrap{position:relative;margin-bottom:12px}
+.search-wrap input{width:100%;padding:10px 16px 10px 38px;border:1px solid var(--border);border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;background:var(--card);color:var(--text);outline:none;transition:border .15s}
+.search-wrap input:focus{border-color:var(--accent)}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:16px;pointer-events:none}
 
 /* FAB */
-.fab { position:fixed; bottom:calc(28px + env(safe-area-inset-bottom)); right:20px; height:48px; background:var(--accent); color:#fff; border-radius:24px; display:flex; align-items:center; gap:8px; padding:0 20px; font-size:14px; font-weight:600; box-shadow:0 4px 20px rgba(29,78,216,0.35); cursor:pointer; z-index:40; letter-spacing:0.01em; font-family:'Inter',sans-serif; border:none; }
+.fab{position:fixed;bottom:calc(28px + env(safe-area-inset-bottom));right:20px;height:48px;background:var(--accent);color:#fff;border-radius:24px;display:flex;align-items:center;gap:8px;padding:0 20px;font-size:14px;font-weight:600;box-shadow:0 4px 20px rgba(29,78,216,0.35);cursor:pointer;z-index:40;font-family:'Inter',sans-serif;border:none}
 
 /* MODAL */
-.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:100; align-items:flex-end; justify-content:center; }
-.modal-overlay.open { display:flex; }
-.modal { background:var(--card); border-radius:20px 20px 0 0; width:100%; max-width:680px; padding:24px 20px calc(24px + env(safe-area-inset-bottom)); max-height:90vh; overflow-y:auto; }
-.modal-handle { width:40px; height:4px; background:var(--border); border-radius:2px; margin:0 auto 20px; }
-.modal-title { font-size:18px; font-weight:700; color:var(--text); margin-bottom:20px; }
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;align-items:flex-end;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--card);border-radius:20px 20px 0 0;width:100%;max-width:680px;padding:24px 20px calc(24px + env(safe-area-inset-bottom));max-height:92vh;overflow-y:auto}
+.modal-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px}
+.modal-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:20px}
 
 /* FORM */
-.form-group { margin-bottom:16px; }
-.form-label { display:block; font-size:12px; font-weight:600; color:var(--sub); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px; }
-.form-input,.form-select,.form-textarea { width:100%; padding:10px 14px; border:1px solid var(--border); border-radius:10px; font-size:14px; font-family:'Inter',sans-serif; color:var(--text); background:var(--card); outline:none; transition:border 0.15s; -webkit-appearance:none; }
-.form-input:focus,.form-select:focus,.form-textarea:focus { border-color:var(--accent); }
-.form-textarea { resize:vertical; min-height:80px; }
-.form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.form-group{margin-bottom:14px}
+.form-label{display:block;font-size:12px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.form-input,.form-select,.form-textarea{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;color:var(--text);background:var(--card);outline:none;transition:border .15s;-webkit-appearance:none}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--accent)}
+.form-textarea{resize:vertical;min-height:70px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-hint{font-size:11px;color:var(--muted);margin-top:4px}
 
-/* REPEAT SELECTOR */
-.repeat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
-.repeat-opt { padding:10px 8px; border:1px solid var(--border); border-radius:10px; text-align:center; cursor:pointer; transition:all 0.15s; background:var(--card); }
-.repeat-opt:hover { border-color:var(--accent); }
-.repeat-opt.selected { background:var(--blue-bg); border-color:var(--accent); color:var(--accent); }
-.repeat-opt-icon { font-size:18px; margin-bottom:4px; }
-.repeat-opt-label { font-size:11px; font-weight:600; color:var(--text); }
-.repeat-opt.selected .repeat-opt-label { color:var(--accent); }
-.repeat-opt-sub { font-size:10px; color:var(--muted); margin-top:2px; }
-.custom-days-wrap { display:none; margin-top:10px; }
-.custom-days-wrap.show { display:block; }
-.custom-days-row { display:flex; align-items:center; gap:10px; }
-.custom-days-row input { flex:1; }
-.custom-days-row span { font-size:13px; color:var(--sub); white-space:nowrap; }
+/* MULTI-MEMBER SELECT */
+.member-select-grid{display:flex;flex-wrap:wrap;gap:8px}
+.member-toggle{padding:7px 14px;border-radius:20px;font-size:13px;font-weight:500;border:1px solid var(--border);background:var(--card);color:var(--sub);cursor:pointer;transition:all .15s;user-select:none}
+.member-toggle.on{background:var(--blue-bg);border-color:var(--accent);color:var(--accent)}
 
-.btn-row { display:flex; gap:10px; margin-top:20px; }
-.btn { flex:1; padding:13px; border-radius:10px; font-size:14px; font-weight:600; cursor:pointer; border:none; font-family:'Inter',sans-serif; transition:opacity 0.15s; }
-.btn:active { opacity:0.8; }
-.btn-primary { background:var(--accent); color:#fff; }
-.btn-secondary { background:var(--border-lt); color:var(--sub); border:1px solid var(--border); }
-.btn-danger { background:#fef2f2; color:var(--red); border:1px solid var(--red-bd); }
+/* REPEAT GRID */
+.repeat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.repeat-opt{padding:9px 6px;border:1px solid var(--border);border-radius:10px;text-align:center;cursor:pointer;transition:all .15s;background:var(--card)}
+.repeat-opt:hover{border-color:var(--accent)}
+.repeat-opt.selected{background:var(--blue-bg);border-color:var(--accent)}
+.repeat-opt-icon{font-size:16px;margin-bottom:3px}
+.repeat-opt-label{font-size:11px;font-weight:600;color:var(--text)}
+.repeat-opt.selected .repeat-opt-label{color:var(--accent)}
+.repeat-opt-sub{font-size:9px;color:var(--muted);margin-top:1px}
+.extra-wrap{display:none;margin-top:10px}
+.extra-wrap.show{display:block}
+.inline-row{display:flex;align-items:center;gap:10px}
+.inline-row input{flex:1}
+.inline-row span{font-size:13px;color:var(--sub);white-space:nowrap}
+
+/* YEARS SELECT */
+.years-select-wrap{margin-top:10px;display:none}
+.years-select-wrap.show{display:block}
+
+/* EXPENSE INPUT */
+.expense-input-wrap{position:relative}
+.expense-input-wrap .currency{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--muted);pointer-events:none}
+.expense-input-wrap input{padding-left:30px}
+
+/* BUTTONS */
+.btn-row{display:flex;gap:10px;margin-top:20px}
+.btn{flex:1;padding:13px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:opacity .15s}
+.btn:active{opacity:.8}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-secondary{background:var(--border-lt);color:var(--sub);border:1px solid var(--border)}
+.btn-danger{background:#fef2f2;color:var(--red);border:1px solid var(--red-bd)}
 
 /* SETTINGS */
-.settings-section { margin-bottom:24px; }
-.settings-title { font-size:13px; font-weight:700; color:var(--sub); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:12px; }
-.settings-card { background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
-.settings-row { display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid var(--border-lt); }
-.settings-row:last-child { border-bottom:none; }
-.settings-row-label { font-size:14px; font-weight:500; color:var(--text); }
-.settings-row-sub { font-size:12px; color:var(--muted); margin-top:2px; }
-.settings-row-action { color:var(--accent); font-size:13px; font-weight:600; cursor:pointer; }
-.tag-list { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
-.tag { display:inline-flex; align-items:center; gap:6px; background:var(--border-lt); border:1px solid var(--border); border-radius:8px; padding:6px 12px; font-size:13px; font-weight:500; }
-.tag-remove { color:var(--muted); cursor:pointer; font-size:16px; line-height:1; transition:color 0.15s; }
-.tag-remove:hover { color:var(--red); }
-.tag-add-row { display:flex; gap:8px; margin-top:10px; }
-.tag-add-input { flex:1; padding:8px 12px; border:1px solid var(--border); border-radius:8px; font-size:13px; font-family:'Inter',sans-serif; outline:none; transition:border 0.15s; }
-.tag-add-input:focus { border-color:var(--accent); }
-.tag-add-btn { padding:8px 16px; background:var(--accent); color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif; }
-
-/* TOAST */
-.toast-wrap { position:fixed; bottom:calc(90px + env(safe-area-inset-bottom)); right:16px; z-index:200; display:flex; flex-direction:column; gap:8px; align-items:flex-end; }
-.toast { background:var(--deep2); color:#fff; padding:10px 16px; border-radius:10px; font-size:13px; font-weight:500; box-shadow:0 4px 16px rgba(0,0,0,0.2); animation:slideIn 0.2s ease; max-width:280px; }
-.toast.success { background:#065f46; } .toast.error { background:#991b1b; }
-@keyframes slideIn { from { transform:translateX(120%); opacity:0; } to { transform:translateX(0); opacity:1; } }
+.settings-section{margin-bottom:22px}
+.settings-title{font-size:12px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.settings-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.settings-row{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid var(--border-lt)}
+.settings-row:last-child{border-bottom:none}
+.settings-row-label{font-size:14px;font-weight:500;color:var(--text)}
+.settings-row-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.settings-row-action{color:var(--accent);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;margin-left:12px;flex-shrink:0}
+.tag-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.tag{display:inline-flex;align-items:center;gap:6px;background:var(--border-lt);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:13px;font-weight:500}
+.tag-remove{color:var(--muted);cursor:pointer;font-size:16px;line-height:1;transition:color .15s}
+.tag-remove:hover{color:var(--red)}
+.tag-add-row{display:flex;gap:8px;margin-top:10px}
+.tag-add-input{flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border .15s}
+.tag-add-input:focus{border-color:var(--accent)}
+.tag-add-btn{padding:8px 16px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
 
 /* DETAIL */
-.detail-field { margin-bottom:14px; }
-.detail-field-label { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px; }
-.detail-field-value { font-size:15px; color:var(--text); font-weight:500; }
-.detail-badge { display:inline-block; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600; }
+.detail-field{margin-bottom:13px}
+.detail-field-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.detail-field-value{font-size:15px;color:var(--text);font-weight:500}
+.detail-badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600}
+
+/* TOAST */
+.toast-wrap{position:fixed;bottom:calc(90px + env(safe-area-inset-bottom));right:16px;z-index:200;display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.toast{background:var(--deep2);color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:500;box-shadow:0 4px 16px rgba(0,0,0,0.2);animation:slideIn .2s ease;max-width:280px}
+.toast.success{background:#065f46}.toast.error{background:#991b1b}
+@keyframes slideIn{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
 
 /* LOADING */
-.loading { display:flex; align-items:center; justify-content:center; padding:48px; color:var(--muted); gap:10px; font-size:14px; }
-.spinner { width:20px; height:20px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.7s linear infinite; }
-@keyframes spin { to { transform:rotate(360deg); } }
+.loading{display:flex;align-items:center;justify-content:center;padding:48px;color:var(--muted);gap:10px;font-size:14px}
+.spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
@@ -184,7 +214,7 @@ body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); 
       <div class="header-sub">Anan & Prangkwan</div>
     </div>
     <div class="header-right">
-      <div class="live-dot"><div class="dot" id="statusDot"></div> <span id="statusText">Connecting</span></div>
+      <div class="live-dot"><div class="dot" id="statusDot"></div><span id="statusText">Connecting</span></div>
       <div class="header-date" id="headerDate"></div>
     </div>
   </div>
@@ -192,7 +222,7 @@ body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); 
     <div class="hstat"><div class="hstat-num red" id="statWeek">—</div><div class="hstat-lbl">This week</div></div>
     <div class="hstat"><div class="hstat-num amber" id="statMonth">—</div><div class="hstat-lbl">This month</div></div>
     <div class="hstat"><div class="hstat-num green" id="statTotal">—</div><div class="hstat-lbl">Total</div></div>
-    <div class="hstat"><div class="hstat-num blue" id="statNext">—</div><div class="hstat-lbl">Next event</div></div>
+    <div class="hstat"><div class="hstat-num teal" id="statExpense">—</div><div class="hstat-lbl">Est. annual</div></div>
   </div>
 </div>
 
@@ -204,30 +234,36 @@ body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); 
 </div>
 
 <div class="main">
-  <div class="page active" id="page-dashboard"><div id="dashContent"><div class="loading"><div class="spinner"></div> Loading…</div></div></div>
+  <div class="page active" id="page-dashboard"><div id="dashContent"><div class="loading"><div class="spinner"></div>Loading…</div></div></div>
   <div class="page" id="page-upcoming">
     <div class="filter-bar" id="upcomingFilters">
-      <div class="filter-chip active" onclick="setUpcomingFilter(30,this)">Next 30 days</div>
+      <div class="filter-chip active" onclick="setUpcomingFilter(30,this)">30 days</div>
       <div class="filter-chip" onclick="setUpcomingFilter(60,this)">60 days</div>
       <div class="filter-chip" onclick="setUpcomingFilter(90,this)">90 days</div>
-      <div class="filter-chip" onclick="setUpcomingFilter(365,this)">All upcoming</div>
+      <div class="filter-chip" onclick="setUpcomingFilter(365,this)">1 year</div>
+      <div class="filter-chip" onclick="setUpcomingFilter(9999,this)">All</div>
     </div>
-    <div id="upcomingContent"><div class="loading"><div class="spinner"></div> Loading…</div></div>
+    <div id="upcomingContent"><div class="loading"><div class="spinner"></div>Loading…</div></div>
   </div>
   <div class="page" id="page-all">
     <div class="search-wrap"><span class="search-icon">🔍</span><input class="form-input" type="text" id="searchInput" placeholder="Search events…" oninput="renderAll()"></div>
     <div class="filter-bar" id="categoryFilters">
       <div class="filter-chip active" onclick="setCatFilter('all',this)">All</div>
-      <div class="filter-chip" onclick="setCatFilter('car',this)">🚗 Car</div>
-      <div class="filter-chip" onclick="setCatFilter('health',this)">💉 Health</div>
-      <div class="filter-chip" onclick="setCatFilter('birthday',this)">🎂 Birthday</div>
-      <div class="filter-chip" onclick="setCatFilter('home',this)">🏠 Home</div>
-      <div class="filter-chip" onclick="setCatFilter('document',this)">📄 Documents</div>
-      <div class="filter-chip" onclick="setCatFilter('other',this)">⭐ Other</div>
+      <div class="filter-chip" onclick="setCatFilter('birthday',this)">🎂</div>
+      <div class="filter-chip" onclick="setCatFilter('car',this)">🚗</div>
+      <div class="filter-chip" onclick="setCatFilter('health',this)">💉</div>
+      <div class="filter-chip" onclick="setCatFilter('house',this)">🏠</div>
+      <div class="filter-chip" onclick="setCatFilter('work',this)">💼</div>
+      <div class="filter-chip" onclick="setCatFilter('license',this)">🪪</div>
+      <div class="filter-chip" onclick="setCatFilter('inspector',this)">✈️</div>
+      <div class="filter-chip" onclick="setCatFilter('payment',this)">💳</div>
+      <div class="filter-chip" onclick="setCatFilter('id',this)">🪪</div>
+      <div class="filter-chip" onclick="setCatFilter('document',this)">📄</div>
+      <div class="filter-chip" onclick="setCatFilter('other',this)">⭐</div>
     </div>
-    <div id="allContent"><div class="loading"><div class="spinner"></div> Loading…</div></div>
+    <div id="allContent"><div class="loading"><div class="spinner"></div>Loading…</div></div>
   </div>
-  <div class="page" id="page-settings"><div id="settingsContent"><div class="loading"><div class="spinner"></div> Loading…</div></div></div>
+  <div class="page" id="page-settings"><div id="settingsContent"><div class="loading"><div class="spinner"></div>Loading…</div></div></div>
 </div>
 
 <button class="fab" onclick="openAddModal()">＋ Add Event</button>
@@ -239,77 +275,93 @@ body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); 
     <div class="modal-handle"></div>
     <div class="modal-title" id="modalTitle">Add Event</div>
     <input type="hidden" id="editId">
+
     <div class="form-group">
       <label class="form-label">Title *</label>
       <input class="form-input" id="fTitle" placeholder="e.g. Car Insurance Renewal">
     </div>
+
     <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Date *</label>
-        <input class="form-input" id="fDate" type="date">
-      </div>
       <div class="form-group">
         <label class="form-label">Category</label>
         <select class="form-select" id="fCategory">
+          <option value="birthday">🎂 Birthday</option>
           <option value="car">🚗 Car</option>
           <option value="health">💉 Health</option>
-          <option value="birthday">🎂 Birthday</option>
-          <option value="home">🏠 Home</option>
+          <option value="house">🏠 House</option>
+          <option value="work">💼 Work</option>
+          <option value="license">🪪 Driver's License</option>
+          <option value="inspector">✈️ Inspector Credentials</option>
+          <option value="payment">💳 Payment to Service</option>
+          <option value="id">🪪 Personal ID Card</option>
           <option value="document">📄 Document</option>
           <option value="other">⭐ Other</option>
         </select>
       </div>
+      <div class="form-group">
+        <label class="form-label">Est. Expense (฿)</label>
+        <div class="expense-input-wrap">
+          <span class="currency">฿</span>
+          <input class="form-input" id="fExpense" type="number" min="0" placeholder="0">
+        </div>
+      </div>
     </div>
+
     <div class="form-group">
-      <label class="form-label">Family Member</label>
-      <select class="form-select" id="fMember"></select>
+      <label class="form-label">Date *</label>
+      <input class="form-input" id="fDate" type="date">
     </div>
+
+    <div class="form-group">
+      <label class="form-label">Family Members</label>
+      <div class="member-select-grid" id="memberSelectGrid"></div>
+      <div class="form-hint">Tap to select — multiple allowed</div>
+    </div>
+
     <div class="form-group">
       <label class="form-label">Repeat Schedule</label>
       <div class="repeat-grid">
-        <div class="repeat-opt" data-val="none" onclick="selectRepeat('none')">
-          <div class="repeat-opt-icon">📌</div>
-          <div class="repeat-opt-label">One-time</div>
-          <div class="repeat-opt-sub">No repeat</div>
-        </div>
-        <div class="repeat-opt" data-val="monthly" onclick="selectRepeat('monthly')">
-          <div class="repeat-opt-icon">📅</div>
-          <div class="repeat-opt-label">Monthly</div>
-          <div class="repeat-opt-sub">Every month</div>
-        </div>
-        <div class="repeat-opt" data-val="3months" onclick="selectRepeat('3months')">
-          <div class="repeat-opt-icon">🔄</div>
-          <div class="repeat-opt-label">Quarterly</div>
-          <div class="repeat-opt-sub">Every 3 months</div>
-        </div>
-        <div class="repeat-opt" data-val="6months" onclick="selectRepeat('6months')">
-          <div class="repeat-opt-icon">🗓️</div>
-          <div class="repeat-opt-label">6 Months</div>
-          <div class="repeat-opt-sub">Twice a year</div>
-        </div>
-        <div class="repeat-opt selected" data-val="yearly" onclick="selectRepeat('yearly')">
-          <div class="repeat-opt-icon">🔁</div>
-          <div class="repeat-opt-label">Yearly</div>
-          <div class="repeat-opt-sub">Every year</div>
-        </div>
-        <div class="repeat-opt" data-val="custom" onclick="selectRepeat('custom')">
-          <div class="repeat-opt-icon">✏️</div>
-          <div class="repeat-opt-label">Custom</div>
-          <div class="repeat-opt-sub">Set days</div>
+        <div class="repeat-opt" data-val="none" onclick="selectRepeat('none')"><div class="repeat-opt-icon">📌</div><div class="repeat-opt-label">One-time</div><div class="repeat-opt-sub">No repeat</div></div>
+        <div class="repeat-opt" data-val="monthly" onclick="selectRepeat('monthly')"><div class="repeat-opt-icon">📅</div><div class="repeat-opt-label">Monthly</div><div class="repeat-opt-sub">Every month</div></div>
+        <div class="repeat-opt" data-val="3months" onclick="selectRepeat('3months')"><div class="repeat-opt-icon">🔄</div><div class="repeat-opt-label">Quarterly</div><div class="repeat-opt-sub">Every 3 months</div></div>
+        <div class="repeat-opt" data-val="6months" onclick="selectRepeat('6months')"><div class="repeat-opt-icon">🗓️</div><div class="repeat-opt-label">6 Months</div><div class="repeat-opt-sub">Twice a year</div></div>
+        <div class="repeat-opt selected" data-val="yearly" onclick="selectRepeat('yearly')"><div class="repeat-opt-icon">🔁</div><div class="repeat-opt-label">Yearly</div><div class="repeat-opt-sub">Every year</div></div>
+        <div class="repeat-opt" data-val="multiyear" onclick="selectRepeat('multiyear')"><div class="repeat-opt-icon">📆</div><div class="repeat-opt-label">Multi-year</div><div class="repeat-opt-sub">2–10 years</div></div>
+        <div class="repeat-opt" data-val="custom" onclick="selectRepeat('custom')"><div class="repeat-opt-icon">✏️</div><div class="repeat-opt-label">Custom days</div><div class="repeat-opt-sub">Set interval</div></div>
+        <div class="repeat-opt" data-val="customdate" onclick="selectRepeat('customdate')"><div class="repeat-opt-icon">📍</div><div class="repeat-opt-label">Set date</div><div class="repeat-opt-sub">Specific date</div></div>
+      </div>
+      <!-- Multi-year -->
+      <div class="extra-wrap" id="multiyearWrap">
+        <div class="inline-row">
+          <span>Every</span>
+          <select class="form-select" id="fYears" style="flex:1">
+            <option value="2">2 years</option><option value="3">3 years</option><option value="4">4 years</option>
+            <option value="5">5 years</option><option value="6">6 years</option><option value="7">7 years</option>
+            <option value="8">8 years</option><option value="9">9 years</option><option value="10">10 years</option>
+          </select>
         </div>
       </div>
-      <div class="custom-days-wrap" id="customDaysWrap">
-        <div class="custom-days-row">
+      <!-- Custom days -->
+      <div class="extra-wrap" id="customDaysWrap">
+        <div class="inline-row">
           <span>Every</span>
-          <input class="form-input" id="fCustomDays" type="number" min="1" max="999" placeholder="e.g. 45">
+          <input class="form-input" id="fCustomDays" type="number" min="1" max="9999" placeholder="e.g. 45" style="flex:1">
           <span>days</span>
         </div>
       </div>
+      <!-- Custom date -->
+      <div class="extra-wrap" id="customDateWrap">
+        <label class="form-label" style="margin-top:8px">Next occurrence date</label>
+        <input class="form-input" id="fCustomDate" type="date">
+        <div class="form-hint">Event will occur on this specific date (one-time override)</div>
+      </div>
     </div>
+
     <div class="form-group">
       <label class="form-label">Notes</label>
       <textarea class="form-textarea" id="fNotes" placeholder="Optional notes…"></textarea>
     </div>
+
     <div class="btn-row">
       <button class="btn btn-secondary" onclick="closeModal('eventModal')">Cancel</button>
       <button class="btn btn-danger" id="deleteBtn" style="display:none" onclick="deleteEvent()">Delete</button>
@@ -334,7 +386,7 @@ body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); 
 <div class="modal-overlay" id="emailModal">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-title">Notification Emails</div>
+    <div class="modal-title" id="emailModalTitle">Notification Emails</div>
     <div id="emailTagList" class="tag-list"></div>
     <div class="tag-add-row">
       <input class="tag-add-input" id="newEmailInput" type="email" placeholder="Add email address…">
@@ -352,10 +404,10 @@ body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); 
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title">Reminder Days</div>
-    <div class="form-group" style="margin-bottom:8px"><label class="form-label">Send reminders this many days before</label></div>
+    <div class="form-group" style="margin-bottom:8px"><label class="form-label">Send reminders this many days before the event</label></div>
     <div id="reminderTagList" class="tag-list"></div>
     <div class="tag-add-row">
-      <input class="tag-add-input" id="newReminderInput" type="number" min="1" max="365" placeholder="Days before (e.g. 14)">
+      <input class="tag-add-input" id="newReminderInput" type="number" min="1" max="365" placeholder="e.g. 14">
       <button class="tag-add-btn" onclick="addReminder()">Add</button>
     </div>
     <div class="btn-row">
@@ -385,482 +437,490 @@ body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); 
 <script>
 const SUPABASE_URL  = 'https://fkcjjprewnjrwobyaglb.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZrY2pqcHJld25qcndvYnlhZ2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzNTc4OTAsImV4cCI6MjA5NjkzMzg5MH0.VANzCQDqqSeLIbVbTx30eN53P2rdwtKRNv2b2MlxZDg';
-const { createClient } = supabase;
-const db = createClient(SUPABASE_URL, SUPABASE_ANON);
+const {createClient}=supabase;
+const db=createClient(SUPABASE_URL,SUPABASE_ANON);
 
-let events = [], settings = {}, currentTab = 'dashboard', upcomingDays = 30, categoryFilter = 'all', currentDetailId = null;
+let events=[],settings={},currentTab='dashboard',upcomingDays=30,categoryFilter='all',currentDetailId=null;
 
-const CATS = {
-  car:      { icon:'🚗', label:'Car',      color:'red'    },
-  health:   { icon:'💉', label:'Health',   color:'red'    },
-  birthday: { icon:'🎂', label:'Birthday', color:'amber'  },
-  home:     { icon:'🏠', label:'Home',     color:'green'  },
-  document: { icon:'📄', label:'Document', color:'blue'   },
-  other:    { icon:'⭐', label:'Other',    color:'purple' },
+const CATS={
+  birthday:{icon:'🎂',label:'Birthday',     color:'amber'},
+  car:     {icon:'🚗',label:'Car',          color:'red'},
+  health:  {icon:'💉',label:'Health',       color:'red'},
+  house:   {icon:'🏠',label:'House',        color:'green'},
+  work:    {icon:'💼',label:'Work',         color:'blue'},
+  license: {icon:'🪪',label:"Driver's License",color:'purple'},
+  inspector:{icon:'✈️',label:'Inspector Credentials',color:'teal'},
+  payment: {icon:'💳',label:'Payment to Service',color:'amber'},
+  id:      {icon:'🪪',label:'Personal ID Card',color:'purple'},
+  document:{icon:'📄',label:'Document',     color:'blue'},
+  other:   {icon:'⭐',label:'Other',        color:'purple'},
 };
 
-// REPEAT CONFIG
-const REPEAT_OPTS = {
-  none:    { label:'One-time',   days:0   },
-  monthly: { label:'Monthly',    days:30  },
-  '3months':{ label:'Quarterly', days:91  },
-  '6months':{ label:'6 Months',  days:182 },
-  yearly:  { label:'Yearly',     days:365 },
-  custom:  { label:'Custom',     days:0   },
-};
-
-function repeatLabel(ev) {
-  const r = ev.repeat_type || 'none';
-  if (r === 'none')   return '📌 One-time';
-  if (r === 'monthly') return '📅 Every month';
-  if (r === '3months') return '🔄 Every 3 months';
-  if (r === '6months') return '🗓️ Every 6 months';
-  if (r === 'yearly')  return '🔁 Every year';
-  if (r === 'custom')  return `✏️ Every ${ev.repeat_days || '?'} days`;
-  return '📌 One-time';
-}
-
-function repeatShort(ev) {
-  const r = ev.repeat_type || 'none';
-  if (r === 'none')    return 'One-time';
-  if (r === 'monthly') return 'Monthly';
-  if (r === '3months') return 'Quarterly';
-  if (r === '6months') return '6-monthly';
-  if (r === 'yearly')  return 'Yearly';
-  if (r === 'custom')  return `Every ${ev.repeat_days||'?'}d`;
-  return 'One-time';
-}
-
-function getRepeatDays(ev) {
-  const r = ev.repeat_type || 'none';
-  if (r === 'none')    return 0;
-  if (r === 'monthly') return 30;
-  if (r === '3months') return 91;
-  if (r === '6months') return 182;
-  if (r === 'yearly')  return 365;
-  if (r === 'custom')  return ev.repeat_days || 0;
+// ── REPEAT LOGIC ──
+function getRepeatDays(ev){
+  const r=ev.repeat_type||'none';
+  if(r==='none'||r==='customdate')return 0;
+  if(r==='monthly')return 30;
+  if(r==='3months')return 91;
+  if(r==='6months')return 182;
+  if(r==='yearly')return 365;
+  if(r==='multiyear')return (ev.repeat_years||2)*365;
+  if(r==='custom')return ev.repeat_days||0;
   return 0;
 }
 
-async function init() {
-  setHeaderDate();
+function getEffectiveDate(ev){
+  const today=new Date();today.setHours(0,0,0,0);
+  if(ev.repeat_type==='customdate'&&ev.custom_date){
+    const d=new Date(ev.custom_date);d.setHours(0,0,0,0);return d;
+  }
+  let d=new Date(ev.event_date);d.setHours(0,0,0,0);
+  const rd=getRepeatDays(ev);
+  if(rd>0){while(d<today)d=new Date(d.getTime()+rd*86400000);}
+  return d;
+}
+
+function getEffectiveDays(ev){
+  const today=new Date();today.setHours(0,0,0,0);
+  return Math.round((getEffectiveDate(ev)-today)/86400000);
+}
+
+function repeatLabel(ev){
+  const r=ev.repeat_type||'none';
+  if(r==='none')return '📌 One-time';
+  if(r==='monthly')return '📅 Every month';
+  if(r==='3months')return '🔄 Every 3 months';
+  if(r==='6months')return '🗓️ Every 6 months';
+  if(r==='yearly')return '🔁 Every year';
+  if(r==='multiyear')return `📆 Every ${ev.repeat_years||2} years`;
+  if(r==='custom')return `✏️ Every ${ev.repeat_days||'?'} days`;
+  if(r==='customdate')return `📍 Specific date: ${ev.custom_date||''}`;
+  return '📌 One-time';
+}
+
+function repeatShort(ev){
+  const r=ev.repeat_type||'none';
+  if(r==='none')return 'One-time';
+  if(r==='monthly')return 'Monthly';
+  if(r==='3months')return 'Quarterly';
+  if(r==='6months')return '6-monthly';
+  if(r==='yearly')return 'Yearly';
+  if(r==='multiyear')return `${ev.repeat_years||2}yr`;
+  if(r==='custom')return `${ev.repeat_days||'?'}d`;
+  if(r==='customdate')return 'Set date';
+  return 'One-time';
+}
+
+// ── EXPENSE ──
+function annualExpense(ev){
+  const amt=parseFloat(ev.expense_estimate)||0;
+  if(!amt)return 0;
+  const r=ev.repeat_type||'none';
+  if(r==='none'||r==='customdate')return amt;
+  if(r==='monthly')return amt*12;
+  if(r==='3months')return amt*4;
+  if(r==='6months')return amt*2;
+  if(r==='yearly')return amt;
+  if(r==='multiyear')return amt/(ev.repeat_years||2);
+  if(r==='custom'&&ev.repeat_days)return amt*(365/ev.repeat_days);
+  return amt;
+}
+
+function fmtMoney(n){
+  return '฿'+Math.round(n).toLocaleString('en');
+}
+
+// ── INIT ──
+async function init(){
+  document.getElementById('headerDate').textContent=
+    new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
   await loadAll();
   setStatus('connected');
 }
 
-function setHeaderDate() {
-  document.getElementById('headerDate').textContent =
-    new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
-}
-
-async function loadAll() {
-  try {
-    const [evRes, setRes] = await Promise.all([
+async function loadAll(){
+  try{
+    const[evRes,setRes]=await Promise.all([
       db.from('family_events').select('*').order('event_date'),
       db.from('family_settings').select('*').limit(1)
     ]);
-    if (evRes.error)  throw evRes.error;
-    if (setRes.error) throw setRes.error;
-    events   = evRes.data  || [];
-    settings = setRes.data[0] || { reminder_days:[30,14,7,3,1], notify_emails:[], members:['Anan','Prangkwan'] };
+    if(evRes.error)throw evRes.error;
+    if(setRes.error)throw setRes.error;
+    events=evRes.data||[];
+    settings=setRes.data[0]||{reminder_days:[30,14,7,3,1],notify_emails:[],members:['Anan','Prangkwan','Mark','Matt','Malee']};
     updateStats();
     renderCurrentPage();
-  } catch(e) {
-    setStatus('error');
-    toast('Could not load data: ' + e.message, 'error');
-  }
+  }catch(e){setStatus('error');toast('Could not load: '+e.message,'error');}
 }
 
-function setStatus(s) {
-  document.getElementById('statusDot').className = 'dot ' + s;
-  document.getElementById('statusText').textContent = s === 'connected' ? 'Connected' : s === 'error' ? 'Error' : 'Connecting';
+function setStatus(s){
+  document.getElementById('statusDot').className='dot '+s;
+  document.getElementById('statusText').textContent=s==='connected'?'Connected':s==='error'?'Error':'Connecting';
 }
 
-function getEffectiveDate(ev) {
-  const today = new Date(); today.setHours(0,0,0,0);
-  let d = new Date(ev.event_date); d.setHours(0,0,0,0);
-  const rd = getRepeatDays(ev);
-  if (rd > 0) {
-    // advance until next occurrence >= today
-    while (d < today) d = new Date(d.getTime() + rd * 86400000);
-  }
-  return d;
+function updateStats(){
+  const upcoming=events.map(e=>({e,days:getEffectiveDays(e)})).filter(x=>x.days>=0).sort((a,b)=>a.days-b.days);
+  const week=upcoming.filter(x=>x.days<=7).length;
+  const month=upcoming.filter(x=>x.days<=30).length;
+  const totalAnnual=events.reduce((s,e)=>s+annualExpense(e),0);
+  const next=upcoming[0];
+  document.getElementById('statWeek').textContent=week;
+  document.getElementById('statMonth').textContent=month;
+  document.getElementById('statTotal').textContent=events.length;
+  document.getElementById('statExpense').textContent=totalAnnual>0?fmtMoney(totalAnnual):'—';
+  const badge=document.getElementById('urgentBadge');
+  if(week>0){badge.textContent=week;badge.style.display='';}else badge.style.display='none';
 }
 
-function getEffectiveDays(ev) {
-  const today = new Date(); today.setHours(0,0,0,0);
-  return Math.round((getEffectiveDate(ev) - today) / 86400000);
-}
-
-function urgencyClass(days) {
-  if (days <= 7)  return 'urgent';
-  if (days <= 30) return 'warning';
-  if (days <= 90) return 'safe';
-  return 'future';
-}
-function pillClass(days) {
-  if (days <= 7)  return 'pill-red';
-  if (days <= 30) return 'pill-amber';
-  if (days <= 90) return 'pill-green';
-  return 'pill-blue';
-}
-function daysLabel(days) {
-  if (days === 0) return 'Today';
-  if (days === 1) return '1 day';
-  return days + ' days';
-}
-
-function updateStats() {
-  const upcoming = events.map(e => ({ e, days: getEffectiveDays(e) }))
-    .filter(x => x.days >= 0).sort((a,b) => a.days - b.days);
-  const week  = upcoming.filter(x => x.days <= 7).length;
-  const month = upcoming.filter(x => x.days <= 30).length;
-  const next  = upcoming[0];
-  document.getElementById('statWeek').textContent  = week;
-  document.getElementById('statMonth').textContent = month;
-  document.getElementById('statTotal').textContent = events.length;
-  document.getElementById('statNext').textContent  = next
-    ? getEffectiveDate(next.e).toLocaleDateString('en-GB',{day:'numeric',month:'short'}) : '—';
-  const badge = document.getElementById('urgentBadge');
-  if (week > 0) { badge.textContent = week; badge.style.display = ''; }
-  else badge.style.display = 'none';
-}
-
-function switchTab(tab) {
-  currentTab = tab;
-  document.querySelectorAll('.tab').forEach((t,i) => {
-    t.classList.toggle('active', ['dashboard','upcoming','all','settings'][i] === tab);
-  });
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + tab).classList.add('active');
+function switchTab(tab){
+  currentTab=tab;
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['dashboard','upcoming','all','settings'][i]===tab));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+tab).classList.add('active');
   renderCurrentPage();
 }
 
-function renderCurrentPage() {
-  if (currentTab === 'dashboard') renderDashboard();
-  if (currentTab === 'upcoming')  renderUpcoming();
-  if (currentTab === 'all')       renderAll();
-  if (currentTab === 'settings')  renderSettings();
+function renderCurrentPage(){
+  if(currentTab==='dashboard')renderDashboard();
+  if(currentTab==='upcoming')renderUpcoming();
+  if(currentTab==='all')renderAll();
+  if(currentTab==='settings')renderSettings();
 }
 
-function eventRowHTML(ev, days) {
-  const cat = CATS[ev.category] || CATS.other;
-  const d   = getEffectiveDate(ev);
-  const dateStr = d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+// ── EVENT ROW HTML ──
+function membersHTML(ev){
+  const members=Array.isArray(ev.members)?ev.members:(ev.member?[ev.member]:[]);
+  if(!members.length)return '';
+  return `<div class="member-chips">${members.map(m=>`<span class="member-chip">👤 ${esc(m)}</span>`).join('')}</div>`;
+}
+
+function eventRowHTML(ev,days){
+  const cat=CATS[ev.category]||CATS.other;
+  const d=getEffectiveDate(ev);
+  const dateStr=d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+  const exp=parseFloat(ev.expense_estimate)||0;
   return `<div class="event-row ${urgencyClass(days)}" onclick="openDetail('${ev.id}')">
     <div class="event-icon icon-${cat.color}">${cat.icon}</div>
     <div class="event-body">
       <div class="event-name">${esc(ev.title)}</div>
       <div class="event-detail">${dateStr}<span class="detail-sep">·</span>${repeatShort(ev)}</div>
-      ${ev.member ? `<div class="member-chip">👤 ${esc(ev.member)}</div>` : ''}
+      ${membersHTML(ev)}
+      ${exp>0?`<div class="expense-chip">฿ ${exp.toLocaleString('en')}</div>`:''}
     </div>
     <div class="urgency-pill ${pillClass(days)}">${daysLabel(days)}<small>${d.toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</small></div>
   </div>`;
 }
 
-function sectionHTML(label, items, count) {
-  if (!items.length) return '';
+function urgencyClass(days){if(days<=7)return 'urgent';if(days<=30)return 'warning';if(days<=90)return 'safe';return 'future';}
+function pillClass(days){if(days<=7)return 'pill-red';if(days<=30)return 'pill-amber';if(days<=90)return 'pill-green';return 'pill-blue';}
+function daysLabel(days){if(days===0)return 'Today';if(days===1)return '1 day';return days+' days';}
+
+function sectionHTML(label,items,count){
+  if(!items.length)return '';
   return `<div class="section-label"><div class="section-label-text">${label}</div><div class="section-label-line"></div><div class="section-label-count">${count} event${count!==1?'s':''}</div></div>${items.join('')}`;
 }
 
-function renderDashboard() {
-  const sorted = events.map(e => ({ e, days: getEffectiveDays(e) })).filter(x => x.days >= 0).sort((a,b) => a.days - b.days);
-  let html = '';
-  html += sectionHTML('🔴 Needs attention — within 7 days', sorted.filter(x=>x.days<=7).map(x=>eventRowHTML(x.e,x.days)), sorted.filter(x=>x.days<=7).length);
-  html += sectionHTML('🟡 Coming up — within 30 days', sorted.filter(x=>x.days>7&&x.days<=30).map(x=>eventRowHTML(x.e,x.days)), sorted.filter(x=>x.days>7&&x.days<=30).length);
-  html += sectionHTML('🟢 On the horizon — within 90 days', sorted.filter(x=>x.days>30&&x.days<=90).map(x=>eventRowHTML(x.e,x.days)), sorted.filter(x=>x.days>30&&x.days<=90).length);
-  if (!html) html = `<div class="empty"><div class="empty-icon">🎉</div><div class="empty-title">Nothing urgent</div>No events due soon. Tap + to add one.</div>`;
-  document.getElementById('dashContent').innerHTML = html;
-}
-
-function setUpcomingFilter(days, el) {
-  upcomingDays = days;
-  document.querySelectorAll('#upcomingFilters .filter-chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-  renderUpcoming();
-}
-
-function renderUpcoming() {
-  const sorted = events.map(e => ({ e, days: getEffectiveDays(e) }))
-    .filter(x => x.days >= 0 && x.days <= upcomingDays).sort((a,b) => a.days - b.days);
-  if (!sorted.length) {
-    document.getElementById('upcomingContent').innerHTML = `<div class="empty"><div class="empty-icon">📅</div><div class="empty-title">Nothing in this range</div>No events in the next ${upcomingDays} days.</div>`;
-    return;
+// ── DASHBOARD ──
+function renderDashboard(){
+  const sorted=events.map(e=>({e,days:getEffectiveDays(e)})).filter(x=>x.days>=0).sort((a,b)=>a.days-b.days);
+  let html='';
+  // Expense summary
+  const withExpense=events.filter(e=>parseFloat(e.expense_estimate)>0);
+  if(withExpense.length){
+    const bycat={};
+    withExpense.forEach(e=>{
+      const cat=CATS[e.category]||CATS.other;
+      const k=cat.icon+' '+cat.label;
+      bycat[k]=(bycat[k]||0)+annualExpense(e);
+    });
+    const total=Object.values(bycat).reduce((s,v)=>s+v,0);
+    html+=`<div class="section-label"><div class="section-label-text">💰 Estimated Annual Expenses</div><div class="section-label-line"></div></div>
+    <div class="expense-summary">
+      <div class="expense-summary-title">By Category — Annualised</div>
+      ${Object.entries(bycat).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`
+        <div class="expense-row"><span class="expense-row-label">${k}</span><span class="expense-row-val">${fmtMoney(v)}</span></div>`).join('')}
+      <div class="expense-total"><span class="expense-total-label">Total</span><span class="expense-total-val">${fmtMoney(total)}</span></div>
+    </div>`;
   }
-  document.getElementById('upcomingContent').innerHTML = sorted.map(x => eventRowHTML(x.e, x.days)).join('');
+  html+=sectionHTML('🔴 Needs attention — within 7 days',sorted.filter(x=>x.days<=7).map(x=>eventRowHTML(x.e,x.days)),sorted.filter(x=>x.days<=7).length);
+  html+=sectionHTML('🟡 Coming up — within 30 days',sorted.filter(x=>x.days>7&&x.days<=30).map(x=>eventRowHTML(x.e,x.days)),sorted.filter(x=>x.days>7&&x.days<=30).length);
+  html+=sectionHTML('🟢 On the horizon — within 90 days',sorted.filter(x=>x.days>30&&x.days<=90).map(x=>eventRowHTML(x.e,x.days)),sorted.filter(x=>x.days>30&&x.days<=90).length);
+  if(!html)html=`<div class="empty"><div class="empty-icon">🎉</div><div class="empty-title">All clear</div>No events due soon. Tap + to add one.</div>`;
+  document.getElementById('dashContent').innerHTML=html;
 }
 
-function setCatFilter(cat, el) {
-  categoryFilter = cat;
-  document.querySelectorAll('#categoryFilters .filter-chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-  renderAll();
+function setUpcomingFilter(days,el){
+  upcomingDays=days;
+  document.querySelectorAll('#upcomingFilters .filter-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');renderUpcoming();
 }
 
-function renderAll() {
-  const q = (document.getElementById('searchInput')?.value || '').toLowerCase();
-  const filtered = events.filter(e => {
-    return (categoryFilter === 'all' || e.category === categoryFilter) &&
-      (!q || e.title.toLowerCase().includes(q) || (e.member||'').toLowerCase().includes(q));
-  }).map(e => ({ e, days: getEffectiveDays(e) })).sort((a,b) => a.days - b.days);
-  if (!filtered.length) {
-    document.getElementById('allContent').innerHTML = `<div class="empty"><div class="empty-icon">🔍</div><div class="empty-title">No events found</div>Try a different filter or search.</div>`;
-    return;
-  }
-  document.getElementById('allContent').innerHTML = filtered.map(x => eventRowHTML(x.e, x.days)).join('');
+function renderUpcoming(){
+  const sorted=events.map(e=>({e,days:getEffectiveDays(e)})).filter(x=>x.days>=0&&x.days<=upcomingDays).sort((a,b)=>a.days-b.days);
+  if(!sorted.length){document.getElementById('upcomingContent').innerHTML=`<div class="empty"><div class="empty-icon">📅</div><div class="empty-title">Nothing in this range</div></div>`;return;}
+  document.getElementById('upcomingContent').innerHTML=sorted.map(x=>eventRowHTML(x.e,x.days)).join('');
 }
 
-function renderSettings() {
-  const s = settings;
-  const emails    = (s.notify_emails||[]).join(', ') || '—';
-  const reminders = (s.reminder_days||[]).sort((a,b)=>b-a).join(', ') + ' days before';
-  const members   = (s.members||[]).join(', ') || '—';
-  document.getElementById('settingsContent').innerHTML = `
+function setCatFilter(cat,el){
+  categoryFilter=cat;
+  document.querySelectorAll('#categoryFilters .filter-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');renderAll();
+}
+
+function renderAll(){
+  const q=(document.getElementById('searchInput')?.value||'').toLowerCase();
+  const filtered=events.filter(e=>{
+    return(categoryFilter==='all'||e.category===categoryFilter)&&
+      (!q||e.title.toLowerCase().includes(q)||(e.members||[]).join(' ').toLowerCase().includes(q)||(e.member||'').toLowerCase().includes(q));
+  }).map(e=>({e,days:getEffectiveDays(e)})).sort((a,b)=>a.days-b.days);
+  if(!filtered.length){document.getElementById('allContent').innerHTML=`<div class="empty"><div class="empty-icon">🔍</div><div class="empty-title">No events found</div></div>`;return;}
+  document.getElementById('allContent').innerHTML=filtered.map(x=>eventRowHTML(x.e,x.days)).join('');
+}
+
+function renderSettings(){
+  const s=settings;
+  const emails=(s.notify_emails||[]).join(', ')||'—';
+  const reminders=(s.reminder_days||[]).sort((a,b)=>b-a).join(', ')+' days before';
+  const members=(s.members||[]).join(', ')||'—';
+  document.getElementById('settingsContent').innerHTML=`
     <div class="settings-section">
       <div class="settings-title">Notifications</div>
       <div class="settings-card">
-        <div class="settings-row">
-          <div><div class="settings-row-label">📧 Email Recipients</div><div class="settings-row-sub">${esc(emails)}</div></div>
-          <div class="settings-row-action" onclick="openEmailModal()">Edit</div>
-        </div>
-        <div class="settings-row">
-          <div><div class="settings-row-label">⏰ Reminder Schedule</div><div class="settings-row-sub">${esc(reminders)}</div></div>
-          <div class="settings-row-action" onclick="openReminderModal()">Edit</div>
-        </div>
+        <div class="settings-row"><div><div class="settings-row-label">📧 Email Recipients</div><div class="settings-row-sub">${esc(emails)}</div></div><div class="settings-row-action" onclick="openEmailModal()">Edit</div></div>
+        <div class="settings-row"><div><div class="settings-row-label">⏰ Reminder Schedule</div><div class="settings-row-sub">${esc(reminders)}</div></div><div class="settings-row-action" onclick="openReminderModal()">Edit</div></div>
       </div>
     </div>
     <div class="settings-section">
-      <div class="settings-title">Family</div>
+      <div class="settings-title">Family Members</div>
       <div class="settings-card">
-        <div class="settings-row">
-          <div><div class="settings-row-label">👨‍👩‍👦 Family Members</div><div class="settings-row-sub">${esc(members)}</div></div>
-          <div class="settings-row-action" onclick="openMemberModal()">Edit</div>
-        </div>
+        <div class="settings-row"><div><div class="settings-row-label">👨‍👩‍👦 Members</div><div class="settings-row-sub">${esc(members)}</div></div><div class="settings-row-action" onclick="openMemberModal()">Edit</div></div>
       </div>
     </div>
     <div class="settings-section">
       <div class="settings-title">About</div>
       <div class="settings-card">
-        <div class="settings-row"><div><div class="settings-row-label">App Version</div><div class="settings-row-sub">Family Dates v1.1</div></div></div>
+        <div class="settings-row"><div><div class="settings-row-label">Version</div><div class="settings-row-sub">Family Dates v1.2</div></div></div>
         <div class="settings-row"><div><div class="settings-row-label">Total Events</div><div class="settings-row-sub">${events.length} events tracked</div></div></div>
       </div>
     </div>`;
 }
 
-function openDetail(id) {
-  currentDetailId = id;
-  const ev  = events.find(e => e.id === id);
-  if (!ev) return;
-  const cat  = CATS[ev.category] || CATS.other;
-  const days = getEffectiveDays(ev);
-  const d    = getEffectiveDate(ev);
-  document.getElementById('detailContent').innerHTML = `
+// ── DETAIL ──
+function openDetail(id){
+  currentDetailId=id;
+  const ev=events.find(e=>e.id===id);if(!ev)return;
+  const cat=CATS[ev.category]||CATS.other;
+  const days=getEffectiveDays(ev);
+  const d=getEffectiveDate(ev);
+  const members=Array.isArray(ev.members)?ev.members:(ev.member?[ev.member]:[]);
+  const exp=parseFloat(ev.expense_estimate)||0;
+  document.getElementById('detailContent').innerHTML=`
     <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px">
-      <div class="event-icon icon-${cat.color}" style="width:52px;height:52px;font-size:24px;border-radius:14px">${cat.icon}</div>
+      <div class="event-icon icon-${cat.color}" style="width:50px;height:50px;font-size:22px;border-radius:12px">${cat.icon}</div>
       <div><div style="font-size:18px;font-weight:700;color:var(--text)">${esc(ev.title)}</div><div style="font-size:13px;color:var(--muted);margin-top:3px">${cat.label}</div></div>
     </div>
     <div class="detail-field"><div class="detail-field-label">Next Date</div><div class="detail-field-value">${d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</div></div>
     <div class="detail-field"><div class="detail-field-label">Countdown</div><div><span class="detail-badge ${pillClass(days)}" style="font-size:14px;padding:6px 14px">${daysLabel(days)}</span></div></div>
-    ${ev.member ? `<div class="detail-field"><div class="detail-field-label">Member</div><div class="detail-field-value">👤 ${esc(ev.member)}</div></div>` : ''}
-    ${ev.notes  ? `<div class="detail-field"><div class="detail-field-label">Notes</div><div class="detail-field-value" style="font-size:14px;color:var(--sub)">${esc(ev.notes)}</div></div>` : ''}
+    ${members.length?`<div class="detail-field"><div class="detail-field-label">Members</div><div class="member-chips" style="margin-top:6px">${members.map(m=>`<span class="member-chip">👤 ${esc(m)}</span>`).join('')}</div></div>`:''}
+    ${exp>0?`<div class="detail-field"><div class="detail-field-label">Estimated Expense</div><div class="detail-field-value" style="color:var(--teal)">${fmtMoney(exp)} <span style="font-size:12px;color:var(--muted)">(≈ ${fmtMoney(annualExpense(ev))}/yr)</span></div></div>`:''}
+    ${ev.notes?`<div class="detail-field"><div class="detail-field-label">Notes</div><div class="detail-field-value" style="font-size:14px;color:var(--sub)">${esc(ev.notes)}</div></div>`:''}
     <div class="detail-field"><div class="detail-field-label">Recurrence</div><div class="detail-field-value">${repeatLabel(ev)}</div></div>`;
   document.getElementById('detailModal').classList.add('open');
 }
 
-function editFromDetail() { closeModal('detailModal'); openEditModal(currentDetailId); }
+function editFromDetail(){closeModal('detailModal');openEditModal(currentDetailId);}
 
-// REPEAT UI
-function selectRepeat(val) {
-  document.querySelectorAll('.repeat-opt').forEach(o => o.classList.toggle('selected', o.dataset.val === val));
-  document.getElementById('customDaysWrap').classList.toggle('show', val === 'custom');
+// ── REPEAT UI ──
+function selectRepeat(val){
+  document.querySelectorAll('.repeat-opt').forEach(o=>o.classList.toggle('selected',o.dataset.val===val));
+  document.getElementById('multiyearWrap').classList.toggle('show',val==='multiyear');
+  document.getElementById('customDaysWrap').classList.toggle('show',val==='custom');
+  document.getElementById('customDateWrap').classList.toggle('show',val==='customdate');
 }
+function getSelectedRepeat(){const s=document.querySelector('.repeat-opt.selected');return s?s.dataset.val:'yearly';}
 
-function getSelectedRepeat() {
-  const sel = document.querySelector('.repeat-opt.selected');
-  return sel ? sel.dataset.val : 'yearly';
+// ── MEMBER SELECT ──
+function buildMemberGrid(selected){
+  const members=settings.members||['Anan','Prangkwan','Mark','Matt','Malee'];
+  const sel=Array.isArray(selected)?selected:(selected?[selected]:[]);
+  document.getElementById('memberSelectGrid').innerHTML=members.map(m=>
+    `<div class="member-toggle${sel.includes(m)?' on':''}" onclick="toggleMember(this)">${esc(m)}</div>`).join('');
 }
+function toggleMember(el){el.classList.toggle('on');}
+function getSelectedMembers(){return Array.from(document.querySelectorAll('.member-toggle.on')).map(el=>el.textContent.trim());}
 
-function openAddModal() {
-  document.getElementById('modalTitle').textContent = 'Add Event';
-  document.getElementById('editId').value = '';
-  document.getElementById('fTitle').value = '';
-  document.getElementById('fDate').value  = '';
-  document.getElementById('fCategory').value = 'car';
-  document.getElementById('fNotes').value = '';
-  document.getElementById('fCustomDays').value = '';
-  document.getElementById('deleteBtn').style.display = 'none';
+// ── ADD / EDIT ──
+function openAddModal(){
+  document.getElementById('modalTitle').textContent='Add Event';
+  document.getElementById('editId').value='';
+  document.getElementById('fTitle').value='';
+  document.getElementById('fDate').value='';
+  document.getElementById('fCategory').value='birthday';
+  document.getElementById('fNotes').value='';
+  document.getElementById('fCustomDays').value='';
+  document.getElementById('fCustomDate').value='';
+  document.getElementById('fExpense').value='';
+  document.getElementById('fYears').value='2';
+  document.getElementById('deleteBtn').style.display='none';
   selectRepeat('yearly');
-  populateMemberSelect('');
+  buildMemberGrid([]);
   document.getElementById('eventModal').classList.add('open');
 }
 
-function openEditModal(id) {
-  const ev = events.find(e => e.id === id);
-  if (!ev) return;
-  document.getElementById('modalTitle').textContent = 'Edit Event';
-  document.getElementById('editId').value    = ev.id;
-  document.getElementById('fTitle').value    = ev.title;
-  document.getElementById('fDate').value     = ev.event_date;
-  document.getElementById('fCategory').value = ev.category;
-  document.getElementById('fNotes').value    = ev.notes || '';
-  document.getElementById('fCustomDays').value = ev.repeat_days || '';
-  document.getElementById('deleteBtn').style.display = '';
-  const rt = ev.repeat_type || (ev.repeat_yearly ? 'yearly' : 'none');
+function openEditModal(id){
+  const ev=events.find(e=>e.id===id);if(!ev)return;
+  document.getElementById('modalTitle').textContent='Edit Event';
+  document.getElementById('editId').value=ev.id;
+  document.getElementById('fTitle').value=ev.title;
+  document.getElementById('fDate').value=ev.event_date;
+  document.getElementById('fCategory').value=ev.category;
+  document.getElementById('fNotes').value=ev.notes||'';
+  document.getElementById('fCustomDays').value=ev.repeat_days||'';
+  document.getElementById('fCustomDate').value=ev.custom_date||'';
+  document.getElementById('fExpense').value=ev.expense_estimate||'';
+  document.getElementById('fYears').value=ev.repeat_years||'2';
+  document.getElementById('deleteBtn').style.display='';
+  const rt=ev.repeat_type||(ev.repeat_yearly?'yearly':'none');
   selectRepeat(rt);
-  populateMemberSelect(ev.member || '');
+  const members=Array.isArray(ev.members)?ev.members:(ev.member?[ev.member]:[]);
+  buildMemberGrid(members);
   document.getElementById('eventModal').classList.add('open');
 }
 
-function populateMemberSelect(selected) {
-  const members = settings.members || ['Anan','Prangkwan'];
-  document.getElementById('fMember').innerHTML = `<option value="">— No member —</option>` +
-    members.map(m => `<option value="${esc(m)}" ${m===selected?'selected':''}>${esc(m)}</option>`).join('');
-}
+async function saveEvent(){
+  const id=document.getElementById('editId').value;
+  const title=document.getElementById('fTitle').value.trim();
+  const date=document.getElementById('fDate').value;
+  const category=document.getElementById('fCategory').value;
+  const notes=document.getElementById('fNotes').value.trim();
+  const repeat_type=getSelectedRepeat();
+  const repeat_days=repeat_type==='custom'?parseInt(document.getElementById('fCustomDays').value)||0:null;
+  const repeat_years=repeat_type==='multiyear'?parseInt(document.getElementById('fYears').value)||2:null;
+  const custom_date=repeat_type==='customdate'?document.getElementById('fCustomDate').value||null:null;
+  const expense_estimate=parseFloat(document.getElementById('fExpense').value)||null;
+  const repeat_yearly=repeat_type==='yearly';
+  const members=getSelectedMembers();
 
-async function saveEvent() {
-  const id          = document.getElementById('editId').value;
-  const title       = document.getElementById('fTitle').value.trim();
-  const date        = document.getElementById('fDate').value;
-  const category    = document.getElementById('fCategory').value;
-  const member      = document.getElementById('fMember').value;
-  const notes       = document.getElementById('fNotes').value.trim();
-  const repeat_type = getSelectedRepeat();
-  const repeat_days = repeat_type === 'custom' ? parseInt(document.getElementById('fCustomDays').value)||0 : 0;
-  const repeat_yearly = repeat_type === 'yearly';
+  if(!title){toast('Please enter a title','error');return;}
+  if(!date){toast('Please select a date','error');return;}
+  if(repeat_type==='custom'&&(!repeat_days||repeat_days<1)){toast('Please enter the number of days','error');return;}
+  if(repeat_type==='customdate'&&!custom_date){toast('Please select the next occurrence date','error');return;}
 
-  if (!title) { toast('Please enter a title', 'error'); return; }
-  if (!date)  { toast('Please select a date', 'error'); return; }
-  if (repeat_type === 'custom' && repeat_days < 1) { toast('Please enter the number of days', 'error'); return; }
+  const payload={title,event_date:date,category,notes:notes||null,repeat_yearly,repeat_type,repeat_days,repeat_years,custom_date,expense_estimate,members,updated_at:new Date().toISOString()};
 
-  const payload = { title, event_date:date, category, member:member||null, notes:notes||null, repeat_yearly, repeat_type, repeat_days:repeat_days||null, updated_at:new Date().toISOString() };
-
-  try {
-    if (id) {
-      const { error } = await db.from('family_events').update(payload).eq('id', id);
-      if (error) throw error;
-      toast('Event updated ✓', 'success');
-    } else {
-      const { error } = await db.from('family_events').insert(payload);
-      if (error) throw error;
-      toast('Event added ✓', 'success');
+  try{
+    if(id){
+      const{error}=await db.from('family_events').update(payload).eq('id',id);
+      if(error)throw error;
+      toast('Event updated ✓','success');
+    }else{
+      const{error}=await db.from('family_events').insert(payload);
+      if(error)throw error;
+      toast('Event added ✓','success');
     }
-    closeModal('eventModal');
-    await loadAll();
-  } catch(e) { toast('Error: ' + e.message, 'error'); }
+    closeModal('eventModal');await loadAll();
+  }catch(e){toast('Error: '+e.message,'error');}
 }
 
-async function deleteEvent() {
-  const id = document.getElementById('editId').value;
-  if (!id || !confirm('Delete this event?')) return;
-  try {
-    const { error } = await db.from('family_events').delete().eq('id', id);
-    if (error) throw error;
-    toast('Event deleted', 'success');
-    closeModal('eventModal');
-    await loadAll();
-  } catch(e) { toast('Error: ' + e.message, 'error'); }
+async function deleteEvent(){
+  const id=document.getElementById('editId').value;
+  if(!id||!confirm('Delete this event?'))return;
+  try{
+    const{error}=await db.from('family_events').delete().eq('id',id);
+    if(error)throw error;
+    toast('Event deleted','success');closeModal('eventModal');await loadAll();
+  }catch(e){toast('Error: '+e.message,'error');}
 }
 
-// SETTINGS
-function openEmailModal() {
-  renderTagList('emailTagList', [...(settings.notify_emails||[])], 'email');
-  document.getElementById('newEmailInput').value = '';
+// ── SETTINGS MODALS ──
+function openEmailModal(){
+  renderTagList('emailTagList',[...(settings.notify_emails||[])],'email');
+  document.getElementById('newEmailInput').value='';
   document.getElementById('emailModal').classList.add('open');
 }
-function addEmail() {
-  const v = document.getElementById('newEmailInput').value.trim();
-  if (!v||!v.includes('@')) { toast('Enter a valid email', 'error'); return; }
-  const tags = getTagValues('emailTagList');
-  if (tags.includes(v)) { toast('Already added', 'error'); return; }
-  tags.push(v); renderTagList('emailTagList', tags, 'email');
-  document.getElementById('newEmailInput').value = '';
+function addEmail(){
+  const v=document.getElementById('newEmailInput').value.trim();
+  if(!v||!v.includes('@')){toast('Enter a valid email','error');return;}
+  const tags=getTagValues('emailTagList');
+  if(tags.includes(v)){toast('Already added','error');return;}
+  tags.push(v);renderTagList('emailTagList',tags,'email');
+  document.getElementById('newEmailInput').value='';
 }
-async function saveEmails() {
-  const emails = getTagValues('emailTagList');
-  try {
-    const { error } = await db.from('family_settings').update({ notify_emails:emails, updated_at:new Date().toISOString() }).eq('id', settings.id);
-    if (error) throw error;
-    settings.notify_emails = emails;
-    toast('Emails saved ✓', 'success'); closeModal('emailModal'); renderSettings();
-  } catch(e) { toast('Error: ' + e.message, 'error'); }
+async function saveEmails(){
+  const emails=getTagValues('emailTagList');
+  try{
+    const{error}=await db.from('family_settings').update({notify_emails:emails,updated_at:new Date().toISOString()}).eq('id',settings.id);
+    if(error)throw error;
+    settings.notify_emails=emails;
+    toast('Emails saved ✓','success');closeModal('emailModal');renderSettings();
+  }catch(e){toast('Error: '+e.message,'error');}
 }
 
-function openReminderModal() {
-  renderTagList('reminderTagList', [...(settings.reminder_days||[])].sort((a,b)=>b-a).map(String), 'reminder');
-  document.getElementById('newReminderInput').value = '';
+function openReminderModal(){
+  renderTagList('reminderTagList',[...(settings.reminder_days||[])].sort((a,b)=>b-a).map(String),'reminder');
+  document.getElementById('newReminderInput').value='';
   document.getElementById('reminderModal').classList.add('open');
 }
-function addReminder() {
-  const v = parseInt(document.getElementById('newReminderInput').value);
-  if (!v||v<1||v>365) { toast('Enter a number between 1 and 365', 'error'); return; }
-  const tags = getTagValues('reminderTagList');
-  if (tags.includes(String(v))) { toast('Already added', 'error'); return; }
-  tags.push(String(v)); renderTagList('reminderTagList', tags.sort((a,b)=>b-a), 'reminder');
-  document.getElementById('newReminderInput').value = '';
+function addReminder(){
+  const v=parseInt(document.getElementById('newReminderInput').value);
+  if(!v||v<1||v>365){toast('Enter a number 1–365','error');return;}
+  const tags=getTagValues('reminderTagList');
+  if(tags.includes(String(v))){toast('Already added','error');return;}
+  tags.push(String(v));renderTagList('reminderTagList',tags.sort((a,b)=>b-a),'reminder');
+  document.getElementById('newReminderInput').value='';
 }
-async function saveReminders() {
-  const days = getTagValues('reminderTagList').map(Number).filter(Boolean);
-  try {
-    const { error } = await db.from('family_settings').update({ reminder_days:days, updated_at:new Date().toISOString() }).eq('id', settings.id);
-    if (error) throw error;
-    settings.reminder_days = days;
-    toast('Reminder schedule saved ✓', 'success'); closeModal('reminderModal'); renderSettings();
-  } catch(e) { toast('Error: ' + e.message, 'error'); }
+async function saveReminders(){
+  const days=getTagValues('reminderTagList').map(Number).filter(Boolean);
+  try{
+    const{error}=await db.from('family_settings').update({reminder_days:days,updated_at:new Date().toISOString()}).eq('id',settings.id);
+    if(error)throw error;
+    settings.reminder_days=days;
+    toast('Saved ✓','success');closeModal('reminderModal');renderSettings();
+  }catch(e){toast('Error: '+e.message,'error');}
 }
 
-function openMemberModal() {
-  renderTagList('memberTagList', [...(settings.members||[])], 'member');
-  document.getElementById('newMemberInput').value = '';
+function openMemberModal(){
+  renderTagList('memberTagList',[...(settings.members||[])],'member');
+  document.getElementById('newMemberInput').value='';
   document.getElementById('memberModal').classList.add('open');
 }
-function addMember() {
-  const v = document.getElementById('newMemberInput').value.trim();
-  if (!v) { toast('Enter a name', 'error'); return; }
-  const tags = getTagValues('memberTagList');
-  if (tags.includes(v)) { toast('Already added', 'error'); return; }
-  tags.push(v); renderTagList('memberTagList', tags, 'member');
-  document.getElementById('newMemberInput').value = '';
+function addMember(){
+  const v=document.getElementById('newMemberInput').value.trim();
+  if(!v){toast('Enter a name','error');return;}
+  const tags=getTagValues('memberTagList');
+  if(tags.includes(v)){toast('Already added','error');return;}
+  tags.push(v);renderTagList('memberTagList',tags,'member');
+  document.getElementById('newMemberInput').value='';
 }
-async function saveMembers() {
-  const members = getTagValues('memberTagList');
-  try {
-    const { error } = await db.from('family_settings').update({ members, updated_at:new Date().toISOString() }).eq('id', settings.id);
-    if (error) throw error;
-    settings.members = members;
-    toast('Members saved ✓', 'success'); closeModal('memberModal'); renderSettings();
-  } catch(e) { toast('Error: ' + e.message, 'error'); }
-}
-
-function renderTagList(containerId, values, type) {
-  document.getElementById(containerId).innerHTML = values.map((v,i) => `
-    <div class="tag" data-value="${esc(v)}">${type==='reminder'?v+' days':esc(v)}<span class="tag-remove" onclick="removeTag('${containerId}',${i})">×</span></div>`).join('');
-}
-function removeTag(containerId, idx) {
-  const tags = getTagValues(containerId);
-  tags.splice(idx,1);
-  const type = containerId.includes('email')?'email':containerId.includes('reminder')?'reminder':'member';
-  renderTagList(containerId, tags, type);
-}
-function getTagValues(containerId) {
-  return Array.from(document.querySelectorAll(`#${containerId} .tag`)).map(t => t.dataset.value);
+async function saveMembers(){
+  const members=getTagValues('memberTagList');
+  try{
+    const{error}=await db.from('family_settings').update({members,updated_at:new Date().toISOString()}).eq('id',settings.id);
+    if(error)throw error;
+    settings.members=members;
+    toast('Saved ✓','success');closeModal('memberModal');renderSettings();
+  }catch(e){toast('Error: '+e.message,'error');}
 }
 
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-document.querySelectorAll('.modal-overlay').forEach(o => {
-  o.addEventListener('click', e => { if (e.target===o) o.classList.remove('open'); });
-});
-
-function toast(msg, type='') {
-  const t = document.createElement('div');
-  t.className = 'toast ' + type; t.textContent = msg;
-  document.getElementById('toastWrap').appendChild(t);
-  setTimeout(() => t.remove(), 3000);
+function renderTagList(containerId,values,type){
+  document.getElementById(containerId).innerHTML=values.map((v,i)=>
+    `<div class="tag" data-value="${esc(v)}">${type==='reminder'?v+' days':esc(v)}<span class="tag-remove" onclick="removeTag('${containerId}',${i})">×</span></div>`).join('');
 }
-
-function esc(str) {
-  if (!str) return '';
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function removeTag(containerId,idx){
+  const tags=getTagValues(containerId);tags.splice(idx,1);
+  const type=containerId.includes('email')?'email':containerId.includes('reminder')?'reminder':'member';
+  renderTagList(containerId,tags,type);
 }
+function getTagValues(containerId){return Array.from(document.querySelectorAll(`#${containerId} .tag`)).map(t=>t.dataset.value);}
+
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-overlay').forEach(o=>{o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');});});
+
+function toast(msg,type=''){
+  const t=document.createElement('div');t.className='toast '+type;t.textContent=msg;
+  document.getElementById('toastWrap').appendChild(t);setTimeout(()=>t.remove(),3000);
+}
+function esc(str){if(!str)return '';return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 init();
 </script>
