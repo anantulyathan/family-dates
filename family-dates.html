@@ -62,6 +62,36 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .section-label-line{flex:1;height:1px;background:var(--border)}
 .section-label-count{font-size:11px;color:var(--muted);background:var(--border-lt);border:1px solid var(--border);padding:1px 8px;border-radius:10px;white-space:nowrap}
 
+/* METRIC CARDS */
+.metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px}
+.metric-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
+.metric-card.full{grid-column:1/-1}
+.metric-card-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px}
+.metric-num{font-size:26px;font-weight:700;line-height:1}
+.metric-num.accent{color:var(--accent)}
+.metric-num.teal{color:var(--teal)}
+.metric-num.green{color:var(--green)}
+.metric-num.amber{color:var(--amber)}
+.metric-sub{font-size:11px;color:var(--muted);margin-top:3px}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.bar-row:last-child{margin-bottom:0}
+.bar-label{font-size:12px;color:var(--text);width:90px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar-track{flex:1;height:6px;background:var(--border-lt);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;background:var(--accent);transition:width .4s}
+.bar-fill.green{background:var(--green)}
+.bar-fill.amber{background:var(--amber)}
+.bar-fill.teal{background:var(--teal)}
+.bar-fill.purple{background:var(--purple)}
+.bar-val{font-size:11px;font-weight:600;color:var(--sub);width:36px;text-align:right;flex-shrink:0}
+.month-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.month-cell{text-align:center;padding:8px 4px;border-radius:8px;border:1px solid var(--border);background:var(--border-lt)}
+.month-cell.has-events{background:var(--blue-bg);border-color:var(--blue-bd)}
+.month-cell.urgent{background:var(--red-bg);border-color:var(--red-bd)}
+.month-name{font-size:10px;color:var(--muted);font-weight:600}
+.month-count{font-size:16px;font-weight:700;color:var(--text);margin-top:2px}
+.month-cell.has-events .month-count{color:var(--accent)}
+.month-cell.urgent .month-count{color:var(--red)}
+
 /* EVENT ROW */
 .event-row{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 14px;margin-bottom:6px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:box-shadow .15s}
 .event-row:hover{box-shadow:0 2px 12px rgba(0,0,0,0.07)}
@@ -77,24 +107,13 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .detail-sep{color:var(--border)}
 .member-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
 .member-chip{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:500;color:var(--sub);background:var(--border-lt);border:1px solid var(--border);padding:1px 7px;border-radius:5px}
-.expense-chip{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;color:var(--teal);background:var(--teal-bg);border:1px solid var(--teal-bd);padding:1px 7px;border-radius:5px;margin-top:4px}
+.expense-chip{display:inline-flex;align-items:center;font-size:10px;font-weight:600;color:var(--teal);background:var(--teal-bg);border:1px solid var(--teal-bd);padding:1px 7px;border-radius:5px;margin-top:4px}
 .urgency-pill{font-size:11px;font-weight:600;padding:5px 9px;border-radius:20px;flex-shrink:0;min-width:54px;text-align:center;line-height:1.4}
 .urgency-pill small{display:block;font-size:10px;font-weight:400;opacity:.7}
 .pill-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd)}
 .pill-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bd)}
 .pill-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd)}
 .pill-blue{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-bd)}
-
-/* DASHBOARD EXPENSE CARD */
-.expense-summary{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:8px}
-.expense-summary-title{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px}
-.expense-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border-lt)}
-.expense-row:last-child{border-bottom:none;padding-bottom:0}
-.expense-row-label{font-size:13px;color:var(--text)}
-.expense-row-val{font-size:13px;font-weight:600;color:var(--teal)}
-.expense-total{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:2px solid var(--border)}
-.expense-total-label{font-size:13px;font-weight:700;color:var(--text)}
-.expense-total-val{font-size:16px;font-weight:700;color:var(--accent)}
 
 /* EMPTY */
 .empty{text-align:center;padding:48px 24px;color:var(--muted);font-size:14px}
@@ -132,7 +151,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .form-hint{font-size:11px;color:var(--muted);margin-top:4px}
 
-/* MULTI-MEMBER SELECT */
+/* MEMBER TOGGLE */
 .member-select-grid{display:flex;flex-wrap:wrap;gap:8px}
 .member-toggle{padding:7px 14px;border-radius:20px;font-size:13px;font-weight:500;border:1px solid var(--border);background:var(--card);color:var(--sub);cursor:pointer;transition:all .15s;user-select:none}
 .member-toggle.on{background:var(--blue-bg);border-color:var(--accent);color:var(--accent)}
@@ -149,14 +168,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .extra-wrap{display:none;margin-top:10px}
 .extra-wrap.show{display:block}
 .inline-row{display:flex;align-items:center;gap:10px}
-.inline-row input{flex:1}
+.inline-row input,.inline-row select{flex:1}
 .inline-row span{font-size:13px;color:var(--sub);white-space:nowrap}
 
-/* YEARS SELECT */
-.years-select-wrap{margin-top:10px;display:none}
-.years-select-wrap.show{display:block}
-
-/* EXPENSE INPUT */
+/* EXPENSE */
 .expense-input-wrap{position:relative}
 .expense-input-wrap .currency{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--muted);pointer-events:none}
 .expense-input-wrap input{padding-left:30px}
@@ -168,6 +183,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .btn-primary{background:var(--accent);color:#fff}
 .btn-secondary{background:var(--border-lt);color:var(--sub);border:1px solid var(--border)}
 .btn-danger{background:#fef2f2;color:var(--red);border:1px solid var(--red-bd)}
+.btn-teal{background:var(--teal);color:#fff}
 
 /* SETTINGS */
 .settings-section{margin-bottom:22px}
@@ -178,6 +194,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .settings-row-label{font-size:14px;font-weight:500;color:var(--text)}
 .settings-row-sub{font-size:12px;color:var(--muted);margin-top:2px}
 .settings-row-action{color:var(--accent);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;margin-left:12px;flex-shrink:0}
+.send-now-btn{width:100%;padding:14px;background:var(--teal);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .15s}
+.send-now-btn:active{opacity:.8}
+.send-now-btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* TAGS */
 .tag-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .tag{display:inline-flex;align-items:center;gap:6px;background:var(--border-lt);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:13px;font-weight:500}
 .tag-remove{color:var(--muted);cursor:pointer;font-size:16px;line-height:1;transition:color .15s}
@@ -221,7 +242,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
   <div class="header-stats">
     <div class="hstat"><div class="hstat-num red" id="statWeek">—</div><div class="hstat-lbl">This week</div></div>
     <div class="hstat"><div class="hstat-num amber" id="statMonth">—</div><div class="hstat-lbl">This month</div></div>
-    <div class="hstat"><div class="hstat-num green" id="statTotal">—</div><div class="hstat-lbl">Total</div></div>
+    <div class="hstat"><div class="hstat-num green" id="statTotal">—</div><div class="hstat-lbl">Total events</div></div>
     <div class="hstat"><div class="hstat-num teal" id="statExpense">—</div><div class="hstat-lbl">Est. annual</div></div>
   </div>
 </div>
@@ -257,7 +278,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
       <div class="filter-chip" onclick="setCatFilter('license',this)">🪪</div>
       <div class="filter-chip" onclick="setCatFilter('inspector',this)">✈️</div>
       <div class="filter-chip" onclick="setCatFilter('payment',this)">💳</div>
-      <div class="filter-chip" onclick="setCatFilter('id',this)">🪪</div>
+      <div class="filter-chip" onclick="setCatFilter('id',this)">🆔</div>
       <div class="filter-chip" onclick="setCatFilter('document',this)">📄</div>
       <div class="filter-chip" onclick="setCatFilter('other',this)">⭐</div>
     </div>
@@ -275,12 +296,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
     <div class="modal-handle"></div>
     <div class="modal-title" id="modalTitle">Add Event</div>
     <input type="hidden" id="editId">
-
     <div class="form-group">
       <label class="form-label">Title *</label>
       <input class="form-input" id="fTitle" placeholder="e.g. Car Insurance Renewal">
     </div>
-
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">Category</label>
@@ -293,7 +312,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
           <option value="license">🪪 Driver's License</option>
           <option value="inspector">✈️ Inspector Credentials</option>
           <option value="payment">💳 Payment to Service</option>
-          <option value="id">🪪 Personal ID Card</option>
+          <option value="id">🆔 Personal ID Card</option>
           <option value="document">📄 Document</option>
           <option value="other">⭐ Other</option>
         </select>
@@ -306,18 +325,15 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
         </div>
       </div>
     </div>
-
     <div class="form-group">
       <label class="form-label">Date *</label>
       <input class="form-input" id="fDate" type="date">
     </div>
-
     <div class="form-group">
       <label class="form-label">Family Members</label>
       <div class="member-select-grid" id="memberSelectGrid"></div>
       <div class="form-hint">Tap to select — multiple allowed</div>
     </div>
-
     <div class="form-group">
       <label class="form-label">Repeat Schedule</label>
       <div class="repeat-grid">
@@ -330,38 +346,28 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
         <div class="repeat-opt" data-val="custom" onclick="selectRepeat('custom')"><div class="repeat-opt-icon">✏️</div><div class="repeat-opt-label">Custom days</div><div class="repeat-opt-sub">Set interval</div></div>
         <div class="repeat-opt" data-val="customdate" onclick="selectRepeat('customdate')"><div class="repeat-opt-icon">📍</div><div class="repeat-opt-label">Set date</div><div class="repeat-opt-sub">Specific date</div></div>
       </div>
-      <!-- Multi-year -->
       <div class="extra-wrap" id="multiyearWrap">
-        <div class="inline-row">
-          <span>Every</span>
-          <select class="form-select" id="fYears" style="flex:1">
+        <div class="inline-row"><span>Every</span>
+          <select class="form-select" id="fYears">
             <option value="2">2 years</option><option value="3">3 years</option><option value="4">4 years</option>
             <option value="5">5 years</option><option value="6">6 years</option><option value="7">7 years</option>
             <option value="8">8 years</option><option value="9">9 years</option><option value="10">10 years</option>
           </select>
         </div>
       </div>
-      <!-- Custom days -->
       <div class="extra-wrap" id="customDaysWrap">
-        <div class="inline-row">
-          <span>Every</span>
-          <input class="form-input" id="fCustomDays" type="number" min="1" max="9999" placeholder="e.g. 45" style="flex:1">
-          <span>days</span>
-        </div>
+        <div class="inline-row"><span>Every</span><input class="form-input" id="fCustomDays" type="number" min="1" max="9999" placeholder="e.g. 45"><span>days</span></div>
       </div>
-      <!-- Custom date -->
       <div class="extra-wrap" id="customDateWrap">
         <label class="form-label" style="margin-top:8px">Next occurrence date</label>
         <input class="form-input" id="fCustomDate" type="date">
-        <div class="form-hint">Event will occur on this specific date (one-time override)</div>
+        <div class="form-hint">One-time event on this specific date</div>
       </div>
     </div>
-
     <div class="form-group">
       <label class="form-label">Notes</label>
       <textarea class="form-textarea" id="fNotes" placeholder="Optional notes…"></textarea>
     </div>
-
     <div class="btn-row">
       <button class="btn btn-secondary" onclick="closeModal('eventModal')">Cancel</button>
       <button class="btn btn-danger" id="deleteBtn" style="display:none" onclick="deleteEvent()">Delete</button>
@@ -386,7 +392,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 <div class="modal-overlay" id="emailModal">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-title" id="emailModalTitle">Notification Emails</div>
+    <div class="modal-title">Notification Emails</div>
     <div id="emailTagList" class="tag-list"></div>
     <div class="tag-add-row">
       <input class="tag-add-input" id="newEmailInput" type="email" placeholder="Add email address…">
@@ -437,26 +443,29 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 <script>
 const SUPABASE_URL  = 'https://fkcjjprewnjrwobyaglb.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZrY2pqcHJld25qcndvYnlhZ2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzNTc4OTAsImV4cCI6MjA5NjkzMzg5MH0.VANzCQDqqSeLIbVbTx30eN53P2rdwtKRNv2b2MlxZDg';
+const RESEND_KEY    = 're_afX9rcCP_J84MXFCkpXeRSMkuvurcj9vG';
 const {createClient}=supabase;
 const db=createClient(SUPABASE_URL,SUPABASE_ANON);
 
 let events=[],settings={},currentTab='dashboard',upcomingDays=30,categoryFilter='all',currentDetailId=null;
 
 const CATS={
-  birthday:{icon:'🎂',label:'Birthday',     color:'amber'},
-  car:     {icon:'🚗',label:'Car',          color:'red'},
-  health:  {icon:'💉',label:'Health',       color:'red'},
-  house:   {icon:'🏠',label:'House',        color:'green'},
-  work:    {icon:'💼',label:'Work',         color:'blue'},
-  license: {icon:'🪪',label:"Driver's License",color:'purple'},
+  birthday:{icon:'🎂',label:'Birthday',color:'amber'},
+  car:{icon:'🚗',label:'Car',color:'red'},
+  health:{icon:'💉',label:'Health',color:'red'},
+  house:{icon:'🏠',label:'House',color:'green'},
+  work:{icon:'💼',label:'Work',color:'blue'},
+  license:{icon:'🪪',label:"Driver's License",color:'purple'},
   inspector:{icon:'✈️',label:'Inspector Credentials',color:'teal'},
-  payment: {icon:'💳',label:'Payment to Service',color:'amber'},
-  id:      {icon:'🪪',label:'Personal ID Card',color:'purple'},
-  document:{icon:'📄',label:'Document',     color:'blue'},
-  other:   {icon:'⭐',label:'Other',        color:'purple'},
+  payment:{icon:'💳',label:'Payment to Service',color:'amber'},
+  id:{icon:'🆔',label:'Personal ID Card',color:'purple'},
+  document:{icon:'📄',label:'Document',color:'blue'},
+  other:{icon:'⭐',label:'Other',color:'purple'},
 };
 
-// ── REPEAT LOGIC ──
+const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+// ── REPEAT ──
 function getRepeatDays(ev){
   const r=ev.repeat_type||'none';
   if(r==='none'||r==='customdate')return 0;
@@ -464,106 +473,79 @@ function getRepeatDays(ev){
   if(r==='3months')return 91;
   if(r==='6months')return 182;
   if(r==='yearly')return 365;
-  if(r==='multiyear')return (ev.repeat_years||2)*365;
+  if(r==='multiyear')return(ev.repeat_years||2)*365;
   if(r==='custom')return ev.repeat_days||0;
   return 0;
 }
-
 function getEffectiveDate(ev){
   const today=new Date();today.setHours(0,0,0,0);
-  if(ev.repeat_type==='customdate'&&ev.custom_date){
-    const d=new Date(ev.custom_date);d.setHours(0,0,0,0);return d;
-  }
+  if(ev.repeat_type==='customdate'&&ev.custom_date){const d=new Date(ev.custom_date);d.setHours(0,0,0,0);return d;}
   let d=new Date(ev.event_date);d.setHours(0,0,0,0);
   const rd=getRepeatDays(ev);
   if(rd>0){while(d<today)d=new Date(d.getTime()+rd*86400000);}
   return d;
 }
-
 function getEffectiveDays(ev){
   const today=new Date();today.setHours(0,0,0,0);
   return Math.round((getEffectiveDate(ev)-today)/86400000);
 }
-
 function repeatLabel(ev){
   const r=ev.repeat_type||'none';
-  if(r==='none')return '📌 One-time';
-  if(r==='monthly')return '📅 Every month';
-  if(r==='3months')return '🔄 Every 3 months';
-  if(r==='6months')return '🗓️ Every 6 months';
-  if(r==='yearly')return '🔁 Every year';
-  if(r==='multiyear')return `📆 Every ${ev.repeat_years||2} years`;
-  if(r==='custom')return `✏️ Every ${ev.repeat_days||'?'} days`;
-  if(r==='customdate')return `📍 Specific date: ${ev.custom_date||''}`;
-  return '📌 One-time';
+  if(r==='none')return'📌 One-time';if(r==='monthly')return'📅 Every month';
+  if(r==='3months')return'🔄 Every 3 months';if(r==='6months')return'🗓️ Every 6 months';
+  if(r==='yearly')return'🔁 Every year';if(r==='multiyear')return`📆 Every ${ev.repeat_years||2} years`;
+  if(r==='custom')return`✏️ Every ${ev.repeat_days||'?'} days`;if(r==='customdate')return`📍 ${ev.custom_date||'Set date'}`;
+  return'📌 One-time';
 }
-
 function repeatShort(ev){
   const r=ev.repeat_type||'none';
-  if(r==='none')return 'One-time';
-  if(r==='monthly')return 'Monthly';
-  if(r==='3months')return 'Quarterly';
-  if(r==='6months')return '6-monthly';
-  if(r==='yearly')return 'Yearly';
-  if(r==='multiyear')return `${ev.repeat_years||2}yr`;
-  if(r==='custom')return `${ev.repeat_days||'?'}d`;
-  if(r==='customdate')return 'Set date';
-  return 'One-time';
+  if(r==='none')return'One-time';if(r==='monthly')return'Monthly';if(r==='3months')return'Quarterly';
+  if(r==='6months')return'6-monthly';if(r==='yearly')return'Yearly';
+  if(r==='multiyear')return`${ev.repeat_years||2}yr`;if(r==='custom')return`${ev.repeat_days||'?'}d`;
+  if(r==='customdate')return'Set date';return'One-time';
 }
 
 // ── EXPENSE ──
 function annualExpense(ev){
-  const amt=parseFloat(ev.expense_estimate)||0;
-  if(!amt)return 0;
+  const amt=parseFloat(ev.expense_estimate)||0;if(!amt)return 0;
   const r=ev.repeat_type||'none';
-  if(r==='none'||r==='customdate')return amt;
-  if(r==='monthly')return amt*12;
-  if(r==='3months')return amt*4;
-  if(r==='6months')return amt*2;
-  if(r==='yearly')return amt;
+  if(r==='none'||r==='customdate')return amt;if(r==='monthly')return amt*12;
+  if(r==='3months')return amt*4;if(r==='6months')return amt*2;if(r==='yearly')return amt;
   if(r==='multiyear')return amt/(ev.repeat_years||2);
   if(r==='custom'&&ev.repeat_days)return amt*(365/ev.repeat_days);
   return amt;
 }
-
-function fmtMoney(n){
-  return '฿'+Math.round(n).toLocaleString('en');
-}
+function fmtMoney(n){return'฿'+Math.round(n).toLocaleString('en');}
 
 // ── INIT ──
 async function init(){
   document.getElementById('headerDate').textContent=
     new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
-  await loadAll();
-  setStatus('connected');
+  await loadAll();setStatus('connected');
 }
-
 async function loadAll(){
   try{
     const[evRes,setRes]=await Promise.all([
       db.from('family_events').select('*').order('event_date'),
       db.from('family_settings').select('*').limit(1)
     ]);
-    if(evRes.error)throw evRes.error;
-    if(setRes.error)throw setRes.error;
+    if(evRes.error)throw evRes.error;if(setRes.error)throw setRes.error;
     events=evRes.data||[];
-    settings=setRes.data[0]||{reminder_days:[30,14,7,3,1],notify_emails:[],members:['Anan','Prangkwan','Mark','Matt','Malee']};
-    updateStats();
-    renderCurrentPage();
+    settings=setRes.data[0]||{reminder_days:[30,14,7,3,1],notify_emails:['anantulyathan@gmail.com','prangkwan@gmail.com'],members:['Anan','Prangkwan','Mark','Matt','Malee']};
+    updateStats();renderCurrentPage();
   }catch(e){setStatus('error');toast('Could not load: '+e.message,'error');}
 }
-
 function setStatus(s){
   document.getElementById('statusDot').className='dot '+s;
   document.getElementById('statusText').textContent=s==='connected'?'Connected':s==='error'?'Error':'Connecting';
 }
 
+// ── STATS ──
 function updateStats(){
   const upcoming=events.map(e=>({e,days:getEffectiveDays(e)})).filter(x=>x.days>=0).sort((a,b)=>a.days-b.days);
   const week=upcoming.filter(x=>x.days<=7).length;
   const month=upcoming.filter(x=>x.days<=30).length;
   const totalAnnual=events.reduce((s,e)=>s+annualExpense(e),0);
-  const next=upcoming[0];
   document.getElementById('statWeek').textContent=week;
   document.getElementById('statMonth').textContent=month;
   document.getElementById('statTotal').textContent=events.length;
@@ -579,7 +561,6 @@ function switchTab(tab){
   document.getElementById('page-'+tab).classList.add('active');
   renderCurrentPage();
 }
-
 function renderCurrentPage(){
   if(currentTab==='dashboard')renderDashboard();
   if(currentTab==='upcoming')renderUpcoming();
@@ -587,65 +568,149 @@ function renderCurrentPage(){
   if(currentTab==='settings')renderSettings();
 }
 
-// ── EVENT ROW HTML ──
+// ── HELPERS ──
+function urgencyClass(d){if(d<=7)return'urgent';if(d<=30)return'warning';if(d<=90)return'safe';return'future';}
+function pillClass(d){if(d<=7)return'pill-red';if(d<=30)return'pill-amber';if(d<=90)return'pill-green';return'pill-blue';}
+function daysLabel(d){if(d===0)return'Today';if(d===1)return'1 day';return d+' days';}
 function membersHTML(ev){
-  const members=Array.isArray(ev.members)?ev.members:(ev.member?[ev.member]:[]);
-  if(!members.length)return '';
-  return `<div class="member-chips">${members.map(m=>`<span class="member-chip">👤 ${esc(m)}</span>`).join('')}</div>`;
+  const m=Array.isArray(ev.members)&&ev.members.length?ev.members:(ev.member?[ev.member]:[]);
+  if(!m.length)return'';
+  return`<div class="member-chips">${m.map(x=>`<span class="member-chip">👤 ${esc(x)}</span>`).join('')}</div>`;
 }
-
 function eventRowHTML(ev,days){
   const cat=CATS[ev.category]||CATS.other;
   const d=getEffectiveDate(ev);
-  const dateStr=d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
   const exp=parseFloat(ev.expense_estimate)||0;
-  return `<div class="event-row ${urgencyClass(days)}" onclick="openDetail('${ev.id}')">
+  return`<div class="event-row ${urgencyClass(days)}" onclick="openDetail('${ev.id}')">
     <div class="event-icon icon-${cat.color}">${cat.icon}</div>
     <div class="event-body">
       <div class="event-name">${esc(ev.title)}</div>
-      <div class="event-detail">${dateStr}<span class="detail-sep">·</span>${repeatShort(ev)}</div>
+      <div class="event-detail">${d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}<span class="detail-sep">·</span>${repeatShort(ev)}</div>
       ${membersHTML(ev)}
-      ${exp>0?`<div class="expense-chip">฿ ${exp.toLocaleString('en')}</div>`:''}
+      ${exp>0?`<div class="expense-chip">฿${exp.toLocaleString('en')}</div>`:''}
     </div>
     <div class="urgency-pill ${pillClass(days)}">${daysLabel(days)}<small>${d.toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</small></div>
   </div>`;
 }
-
-function urgencyClass(days){if(days<=7)return 'urgent';if(days<=30)return 'warning';if(days<=90)return 'safe';return 'future';}
-function pillClass(days){if(days<=7)return 'pill-red';if(days<=30)return 'pill-amber';if(days<=90)return 'pill-green';return 'pill-blue';}
-function daysLabel(days){if(days===0)return 'Today';if(days===1)return '1 day';return days+' days';}
-
 function sectionHTML(label,items,count){
-  if(!items.length)return '';
-  return `<div class="section-label"><div class="section-label-text">${label}</div><div class="section-label-line"></div><div class="section-label-count">${count} event${count!==1?'s':''}</div></div>${items.join('')}`;
+  if(!items.length)return'';
+  return`<div class="section-label"><div class="section-label-text">${label}</div><div class="section-label-line"></div><div class="section-label-count">${count} event${count!==1?'s':''}</div></div>${items.join('')}`;
 }
 
 // ── DASHBOARD ──
 function renderDashboard(){
+  const today=new Date();today.setHours(0,0,0,0);
+  const thisYear=today.getFullYear();
   const sorted=events.map(e=>({e,days:getEffectiveDays(e)})).filter(x=>x.days>=0).sort((a,b)=>a.days-b.days);
+
+  // ── URGENT SECTIONS ──
   let html='';
-  // Expense summary
-  const withExpense=events.filter(e=>parseFloat(e.expense_estimate)>0);
-  if(withExpense.length){
-    const bycat={};
-    withExpense.forEach(e=>{
-      const cat=CATS[e.category]||CATS.other;
-      const k=cat.icon+' '+cat.label;
-      bycat[k]=(bycat[k]||0)+annualExpense(e);
-    });
-    const total=Object.values(bycat).reduce((s,v)=>s+v,0);
-    html+=`<div class="section-label"><div class="section-label-text">💰 Estimated Annual Expenses</div><div class="section-label-line"></div></div>
-    <div class="expense-summary">
-      <div class="expense-summary-title">By Category — Annualised</div>
-      ${Object.entries(bycat).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`
-        <div class="expense-row"><span class="expense-row-label">${k}</span><span class="expense-row-val">${fmtMoney(v)}</span></div>`).join('')}
-      <div class="expense-total"><span class="expense-total-label">Total</span><span class="expense-total-val">${fmtMoney(total)}</span></div>
-    </div>`;
-  }
   html+=sectionHTML('🔴 Needs attention — within 7 days',sorted.filter(x=>x.days<=7).map(x=>eventRowHTML(x.e,x.days)),sorted.filter(x=>x.days<=7).length);
   html+=sectionHTML('🟡 Coming up — within 30 days',sorted.filter(x=>x.days>7&&x.days<=30).map(x=>eventRowHTML(x.e,x.days)),sorted.filter(x=>x.days>7&&x.days<=30).length);
-  html+=sectionHTML('🟢 On the horizon — within 90 days',sorted.filter(x=>x.days>30&&x.days<=90).map(x=>eventRowHTML(x.e,x.days)),sorted.filter(x=>x.days>30&&x.days<=90).length);
-  if(!html)html=`<div class="empty"><div class="empty-icon">🎉</div><div class="empty-title">All clear</div>No events due soon. Tap + to add one.</div>`;
+
+  // ── METRICS SECTION ──
+  html+=`<div class="section-label" style="margin-top:24px"><div class="section-label-text">📊 Metrics & Insights</div><div class="section-label-line"></div></div>`;
+
+  // Total events summary cards
+  const withExpense=events.filter(e=>parseFloat(e.expense_estimate)>0);
+  const totalAnnual=events.reduce((s,e)=>s+annualExpense(e),0);
+  const recurringCount=events.filter(e=>e.repeat_type&&e.repeat_type!=='none'&&e.repeat_type!=='customdate').length;
+  html+=`<div class="metric-grid">
+    <div class="metric-card"><div class="metric-card-title">Total Events</div><div class="metric-num accent">${events.length}</div><div class="metric-sub">${recurringCount} recurring · ${events.length-recurringCount} one-time</div></div>
+    <div class="metric-card"><div class="metric-card-title">Est. Annual Cost</div><div class="metric-num teal">${totalAnnual>0?fmtMoney(totalAnnual):'฿0'}</div><div class="metric-sub">${withExpense.length} events with cost</div></div>
+  </div>`;
+
+  // Events by member
+  const memberCounts={};
+  events.forEach(e=>{
+    const m=Array.isArray(e.members)&&e.members.length?e.members:(e.member?[e.member]:['Unassigned']);
+    m.forEach(x=>{memberCounts[x]=(memberCounts[x]||0)+1;});
+  });
+  const maxM=Math.max(...Object.values(memberCounts),1);
+  const memberColors=['accent','green','amber','teal','purple'];
+  html+=`<div class="metric-card" style="margin-bottom:10px"><div class="metric-card-title">👨‍👩‍👦 Events by Member</div>
+    ${Object.entries(memberCounts).sort((a,b)=>b[1]-a[1]).map(([k,v],i)=>`
+      <div class="bar-row">
+        <div class="bar-label">${esc(k)}</div>
+        <div class="bar-track"><div class="bar-fill ${memberColors[i%memberColors.length]}" style="width:${Math.round(v/maxM*100)}%"></div></div>
+        <div class="bar-val">${v}</div>
+      </div>`).join('')}
+  </div>`;
+
+  // Events by category
+  const catCounts={};const catExpense={};
+  events.forEach(e=>{
+    const c=e.category||'other';
+    catCounts[c]=(catCounts[c]||0)+1;
+    catExpense[c]=(catExpense[c]||0)+annualExpense(e);
+  });
+  const maxC=Math.max(...Object.values(catCounts),1);
+  const catColorArr=['accent','green','amber','teal','purple','red'];
+  html+=`<div class="metric-card" style="margin-bottom:10px"><div class="metric-card-title">📂 Events by Category</div>
+    ${Object.entries(catCounts).sort((a,b)=>b[1]-a[1]).map(([k,v],i)=>{
+      const cat=CATS[k]||CATS.other;
+      const exp=catExpense[k]||0;
+      return`<div class="bar-row">
+        <div class="bar-label">${cat.icon} ${cat.label}</div>
+        <div class="bar-track"><div class="bar-fill ${catColorArr[i%catColorArr.length]}" style="width:${Math.round(v/maxC*100)}%"></div></div>
+        <div class="bar-val">${v}${exp>0?'<br><span style="font-size:9px;color:var(--teal)">'+fmtMoney(exp)+'</span>':''}</div>
+      </div>`;}).join('')}
+  </div>`;
+
+  // Events by month (next 12 months)
+  const monthCounts=new Array(12).fill(0);
+  events.forEach(e=>{
+    const d=getEffectiveDate(e);
+    const diffMonths=(d.getFullYear()-thisYear)*12+(d.getMonth()-today.getMonth());
+    if(diffMonths>=0&&diffMonths<12)monthCounts[d.getMonth()]++;
+  });
+  const maxMonth=Math.max(...monthCounts,1);
+  html+=`<div class="metric-card" style="margin-bottom:10px"><div class="metric-card-title">📅 Events by Month</div>
+    <div class="month-grid">
+      ${MONTHS.map((m,i)=>{
+        const idx=(today.getMonth()+i)%12;
+        const count=monthCounts[idx];
+        const cls=count===0?'':(count>=3?'urgent':'has-events');
+        return`<div class="month-cell ${cls}"><div class="month-name">${MONTHS[idx]}</div><div class="month-count">${count||'·'}</div></div>`;
+      }).join('')}
+    </div>
+  </div>`;
+
+  // Expense by member
+  if(withExpense.length>0){
+    const memberExp={};
+    events.forEach(e=>{
+      const amt=annualExpense(e);if(!amt)return;
+      const m=Array.isArray(e.members)&&e.members.length?e.members:(e.member?[e.member]:['Unassigned']);
+      m.forEach(x=>{memberExp[x]=(memberExp[x]||0)+amt/m.length;});
+    });
+    const maxE=Math.max(...Object.values(memberExp),1);
+    html+=`<div class="metric-card" style="margin-bottom:10px"><div class="metric-card-title">💰 Est. Annual Cost by Member</div>
+      ${Object.entries(memberExp).sort((a,b)=>b[1]-a[1]).map(([k,v],i)=>`
+        <div class="bar-row">
+          <div class="bar-label">${esc(k)}</div>
+          <div class="bar-track"><div class="bar-fill teal" style="width:${Math.round(v/maxE*100)}%"></div></div>
+          <div class="bar-val" style="font-size:10px">${fmtMoney(v)}</div>
+        </div>`).join('')}
+    </div>`;
+  }
+
+  // Upcoming Q summary
+  const q1=sorted.filter(x=>x.days<=90).length;
+  const q2=sorted.filter(x=>x.days>90&&x.days<=180).length;
+  const q3=sorted.filter(x=>x.days>180&&x.days<=270).length;
+  const q4=sorted.filter(x=>x.days>270&&x.days<=365).length;
+  html+=`<div class="metric-card full" style="margin-bottom:4px"><div class="metric-card-title">📆 Events by Quarter (Next 12 Months)</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px">
+      ${[['Next 3mo',q1,'accent'],['3–6mo',q2,'green'],['6–9mo',q3,'amber'],['9–12mo',q4,'blue']].map(([label,count,color])=>`
+        <div style="text-align:center;padding:10px 6px;background:var(--border-lt);border-radius:10px;border:1px solid var(--border)">
+          <div style="font-size:20px;font-weight:700;color:var(--${color})">${count}</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:3px">${label}</div>
+        </div>`).join('')}
+    </div>
+  </div>`;
+
+  if(!sorted.length&&!events.length)html=`<div class="empty"><div class="empty-icon">📅</div><div class="empty-title">No events yet</div>Tap + to add your first event.</div>`;
   document.getElementById('dashContent').innerHTML=html;
 }
 
@@ -654,29 +719,28 @@ function setUpcomingFilter(days,el){
   document.querySelectorAll('#upcomingFilters .filter-chip').forEach(c=>c.classList.remove('active'));
   el.classList.add('active');renderUpcoming();
 }
-
 function renderUpcoming(){
   const sorted=events.map(e=>({e,days:getEffectiveDays(e)})).filter(x=>x.days>=0&&x.days<=upcomingDays).sort((a,b)=>a.days-b.days);
   if(!sorted.length){document.getElementById('upcomingContent').innerHTML=`<div class="empty"><div class="empty-icon">📅</div><div class="empty-title">Nothing in this range</div></div>`;return;}
   document.getElementById('upcomingContent').innerHTML=sorted.map(x=>eventRowHTML(x.e,x.days)).join('');
 }
-
 function setCatFilter(cat,el){
   categoryFilter=cat;
   document.querySelectorAll('#categoryFilters .filter-chip').forEach(c=>c.classList.remove('active'));
   el.classList.add('active');renderAll();
 }
-
 function renderAll(){
   const q=(document.getElementById('searchInput')?.value||'').toLowerCase();
   const filtered=events.filter(e=>{
+    const mArr=Array.isArray(e.members)?e.members:(e.member?[e.member]:[]);
     return(categoryFilter==='all'||e.category===categoryFilter)&&
-      (!q||e.title.toLowerCase().includes(q)||(e.members||[]).join(' ').toLowerCase().includes(q)||(e.member||'').toLowerCase().includes(q));
+      (!q||e.title.toLowerCase().includes(q)||mArr.join(' ').toLowerCase().includes(q));
   }).map(e=>({e,days:getEffectiveDays(e)})).sort((a,b)=>a.days-b.days);
   if(!filtered.length){document.getElementById('allContent').innerHTML=`<div class="empty"><div class="empty-icon">🔍</div><div class="empty-title">No events found</div></div>`;return;}
   document.getElementById('allContent').innerHTML=filtered.map(x=>eventRowHTML(x.e,x.days)).join('');
 }
 
+// ── SETTINGS ──
 function renderSettings(){
   const s=settings;
   const emails=(s.notify_emails||[]).join(', ')||'—';
@@ -684,7 +748,21 @@ function renderSettings(){
   const members=(s.members||[]).join(', ')||'—';
   document.getElementById('settingsContent').innerHTML=`
     <div class="settings-section">
-      <div class="settings-title">Notifications</div>
+      <div class="settings-title">Send Reminders</div>
+      <div class="settings-card">
+        <div class="settings-row" style="flex-direction:column;align-items:stretch;gap:10px">
+          <div>
+            <div class="settings-row-label">📨 Send Reminder Now</div>
+            <div class="settings-row-sub">Sends one grouped email for all events due within 30 days to all recipients</div>
+          </div>
+          <button class="send-now-btn" id="sendNowBtn" onclick="sendRemindersNow()">
+            <span>📧</span> Send Reminder Email Now
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-title">Notification Settings</div>
       <div class="settings-card">
         <div class="settings-row"><div><div class="settings-row-label">📧 Email Recipients</div><div class="settings-row-sub">${esc(emails)}</div></div><div class="settings-row-action" onclick="openEmailModal()">Edit</div></div>
         <div class="settings-row"><div><div class="settings-row-label">⏰ Reminder Schedule</div><div class="settings-row-sub">${esc(reminders)}</div></div><div class="settings-row-action" onclick="openReminderModal()">Edit</div></div>
@@ -699,10 +777,93 @@ function renderSettings(){
     <div class="settings-section">
       <div class="settings-title">About</div>
       <div class="settings-card">
-        <div class="settings-row"><div><div class="settings-row-label">Version</div><div class="settings-row-sub">Family Dates v1.2</div></div></div>
+        <div class="settings-row"><div><div class="settings-row-label">Version</div><div class="settings-row-sub">Family Dates v1.3</div></div></div>
         <div class="settings-row"><div><div class="settings-row-label">Total Events</div><div class="settings-row-sub">${events.length} events tracked</div></div></div>
       </div>
     </div>`;
+}
+
+// ── SEND REMINDER NOW ──
+async function sendRemindersNow(){
+  const btn=document.getElementById('sendNowBtn');
+  if(!btn)return;
+  btn.disabled=true;btn.innerHTML='<div class="spinner" style="border-color:rgba(255,255,255,0.3);border-top-color:#fff;width:16px;height:16px"></div> Sending…';
+
+  try{
+    const recipients=settings.notify_emails||[];
+    if(!recipients.length){toast('No email recipients configured in Settings','error');btn.disabled=false;btn.innerHTML='<span>📧</span> Send Reminder Email Now';return;}
+
+    // Group events due within 30 days
+    const due=events.map(e=>({e,days:getEffectiveDays(e)}))
+      .filter(x=>x.days>=0&&x.days<=30)
+      .sort((a,b)=>a.days-b.days);
+
+    if(!due.length){toast('No events due within 30 days','error');btn.disabled=false;btn.innerHTML='<span>📧</span> Send Reminder Email Now';return;}
+
+    // Build single grouped email
+    const emailHTML=buildReminderEmailHTML(due);
+
+    // Send ONE email to all recipients
+    const res=await fetch('https://api.resend.com/emails',{
+      method:'POST',
+      headers:{'Authorization':'Bearer '+RESEND_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({
+        from:'Family Dates <onboarding@resend.dev>',
+        to:recipients,
+        subject:`📅 Family Dates Reminder — ${due.length} event${due.length!==1?'s':''} coming up`,
+        html:emailHTML
+      })
+    });
+
+    if(!res.ok){const err=await res.json();throw new Error(err.message||'Send failed');}
+
+    // Log to Supabase
+    const logEntries=due.map(x=>({event_id:x.e.id,days_before:x.days,email_to:recipients.join(', '),status:'sent'}));
+    await db.from('family_notifications_log').insert(logEntries);
+
+    toast(`✓ Reminder sent for ${due.length} event${due.length!==1?'s':''}`,'success');
+  }catch(e){
+    toast('Error: '+e.message,'error');
+  }
+  btn.disabled=false;btn.innerHTML='<span>📧</span> Send Reminder Email Now';
+}
+
+function buildReminderEmailHTML(due){
+  const rows=due.map(({e,days})=>{
+    const cat=CATS[e.category]||CATS.other;
+    const d=getEffectiveDate(e);
+    const dateStr=d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    const members=Array.isArray(e.members)&&e.members.length?e.members:(e.member?[e.member]:[]);
+    const urgColor=days<=7?'#ef4444':days<=14?'#d97706':'#059669';
+    const exp=parseFloat(e.expense_estimate)||0;
+    return`<tr>
+      <td style="padding:12px 16px;border-bottom:1px solid #e5e7eb">
+        <div style="font-size:15px;font-weight:600;color:#111827">${cat.icon} ${e.title}</div>
+        <div style="font-size:13px;color:#6b7280;margin-top:4px">${dateStr}</div>
+        ${members.length?`<div style="font-size:12px;color:#6b7280;margin-top:3px">👤 ${members.join(', ')}</div>`:''}
+        ${exp>0?`<div style="font-size:12px;color:#0d9488;margin-top:3px">Est. ${fmtMoney(exp)}</div>`:''}
+      </td>
+      <td style="padding:12px 16px;border-bottom:1px solid #e5e7eb;text-align:right;white-space:nowrap">
+        <span style="background:${urgColor}15;color:${urgColor};border:1px solid ${urgColor}40;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700">${days===0?'TODAY':days===1?'1 day':days+' days'}</span>
+      </td>
+    </tr>`;
+  }).join('');
+
+  return`<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f5f5f7;font-family:Inter,system-ui,sans-serif">
+  <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.08)">
+    <div style="background:#111827;padding:28px 32px">
+      <div style="font-size:24px;color:#fff;font-weight:600">📅 Family Dates</div>
+      <div style="font-size:14px;color:rgba(255,255,255,0.5);margin-top:6px">Upcoming event reminder • ${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</div>
+    </div>
+    <div style="padding:24px 32px 8px">
+      <div style="font-size:15px;color:#374151">You have <strong>${due.length} event${due.length!==1?'s':''}</strong> coming up in the next 30 days:</div>
+    </div>
+    <table style="width:100%;border-collapse:collapse">${rows}</table>
+    <div style="padding:20px 32px;background:#f9fafb;border-top:1px solid #e5e7eb">
+      <div style="font-size:12px;color:#9ca3af">Sent by Family Dates · Anan & Prangkwan</div>
+    </div>
+  </div>
+</body></html>`;
 }
 
 // ── DETAIL ──
@@ -712,7 +873,7 @@ function openDetail(id){
   const cat=CATS[ev.category]||CATS.other;
   const days=getEffectiveDays(ev);
   const d=getEffectiveDate(ev);
-  const members=Array.isArray(ev.members)?ev.members:(ev.member?[ev.member]:[]);
+  const members=Array.isArray(ev.members)&&ev.members.length?ev.members:(ev.member?[ev.member]:[]);
   const exp=parseFloat(ev.expense_estimate)||0;
   document.getElementById('detailContent').innerHTML=`
     <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px">
@@ -727,7 +888,6 @@ function openDetail(id){
     <div class="detail-field"><div class="detail-field-label">Recurrence</div><div class="detail-field-value">${repeatLabel(ev)}</div></div>`;
   document.getElementById('detailModal').classList.add('open');
 }
-
 function editFromDetail(){closeModal('detailModal');openEditModal(currentDetailId);}
 
 // ── REPEAT UI ──
@@ -744,9 +904,8 @@ function buildMemberGrid(selected){
   const members=settings.members||['Anan','Prangkwan','Mark','Matt','Malee'];
   const sel=Array.isArray(selected)?selected:(selected?[selected]:[]);
   document.getElementById('memberSelectGrid').innerHTML=members.map(m=>
-    `<div class="member-toggle${sel.includes(m)?' on':''}" onclick="toggleMember(this)">${esc(m)}</div>`).join('');
+    `<div class="member-toggle${sel.includes(m)?' on':''}" onclick="this.classList.toggle('on')">${esc(m)}</div>`).join('');
 }
-function toggleMember(el){el.classList.toggle('on');}
 function getSelectedMembers(){return Array.from(document.querySelectorAll('.member-toggle.on')).map(el=>el.textContent.trim());}
 
 // ── ADD / EDIT ──
@@ -762,11 +921,9 @@ function openAddModal(){
   document.getElementById('fExpense').value='';
   document.getElementById('fYears').value='2';
   document.getElementById('deleteBtn').style.display='none';
-  selectRepeat('yearly');
-  buildMemberGrid([]);
+  selectRepeat('yearly');buildMemberGrid([]);
   document.getElementById('eventModal').classList.add('open');
 }
-
 function openEditModal(id){
   const ev=events.find(e=>e.id===id);if(!ev)return;
   document.getElementById('modalTitle').textContent='Edit Event';
@@ -782,11 +939,10 @@ function openEditModal(id){
   document.getElementById('deleteBtn').style.display='';
   const rt=ev.repeat_type||(ev.repeat_yearly?'yearly':'none');
   selectRepeat(rt);
-  const members=Array.isArray(ev.members)?ev.members:(ev.member?[ev.member]:[]);
+  const members=Array.isArray(ev.members)&&ev.members.length?ev.members:(ev.member?[ev.member]:[]);
   buildMemberGrid(members);
   document.getElementById('eventModal').classList.add('open');
 }
-
 async function saveEvent(){
   const id=document.getElementById('editId').value;
   const title=document.getElementById('fTitle').value.trim();
@@ -800,36 +956,22 @@ async function saveEvent(){
   const expense_estimate=parseFloat(document.getElementById('fExpense').value)||null;
   const repeat_yearly=repeat_type==='yearly';
   const members=getSelectedMembers();
-
   if(!title){toast('Please enter a title','error');return;}
   if(!date){toast('Please select a date','error');return;}
-  if(repeat_type==='custom'&&(!repeat_days||repeat_days<1)){toast('Please enter the number of days','error');return;}
+  if(repeat_type==='custom'&&(!repeat_days||repeat_days<1)){toast('Please enter number of days','error');return;}
   if(repeat_type==='customdate'&&!custom_date){toast('Please select the next occurrence date','error');return;}
-
   const payload={title,event_date:date,category,notes:notes||null,repeat_yearly,repeat_type,repeat_days,repeat_years,custom_date,expense_estimate,members,updated_at:new Date().toISOString()};
-
   try{
-    if(id){
-      const{error}=await db.from('family_events').update(payload).eq('id',id);
-      if(error)throw error;
-      toast('Event updated ✓','success');
-    }else{
-      const{error}=await db.from('family_events').insert(payload);
-      if(error)throw error;
-      toast('Event added ✓','success');
-    }
+    if(id){const{error}=await db.from('family_events').update(payload).eq('id',id);if(error)throw error;toast('Event updated ✓','success');}
+    else{const{error}=await db.from('family_events').insert(payload);if(error)throw error;toast('Event added ✓','success');}
     closeModal('eventModal');await loadAll();
   }catch(e){toast('Error: '+e.message,'error');}
 }
-
 async function deleteEvent(){
   const id=document.getElementById('editId').value;
   if(!id||!confirm('Delete this event?'))return;
-  try{
-    const{error}=await db.from('family_events').delete().eq('id',id);
-    if(error)throw error;
-    toast('Event deleted','success');closeModal('eventModal');await loadAll();
-  }catch(e){toast('Error: '+e.message,'error');}
+  try{const{error}=await db.from('family_events').delete().eq('id',id);if(error)throw error;toast('Deleted','success');closeModal('eventModal');await loadAll();}
+  catch(e){toast('Error: '+e.message,'error');}
 }
 
 // ── SETTINGS MODALS ──
@@ -848,14 +990,9 @@ function addEmail(){
 }
 async function saveEmails(){
   const emails=getTagValues('emailTagList');
-  try{
-    const{error}=await db.from('family_settings').update({notify_emails:emails,updated_at:new Date().toISOString()}).eq('id',settings.id);
-    if(error)throw error;
-    settings.notify_emails=emails;
-    toast('Emails saved ✓','success');closeModal('emailModal');renderSettings();
-  }catch(e){toast('Error: '+e.message,'error');}
+  try{const{error}=await db.from('family_settings').update({notify_emails:emails,updated_at:new Date().toISOString()}).eq('id',settings.id);if(error)throw error;settings.notify_emails=emails;toast('Saved ✓','success');closeModal('emailModal');renderSettings();}
+  catch(e){toast('Error: '+e.message,'error');}
 }
-
 function openReminderModal(){
   renderTagList('reminderTagList',[...(settings.reminder_days||[])].sort((a,b)=>b-a).map(String),'reminder');
   document.getElementById('newReminderInput').value='';
@@ -871,14 +1008,9 @@ function addReminder(){
 }
 async function saveReminders(){
   const days=getTagValues('reminderTagList').map(Number).filter(Boolean);
-  try{
-    const{error}=await db.from('family_settings').update({reminder_days:days,updated_at:new Date().toISOString()}).eq('id',settings.id);
-    if(error)throw error;
-    settings.reminder_days=days;
-    toast('Saved ✓','success');closeModal('reminderModal');renderSettings();
-  }catch(e){toast('Error: '+e.message,'error');}
+  try{const{error}=await db.from('family_settings').update({reminder_days:days,updated_at:new Date().toISOString()}).eq('id',settings.id);if(error)throw error;settings.reminder_days=days;toast('Saved ✓','success');closeModal('reminderModal');renderSettings();}
+  catch(e){toast('Error: '+e.message,'error');}
 }
-
 function openMemberModal(){
   renderTagList('memberTagList',[...(settings.members||[])],'member');
   document.getElementById('newMemberInput').value='';
@@ -894,14 +1026,11 @@ function addMember(){
 }
 async function saveMembers(){
   const members=getTagValues('memberTagList');
-  try{
-    const{error}=await db.from('family_settings').update({members,updated_at:new Date().toISOString()}).eq('id',settings.id);
-    if(error)throw error;
-    settings.members=members;
-    toast('Saved ✓','success');closeModal('memberModal');renderSettings();
-  }catch(e){toast('Error: '+e.message,'error');}
+  try{const{error}=await db.from('family_settings').update({members,updated_at:new Date().toISOString()}).eq('id',settings.id);if(error)throw error;settings.members=members;toast('Saved ✓','success');closeModal('memberModal');renderSettings();}
+  catch(e){toast('Error: '+e.message,'error');}
 }
 
+// ── TAG HELPERS ──
 function renderTagList(containerId,values,type){
   document.getElementById(containerId).innerHTML=values.map((v,i)=>
     `<div class="tag" data-value="${esc(v)}">${type==='reminder'?v+' days':esc(v)}<span class="tag-remove" onclick="removeTag('${containerId}',${i})">×</span></div>`).join('');
@@ -918,9 +1047,9 @@ document.querySelectorAll('.modal-overlay').forEach(o=>{o.addEventListener('clic
 
 function toast(msg,type=''){
   const t=document.createElement('div');t.className='toast '+type;t.textContent=msg;
-  document.getElementById('toastWrap').appendChild(t);setTimeout(()=>t.remove(),3000);
+  document.getElementById('toastWrap').appendChild(t);setTimeout(()=>t.remove(),3500);
 }
-function esc(str){if(!str)return '';return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function esc(str){if(!str)return'';return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 init();
 </script>
