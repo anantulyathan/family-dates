@@ -858,19 +858,18 @@ async function sendRemindersNow(){
     // Build single grouped email
     const emailHTML=buildReminderEmailHTML(due);
 
-    // Send ONE email to all recipients
-    const res=await fetch('https://api.resend.com/emails',{
+    // Send ONE email via Supabase Edge Function (avoids CORS)
+    const res=await fetch('https://fkcjjprewnjrwobyaglb.supabase.co/functions/v1/swift-function',{
       method:'POST',
-      headers:{'Authorization':'Bearer '+RESEND_KEY,'Content-Type':'application/json'},
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+SUPABASE_ANON},
       body:JSON.stringify({
-        from:'Family Dates <onboarding@resend.dev>',
         to:recipients,
         subject:`📅 Family Dates Reminder — ${due.length} event${due.length!==1?'s':''} coming up`,
         html:emailHTML
       })
     });
 
-    if(!res.ok){const err=await res.json();throw new Error(err.message||'Send failed');}
+    if(!res.ok){const err=await res.json();throw new Error(JSON.stringify(err.error)||'Send failed');}
 
     // Log to Supabase
     const logEntries=due.map(x=>({event_id:x.e.id,days_before:x.days,email_to:recipients.join(', '),status:'sent'}));
