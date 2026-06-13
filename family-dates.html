@@ -101,6 +101,46 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .member-filter-bar::-webkit-scrollbar{display:none}
 .member-btn{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid var(--border);background:var(--card);color:var(--sub);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .15s;display:flex;align-items:center;gap:4px}
 .member-btn.active{background:var(--deep);color:#fff;border-color:var(--deep)}
+/* CALENDAR */
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.cal-nav{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--sub)}
+.cal-nav:hover{background:var(--border-lt)}
+.cal-title{font-size:16px;font-weight:700;color:var(--text)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal-dow{text-align:center;font-size:10px;font-weight:700;color:var(--muted);padding:4px 0;text-transform:uppercase}
+.cal-day{min-height:52px;border-radius:8px;padding:4px;border:1px solid transparent;cursor:pointer;transition:all .15s;position:relative}
+.cal-day:hover{background:var(--border-lt)}
+.cal-day.other-month .cal-day-num{color:var(--border)}
+.cal-day.today{border-color:var(--accent);background:var(--blue-bg)}
+.cal-day.today .cal-day-num{color:var(--accent);font-weight:700}
+.cal-day.has-events{background:var(--card);border-color:var(--border)}
+.cal-day-num{font-size:12px;color:var(--sub);font-weight:500;margin-bottom:2px}
+.cal-dots{display:flex;flex-wrap:wrap;gap:2px;margin-top:2px}
+.cal-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.cal-dot.red{background:var(--red)}.cal-dot.amber{background:var(--amber)}.cal-dot.green{background:var(--green)}.cal-dot.blue{background:var(--blue)}.cal-dot.purple{background:var(--purple)}.cal-dot.teal{background:var(--teal)}
+.cal-event-list{margin-top:12px}
+.cal-selected-date{font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px;padding:8px 12px;background:var(--blue-bg);border-radius:8px;border:1px solid var(--blue-bd)}
+
+/* BIRTHDAYS */
+.bday-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:10px;display:flex;align-items:center;gap:16px;cursor:pointer}
+.bday-card:hover{box-shadow:0 2px 12px rgba(0,0,0,0.07)}
+.bday-avatar{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;font-weight:700;color:#fff}
+.bday-info{flex:1}
+.bday-name{font-size:16px;font-weight:700;color:var(--text)}
+.bday-date{font-size:13px;color:var(--muted);margin-top:2px}
+.bday-age{font-size:12px;color:var(--sub);margin-top:3px}
+.bday-countdown{text-align:right;flex-shrink:0}
+.bday-days{font-size:22px;font-weight:800;line-height:1}
+.bday-days-label{font-size:10px;color:var(--muted);margin-top:2px}
+.bday-days.today-color{color:var(--amber)}
+.bday-days.soon-color{color:var(--red)}
+.bday-days.ok-color{color:var(--accent)}
+.couple-card{background:linear-gradient(135deg,#1d4ed8,#0d9488);border-radius:16px;padding:20px;margin-bottom:16px;color:#fff}
+.couple-card-title{font-size:12px;font-weight:600;opacity:0.7;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.couple-years{font-size:36px;font-weight:800;line-height:1}
+.couple-sub{font-size:13px;opacity:0.7;margin-top:4px}
+.gift-note{font-size:12px;color:var(--muted);font-style:italic;margin-top:4px}
+
 
 
 
@@ -264,6 +304,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
   <div class="tab active" onclick="switchTab('dashboard')">Dashboard</div>
   <div class="tab" onclick="switchTab('upcoming')">Upcoming <span class="tab-badge" id="urgentBadge" style="display:none">0</span></div>
   <div class="tab" onclick="switchTab('all')">All Events</div>
+  <div class="tab" onclick="switchTab('calendar')">📆 Calendar</div>
+  <div class="tab" onclick="switchTab('birthdays')">🎂 Birthdays</div>
   <div class="tab" onclick="switchTab('settings')">Settings</div>
 </div>
 
@@ -303,6 +345,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
     <div class="member-filter-bar" id="allMemberBar"></div>
     <div id="allContent"><div class="loading"><div class="spinner"></div>Loading…</div></div>
   </div>
+  <div class="page" id="page-calendar"><div id="calendarContent"><div class="loading"><div class="spinner"></div>Loading…</div></div></div>
+  <div class="page" id="page-birthdays"><div id="birthdaysContent"><div class="loading"><div class="spinner"></div>Loading…</div></div></div>
   <div class="page" id="page-settings"><div id="settingsContent"><div class="loading"><div class="spinner"></div>Loading…</div></div></div>
 </div>
 
@@ -466,7 +510,7 @@ const RESEND_KEY    = 're_afX9rcCP_J84MXFCkpXeRSMkuvurcj9vG';
 const {createClient}=supabase;
 const db=createClient(SUPABASE_URL,SUPABASE_ANON);
 
-let events=[],settings={},currentTab='dashboard',upcomingDays=30,categoryFilter='all',currentDetailId=null,dashYear='all',memberFilter='all',upcomingMemberFilter='all',dashMemberFilter='all';
+let events=[],settings={},currentTab='dashboard',upcomingDays=30,categoryFilter='all',currentDetailId=null,dashYear='all',memberFilter='all',upcomingMemberFilter='all',dashMemberFilter='all',calYear=new Date().getFullYear(),calMonth=new Date().getMonth();
 
 const CATS={
   birthday:{icon:'🎂',label:'Birthday',color:'amber'},
@@ -583,7 +627,7 @@ function updateStats(){
 
 function switchTab(tab){
   currentTab=tab;
-  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['dashboard','upcoming','all','settings'][i]===tab));
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['dashboard','upcoming','all','calendar','birthdays','settings'][i]===tab));
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+tab).classList.add('active');
   renderCurrentPage();
@@ -592,6 +636,8 @@ function renderCurrentPage(){
   if(currentTab==='dashboard')renderDashboard();
   if(currentTab==='upcoming')renderUpcoming();
   if(currentTab==='all')renderAll();
+  if(currentTab==='calendar')renderCalendar();
+  if(currentTab==='birthdays')renderBirthdays();
   if(currentTab==='settings')renderSettings();
 }
 
@@ -1282,6 +1328,229 @@ function toast(msg,type=''){
 function esc(str){if(!str)return'';return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 
+
+
+// ── CALENDAR ──
+const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const AVATAR_COLORS=['#1d4ed8','#0d9488','#d97706','#7c3aed','#ef4444','#059669','#e8637c'];
+let calSelectedDate=null;
+
+function renderCalendar(){
+  const el=document.getElementById('calendarContent');
+  if(!el)return;
+  const today=new Date();today.setHours(0,0,0,0);
+  const firstDay=new Date(calYear,calMonth,1);
+  const lastDay=new Date(calYear,calMonth+1,0);
+  const startDow=firstDay.getDay();
+  const totalDays=lastDay.getDate();
+
+  // Map events to dates in this month view
+  const eventMap={};
+  events.forEach(e=>{
+    if(isPastEvent(e))return;
+    const d=getEffectiveDate(e);
+    // Check if event falls in displayed month range
+    const viewStart=new Date(calYear,calMonth,1-startDow);
+    const viewEnd=new Date(calYear,calMonth+1,7-lastDay.getDay());
+    // For repeating events, check all occurrences in view range
+    const addIfInRange=(dd)=>{
+      const key=`${dd.getFullYear()}-${dd.getMonth()}-${dd.getDate()}`;
+      if(!eventMap[key])eventMap[key]=[];
+      eventMap[key].push(e);
+    };
+    if(d>=viewStart&&d<=viewEnd){addIfInRange(d);}
+    const rd=getRepeatDays(e);
+    if(rd>0){
+      let dd=new Date(d.getTime());
+      for(let i=0;i<60;i++){
+        dd=new Date(dd.getTime()+rd*86400000);
+        if(dd>viewEnd)break;
+        if(dd>=viewStart)addIfInRange(dd);
+      }
+    }
+  });
+
+  // Build grid
+  const cells=[];
+  // Previous month days
+  for(let i=0;i<startDow;i++){
+    const d=new Date(calYear,calMonth,1-startDow+i);
+    cells.push({date:d,current:false});
+  }
+  // This month
+  for(let i=1;i<=totalDays;i++){
+    cells.push({date:new Date(calYear,calMonth,i),current:true});
+  }
+  // Next month padding
+  const remainder=(7-cells.length%7)%7;
+  for(let i=1;i<=remainder;i++){
+    cells.push({date:new Date(calYear,calMonth+1,i),current:false});
+  }
+
+  const monthName=new Date(calYear,calMonth).toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+
+  let html=`<div class="cal-header">
+    <div class="cal-nav" onclick="calNav(-1)">‹</div>
+    <div class="cal-title">${monthName}</div>
+    <div class="cal-nav" onclick="calNav(1)">›</div>
+  </div>
+  <div class="cal-grid">
+    ${DOW.map(d=>`<div class="cal-dow">${d}</div>`).join('')}
+    ${cells.map(({date,current})=>{
+      const key=`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+      const dayEvents=eventMap[key]||[];
+      const isToday=date.getTime()===today.getTime();
+      const isSelected=calSelectedDate&&date.getTime()===calSelectedDate.getTime();
+      const cls=[
+        'cal-day',
+        !current?'other-month':'',
+        isToday?'today':'',
+        dayEvents.length?'has-events':'',
+        isSelected?'selected-day':''
+      ].filter(Boolean).join(' ');
+      const selStyle=isSelected?'outline:2px solid var(--accent);outline-offset:1px;':'';
+      const dots=dayEvents.slice(0,5).map(e=>{
+        const cat=CATS[e.category]||CATS.other;
+        return`<div class="cal-dot ${cat.color}"></div>`;
+      }).join('');
+      return`<div class="${cls}" style="${selStyle}" onclick="selectCalDay(new Date(${date.getFullYear()},${date.getMonth()},${date.getDate()}))">
+        <div class="cal-day-num">${date.getDate()}</div>
+        ${dots?`<div class="cal-dots">${dots}</div>`:''}
+      </div>`;
+    }).join('')}
+  </div>`;
+
+  // Selected day events
+  if(calSelectedDate){
+    const key=`${calSelectedDate.getFullYear()}-${calSelectedDate.getMonth()}-${calSelectedDate.getDate()}`;
+    const dayEvs=eventMap[key]||[];
+    const dateStr=calSelectedDate.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
+    html+=`<div class="cal-event-list">
+      <div class="cal-selected-date">📅 ${dateStr} — ${dayEvs.length?dayEvs.length+' event'+(dayEvs.length!==1?'s':''):'No events'}</div>
+      ${dayEvs.map(e=>{
+        const cat=CATS[e.category]||CATS.other;
+        const days=getEffectiveDays(e);
+        const members=Array.isArray(e.members)&&e.members.length?e.members:(e.member?[e.member]:[]);
+        return`<div class="event-row ${urgencyClass(days)}" onclick="openDetail('${e.id}')">
+          <div class="event-icon icon-${cat.color}">${cat.icon}</div>
+          <div class="event-body">
+            <div class="event-name">${esc(e.title)}</div>
+            <div class="event-detail">${cat.label}<span class="detail-sep">·</span>${repeatShort(e)}</div>
+            ${members.length?`<div class="member-chips">${members.map(m=>`<span class="member-chip">👤 ${esc(m)}</span>`).join('')}</div>`:''}
+          </div>
+          <div class="urgency-pill ${pillClass(days)}">${daysLabel(days)}<small>${calSelectedDate.toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</small></div>
+        </div>`;
+      }).join('')||'<div class="empty" style="padding:20px"><div style="color:var(--muted);font-size:13px">No events on this day</div></div>'}
+    </div>`;
+  }
+
+  el.innerHTML=html;
+}
+
+function calNav(dir){
+  calMonth+=dir;
+  if(calMonth>11){calMonth=0;calYear++;}
+  if(calMonth<0){calMonth=11;calYear--;}
+  calSelectedDate=null;
+  renderCalendar();
+}
+
+function selectCalDay(date){
+  calSelectedDate=date;
+  renderCalendar();
+}
+
+// ── BIRTHDAYS ──
+function renderBirthdays(){
+  const el=document.getElementById('birthdaysContent');
+  if(!el)return;
+  const today=new Date();today.setHours(0,0,0,0);
+  const thisYear=today.getFullYear();
+
+  // Find all birthday events
+  const bdayEvents=events.filter(e=>e.category==='birthday').map(e=>{
+    const d=getEffectiveDate(e);
+    const days=getEffectiveDays(e);
+    const origYear=new Date(e.event_date).getFullYear();
+    const age=origYear>1900?thisYear-origYear+(days<0?-1:0):null;
+    return{e,d,days,age};
+  }).sort((a,b)=>a.days-b.days);
+
+  // Find couple anniversary — look for events with both Anan and Prangkwan
+  const anniversary=events.find(e=>{
+    const m=Array.isArray(e.members)?e.members:(e.member?[e.member]:[]);
+    return m.includes('Anan')&&m.includes('Prangkwan')&&(e.category==='other'||e.category==='birthday');
+  });
+
+  // Couple section — days together from a known date (use first birthday event with both or hardcode)
+  const coupleStartDate=new Date('2010-01-01'); // placeholder — will show from earliest joint event
+  const jointEvents=events.filter(e=>{
+    const m=Array.isArray(e.members)?e.members:(e.member?[e.member]:[]);
+    return m.includes('Anan')&&m.includes('Prangkwan');
+  });
+
+  let html='';
+
+  // Couple counter card
+  const yearsCount=thisYear-coupleStartDate.getFullYear();
+  const nextBig=Math.ceil(yearsCount/5)*5;
+  html+=`<div class="couple-card">
+    <div class="couple-card-title">❤️ Anan & Prangkwan</div>
+    <div class="couple-years">${jointEvents.length>0?''+jointEvents.length+' shared events':'Family'}</div>
+    <div class="couple-sub">${jointEvents.length} events shared together</div>
+  </div>`;
+
+  // Birthday cards
+  if(!bdayEvents.length){
+    html+=`<div class="empty"><div class="empty-icon">🎂</div><div class="empty-title">No birthdays yet</div>Add birthday events with the 🎂 Birthday category</div>`;
+  } else {
+    html+=`<div class="section-label"><div class="section-label-text">🎂 Upcoming Birthdays</div><div class="section-label-line"></div><div class="section-label-count">${bdayEvents.length}</div></div>`;
+    html+=bdayEvents.map(({e,d,days,age},idx)=>{
+      const members=Array.isArray(e.members)&&e.members.length?e.members:(e.member?[e.member]:[]);
+      const name=members.length?members[0]:e.title;
+      const avatarColor=AVATAR_COLORS[idx%AVATAR_COLORS.length];
+      const initials=name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+      const dateStr=d.toLocaleDateString('en-GB',{day:'numeric',month:'long'});
+      const isToday=days===0;
+      const isSoon=days<=7;
+      const daysColorClass=isToday?'today-color':isSoon?'soon-color':'ok-color';
+
+      // Big countdown display
+      let countdownDisplay='';
+      let countdownLabel='';
+      if(days===0){countdownDisplay='🎉';countdownLabel='TODAY!';}
+      else if(days===1){countdownDisplay='1';countdownLabel='day away';}
+      else{countdownDisplay=String(days);countdownLabel='days away';}
+
+      return`<div class="bday-card" onclick="openDetail('${e.id}')">
+        <div class="bday-avatar" style="background:${avatarColor}">${initials||'🎂'}</div>
+        <div class="bday-info">
+          <div class="bday-name">${esc(e.title)}</div>
+          <div class="bday-date">📅 ${dateStr}</div>
+          ${age?`<div class="bday-age">Turning ${age} year${age!==1?'s':''} old</div>`:''}
+          ${members.length>1?`<div class="member-chips" style="margin-top:6px">${members.map(m=>`<span class="member-chip">👤 ${esc(m)}</span>`).join('')}</div>`:''}
+        </div>
+        <div class="bday-countdown">
+          <div class="bday-days ${daysColorClass}">${countdownDisplay}</div>
+          <div class="bday-days-label">${countdownLabel}</div>
+        </div>
+      </div>`;
+    }).join('')}
+  }
+
+  // Non-birthday repeating events as "milestones"
+  const milestones=events.filter(e=>e.category!=='birthday'&&(Array.isArray(e.members)?e.members:(e.member?[e.member]:[])).length>=2).slice(0,5);
+  if(milestones.length){
+    html+=`<div class="section-label" style="margin-top:8px"><div class="section-label-text">⭐ Family Milestones</div><div class="section-label-line"></div></div>`;
+    html+=milestones.map(e=>{
+      const days=getEffectiveDays(e);
+      const cat=CATS[e.category]||CATS.other;
+      return eventRowHTML(e,days);
+    }).join('');
+  }
+
+  el.innerHTML=html;
+}
 
 init();
 </script>
