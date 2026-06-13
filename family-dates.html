@@ -91,6 +91,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .month-count{font-size:16px;font-weight:700;color:var(--text);margin-top:2px}
 .month-cell.has-events .month-count{color:var(--accent)}
 .month-cell.urgent .month-count{color:var(--red)}
+.year-chip{padding:3px 8px;border-radius:6px;font-size:11px;font-weight:600;color:var(--muted);border:1px solid var(--border);background:var(--card);cursor:pointer;transition:all .15s}
+.year-chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
 
 /* EVENT ROW */
 .event-row{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 14px;margin-bottom:6px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:box-shadow .15s}
@@ -671,22 +674,18 @@ function renderDashboard(){
     </div>`;
   }
 
-  // Events by month
-  const monthCounts=new Array(12).fill(0);
-  futureEvents.forEach(e=>{
-    const d=getEffectiveDate(e);
-    const diffMonths=(d.getFullYear()-thisYear)*12+(d.getMonth()-today.getMonth());
-    if(diffMonths>=0&&diffMonths<12)monthCounts[d.getMonth()]++;
-  });
-  html+=`<div class="metric-card" style="margin-bottom:10px"><div class="metric-card-title">📅 Events by Month</div>
-    <div class="month-grid">
-      ${MONTHS.map((m,i)=>{
-        const idx=(today.getMonth()+i)%12;
-        const count=monthCounts[idx];
-        const cls=count===0?'':(count>=3?'urgent':'has-events');
-        return`<div class="month-cell ${cls}"><div class="month-name">${MONTHS[idx]}</div><div class="month-count">${count||'·'}</div></div>`;
-      }).join('')}
+
+  // Events by month — with year selector
+  const yearRange=[];
+  for(let y=thisYear;y<=thisYear+5;y++)yearRange.push(y);
+  html+=`<div class="metric-card" style="margin-bottom:10px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div class="metric-card-title" style="margin-bottom:0">📅 Events by Month</div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end">
+        ${yearRange.map(y=>`<div class="year-chip${y===thisYear?' active':''}" onclick="selectMonthYear(${y},this)">${y}</div>`).join('')}
+      </div>
     </div>
+    <div class="month-grid" id="monthGrid">${buildMonthGrid(thisYear,events)}</div>
   </div>`;
 
   // Expense by member
@@ -1104,6 +1103,34 @@ function toast(msg,type=''){
   document.getElementById('toastWrap').appendChild(t);setTimeout(()=>t.remove(),3500);
 }
 function esc(str){if(!str)return'';return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+
+// ── MONTH GRID HELPERS ──
+function buildMonthGrid(year, evList){
+  const counts=new Array(12).fill(0);
+  const eventsByMonth=new Array(12).fill(null).map(()=>[]);
+  evList.forEach(e=>{
+    if(isPastEvent(e))return;
+    const d=getEffectiveDate(e);
+    if(d.getFullYear()===year){
+      counts[d.getMonth()]++;
+      eventsByMonth[d.getMonth()].push(e.title);
+    }
+  });
+  return MONTHS.map((m,i)=>{
+    const count=counts[i];
+    const cls=count===0?'':(count>=3?'urgent':'has-events');
+    const titles=eventsByMonth[i].slice(0,3).map(t=>t.length>20?t.slice(0,18)+'…':t).join('&#10;');
+    return`<div class="month-cell ${cls}" title="${titles}"><div class="month-name">${m}</div><div class="month-count">${count||'·'}</div></div>`;
+  }).join('');
+}
+
+function selectMonthYear(year, el){
+  document.querySelectorAll('.year-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  const grid=document.getElementById('monthGrid');
+  if(grid)grid.innerHTML=buildMonthGrid(year,events);
+}
 
 init();
 </script>
