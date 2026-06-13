@@ -863,7 +863,7 @@ async function sendRemindersNow(){
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+SUPABASE_ANON},
       body:JSON.stringify({
-        to:recipients,
+        to:['anantulyathan@gmail.com'],
         subject:`📅 Family Dates Reminder — ${due.length} event${due.length!==1?'s':''} coming up`,
         html:emailHTML
       })
