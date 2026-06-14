@@ -94,7 +94,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .mbg-3{background:#f5f3ff}
 .mbg-4{background:#fff7ed}
 .mbg-5{background:#fefce8}
-.mbg-multi{background:#f1f5f9}
+.mbg-multi{background:#bfdbfe}
 .mbg-none{background:#f9fafb}
 
 /* EVENT ROW */
@@ -251,7 +251,18 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .empty-icon{font-size:36px;margin-bottom:10px}
 .empty-title{font-size:14px;font-weight:600;color:var(--sub);margin-bottom:5px}
 
-/* CALENDAR */
+/* CALENDAR DAY POPUP */
+.cal-day.has-events{background:var(--card);border-color:var(--border);cursor:pointer}
+.cal-day.has-events:hover{border-color:var(--accent);background:var(--blue-bg)}
+.day-popup-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;align-items:flex-end;justify-content:center}
+.day-popup-overlay.open{display:flex}
+.day-popup{background:var(--card);border-radius:20px 20px 0 0;width:100%;max-width:680px;padding:20px 20px calc(20px + env(safe-area-inset-bottom));max-height:80vh;overflow-y:auto}
+.day-popup-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:14px}
+.day-popup-event{background:var(--border-lt);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px}
+.day-popup-event-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px}
+.day-popup-event-meta{font-size:12px;color:var(--muted);margin-bottom:8px}
+.day-popup-actions{display:flex;gap:7px}
+.day-popup-btn{flex:1;padding:8px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;font-family:'Inter',sans-serif}
 .cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .cal-nav{width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;color:var(--sub)}
 .cal-title{font-size:15px;font-weight:700;color:var(--text)}
@@ -332,6 +343,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
   <div class="tab" onclick="switchTab('events')">Events <span class="tab-badge" id="urgentBadge" style="display:none">0</span></div>
   <div class="tab" onclick="switchTab('calendar')">📆 Calendar</div>
   <div class="tab" onclick="switchTab('birthdays')">🎂 Birthdays</div>
+  <div class="tab" onclick="switchTab('numbers')">📞 Numbers</div>
+  <div class="tab" onclick="switchTab('shopping')">🛒 Shopping</div>
   <div class="tab" onclick="switchTab('calculator')">🧮 Calc</div>
   <div class="tab" onclick="switchTab('settings')">⚙️ Settings</div>
 </div>
@@ -387,6 +400,16 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
   <!-- BIRTHDAYS -->
   <div class="page" id="page-birthdays">
     <div id="birthdaysContent"><div class="loading"><div class="spinner"></div>Loading…</div></div>
+  </div>
+
+  <!-- IMPORTANT NUMBERS -->
+  <div class="page" id="page-numbers">
+    <div id="numbersContent"><div class="loading"><div class="spinner"></div>Loading…</div></div>
+  </div>
+
+  <!-- SHOPPING -->
+  <div class="page" id="page-shopping">
+    <div id="shoppingContent"><div class="loading"><div class="spinner"></div>Loading…</div></div>
   </div>
 
   <!-- CALCULATOR -->
@@ -589,6 +612,143 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
   </div>
 </div>
 
+<!-- DAY POPUP -->
+<div class="day-popup-overlay" id="dayPopup">
+  <div class="day-popup">
+    <div class="modal-handle"></div>
+    <div class="day-popup-title" id="dayPopupTitle"></div>
+    <div id="dayPopupContent"></div>
+    <div style="margin-top:10px">
+      <button class="btn btn-secondary" style="width:100%" onclick="closeDayPopup()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- IMPORTANT NUMBERS MODAL (add/edit) -->
+<div class="modal-overlay" id="numModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="numModalTitle">Add Number</div>
+    <input type="hidden" id="numEditId">
+    <div class="form-group">
+      <label class="form-label">Name *</label>
+      <input class="form-input" id="numName" placeholder="e.g. Dr. Somchai">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Phone Number *</label>
+      <input class="form-input" id="numPhone" type="tel" placeholder="e.g. 02-123-4567">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Category</label>
+      <select class="form-select" id="numCategory">
+        <option value="doctor">👨‍⚕️ Doctor / Hospital</option>
+        <option value="emergency">🚨 Emergency</option>
+        <option value="family">👨‍👩‍👦 Family</option>
+        <option value="work">💼 Work</option>
+        <option value="service">🔧 Service / Repair</option>
+        <option value="insurance">🛡️ Insurance</option>
+        <option value="school">🏫 School</option>
+        <option value="other">⭐ Other</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notes (optional)</label>
+      <input class="form-input" id="numNotes" placeholder="e.g. Cardiologist at Bumrungrad">
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="closeModal('numModal')">Cancel</button>
+      <button class="btn btn-danger" id="numDeleteBtn" style="display:none" onclick="deleteNumber()">Delete</button>
+      <button class="btn btn-primary" onclick="saveNumber()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- SHOPPING ITEM MODAL (add/edit) -->
+<div class="modal-overlay" id="shopModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="shopModalTitle">Add Item</div>
+    <input type="hidden" id="shopEditId">
+    <div class="form-group">
+      <label class="form-label">Item *</label>
+      <input class="form-input" id="shopItem" placeholder="e.g. Milk, Vitamins">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Category</label>
+      <select class="form-select" id="shopCategory">
+        <option value="grocery">🛒 Grocery</option>
+        <option value="household">🏠 Household</option>
+        <option value="health">💊 Health / Pharmacy</option>
+        <option value="kids">👶 Kids</option>
+        <option value="clothing">👕 Clothing</option>
+        <option value="electronics">📱 Electronics</option>
+        <option value="other">⭐ Other</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Est. Price (฿)</label>
+      <div class="expense-wrap">
+        <span class="currency">฿</span>
+        <input class="form-input" id="shopPrice" type="number" min="0" placeholder="0">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Quantity</label>
+      <input class="form-input" id="shopQty" type="number" min="1" value="1">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Added by</label>
+      <div class="member-select-grid" id="shopMemberGrid"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notes (optional)</label>
+      <input class="form-input" id="shopNotes" placeholder="Brand, size, store…">
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="closeModal('shopModal')">Cancel</button>
+      <button class="btn btn-danger" id="shopDeleteBtn" style="display:none" onclick="deleteShopItem()">Delete</button>
+      <button class="btn btn-primary" onclick="saveShopItem()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- EXPENSE LOG MODAL -->
+<div class="modal-overlay" id="expModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Log Purchase</div>
+    <input type="hidden" id="expEditId">
+    <div class="form-group">
+      <label class="form-label">Item Name *</label>
+      <input class="form-input" id="expItem" placeholder="What did you buy?">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Amount (฿) *</label>
+      <div class="expense-wrap">
+        <span class="currency">฿</span>
+        <input class="form-input" id="expAmount" type="number" min="0" placeholder="0">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Date</label>
+      <input class="form-input" id="expDate" type="date">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Store / Where</label>
+      <input class="form-input" id="expStore" placeholder="e.g. Tops, Lazada">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Paid by</label>
+      <div class="member-select-grid" id="expMemberGrid"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="closeModal('expModal')">Cancel</button>
+      <button class="btn btn-danger" id="expDeleteBtn" style="display:none" onclick="deleteExpense()">Delete</button>
+      <button class="btn btn-primary" onclick="saveExpense()">Save</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ── CONFIG ──
 const SUPABASE_URL  = 'https://fkcjjprewnjrwobyaglb.supabase.co';
@@ -604,6 +764,7 @@ let dashYear='all', dashMemberFilter='all';
 let eventsTimeFilter='all', eventsMemberFilter='all';
 let calYear=new Date().getFullYear(), calMonth=new Date().getMonth();
 let currentDetailId=null;
+let importantNumbers=[], shoppingItems=[], shoppingExpenses=[];
 
 // ── CONSTANTS ──
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -742,7 +903,7 @@ function memberBgClass(ev) {
   if(m.length>1) return 'mbg-multi';
   const members = settings.members||[];
   const idx = members.indexOf(m[0]);
-  return idx>=0 ? 'mbg-'+( idx % 6 ) : 'mbg-none';
+  return idx>=0 ? 'mbg-'+(idx%6) : 'mbg-none';
 }
 
 // ── INIT ──
@@ -755,14 +916,20 @@ async function init() {
 
 async function loadAll() {
   try {
-    const [evRes,setRes] = await Promise.all([
+    const [evRes,setRes,numRes,shopRes,expRes] = await Promise.all([
       db.from('family_events').select('*').order('event_date'),
-      db.from('family_settings').select('*').limit(1)
+      db.from('family_settings').select('*').limit(1),
+      db.from('important_numbers').select('*').order('category').order('name'),
+      db.from('shopping_items').select('*').order('created_at',{ascending:false}),
+      db.from('shopping_expenses').select('*').order('purchase_date',{ascending:false})
     ]);
     if(evRes.error) throw evRes.error;
     if(setRes.error) throw setRes.error;
     events = evRes.data||[];
     settings = setRes.data[0]||{reminder_days:[30,14,7,3,1],notify_emails:['anantulyathan@gmail.com'],members:['Anan','Prangkwan','Mark','Matt','Malee']};
+    importantNumbers = numRes.error ? [] : (numRes.data||[]);
+    shoppingItems = shopRes.error ? [] : (shopRes.data||[]);
+    shoppingExpenses = expRes.error ? [] : (expRes.data||[]);
     buildMemberColorMap();
     updateStats();
     renderCurrentPage();
@@ -792,12 +959,15 @@ function updateStats() {
 // ── TAB SWITCHING ──
 function switchTab(tab) {
   currentTab=tab;
-  const tabs=['dashboard','events','calendar','birthdays','calculator','settings'];
+  const tabs=['dashboard','events','calendar','birthdays','numbers','shopping','calculator','settings'];
   document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',tabs[i]===tab));
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+tab).classList.add('active');
   const fab=document.getElementById('mainFab');
-  fab.style.display=(['calculator','settings'].includes(tab))?'none':'flex';
+  if(tab==='calculator'||tab==='settings') { fab.style.display='none'; }
+  else if(tab==='numbers') { fab.style.display='flex'; fab.onclick=()=>openNumModal(); fab.innerHTML='＋ Add Number'; }
+  else if(tab==='shopping') { fab.style.display='flex'; fab.onclick=()=>openShopModal(); fab.innerHTML='＋ Add Item'; }
+  else { fab.style.display='flex'; fab.onclick=openAddModal; fab.innerHTML='＋ Add Event'; }
   renderCurrentPage();
 }
 
@@ -806,6 +976,8 @@ function renderCurrentPage() {
   if(currentTab==='events') renderEvents();
   if(currentTab==='calendar') renderCalendar();
   if(currentTab==='birthdays') renderBirthdays();
+  if(currentTab==='numbers') renderNumbers();
+  if(currentTab==='shopping') renderShopping();
   if(currentTab==='settings') renderSettings();
 }
 
@@ -967,6 +1139,28 @@ function renderDashboard() {
     +'<div class="metric-card"><div class="metric-card-title">'+( isAll?'Active':'In '+dashYear)+' Events</div><div class="metric-num accent">'+yearEvents.length+'</div><div class="metric-sub">'+recurring.length+' recurring · '+oneTime.length+' one-time</div></div>'
     +'<div class="metric-card"><div class="metric-card-title">Est. '+(isAll?'Annual':'Year')+' Cost</div><div class="metric-num teal">'+fmtMoney(totalCost)+'</div><div class="metric-sub">Recurring: '+fmtMoney(recurringCost)+'</div></div>'
     +'</div>';
+
+  // Recurring vs one-time cost split
+  if(totalCost>0) {
+    const recurPct=Math.round(recurringCost/totalCost*100);
+    const oneTimePct=100-recurPct;
+    html+='<div class="metric-card full" style="margin-bottom:10px"><div class="metric-card-title">💳 Recurring vs One-time Cost</div>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">'
+      +'<div style="text-align:center;padding:10px;background:var(--teal-bg);border:1px solid var(--teal-bd);border-radius:10px">'
+      +'<div style="font-size:18px;font-weight:700;color:var(--teal)">'+fmtMoney(recurringCost)+'</div>'
+      +'<div style="font-size:10px;color:var(--muted);margin-top:3px">🔄 Recurring ('+recurPct+'%)</div>'
+      +'</div>'
+      +'<div style="text-align:center;padding:10px;background:var(--blue-bg);border:1px solid var(--blue-bd);border-radius:10px">'
+      +'<div style="font-size:18px;font-weight:700;color:var(--accent)">'+fmtMoney(oneTimeCost)+'</div>'
+      +'<div style="font-size:10px;color:var(--muted);margin-top:3px">📌 One-time ('+oneTimePct+'%)</div>'
+      +'</div>'
+      +'</div>'
+      +'<div style="height:8px;border-radius:4px;overflow:hidden;background:var(--border-lt);display:flex">'
+      +(recurringCost>0?'<div style="width:'+recurPct+'%;background:var(--teal);transition:width .3s"></div>':'')
+      +(oneTimeCost>0?'<div style="flex:1;background:var(--accent)"></div>':'')
+      +'</div>'
+      +'</div>';
+  }
 
   // Recurring costs by member
   if(recurringCost>0) {
@@ -1135,11 +1329,11 @@ function renderCalendar() {
   const monthName=new Date(calYear,calMonth).toLocaleDateString('en-GB',{month:'long',year:'numeric'});
 
   // Build event map for this month view
-  const eventMap={};
+  calDayEventMap={};
   function addToMap(date,ev) {
     const key=date.getFullYear()+'-'+date.getMonth()+'-'+date.getDate();
-    if(!eventMap[key]) eventMap[key]=[];
-    eventMap[key].push(ev);
+    if(!calDayEventMap[key]) calDayEventMap[key]=[];
+    calDayEventMap[key].push(ev);
   }
   const viewStart=new Date(calYear,calMonth,1-startDow);
   const viewEnd=new Date(calYear,calMonth+1,7);
@@ -1169,29 +1363,30 @@ function renderCalendar() {
   cells.forEach(function(cell){
     var date=cell.date, current=cell.current;
     var key=date.getFullYear()+'-'+date.getMonth()+'-'+date.getDate();
-    var dayEvs=eventMap[key]||[];
+    var dayEvs=calDayEventMap[key]||[];
     var isToday=date.getTime()===today.getTime();
     var cls='cal-day'+(current?'':' other-month')+(isToday?' today':'')+(dayEvs.length?' has-events':'');
     var dots=dayEvs.slice(0,6).map(function(e){
       var cat=CATS[e.category]||CATS.other;
       return '<div class="cal-dot '+cat.color+'"></div>';
     }).join('');
-    html+='<div class="'+cls+'"><div class="cal-day-num">'+date.getDate()+'</div>'+(dots?'<div class="cal-dots">'+dots+'</div>':'')+'</div>';
+    var clickAttr=dayEvs.length?' onclick="openDayPopup(\''+key+'\')"':'';
+    html+='<div class="'+cls+'"'+clickAttr+'><div class="cal-day-num">'+date.getDate()+'</div>'+(dots?'<div class="cal-dots">'+dots+'</div>':'')+'</div>';
   });
   html+='</div>';
 
   // All events this month listed below grid
-  const monthKeys=Object.keys(eventMap).filter(function(k){
+  const monthKeys=Object.keys(calDayEventMap).filter(function(k){
     var parts=k.split('-');
     return parseInt(parts[0])===calYear&&parseInt(parts[1])===calMonth;
   }).sort();
 
   html+='<div class="cal-event-list">';
   if(monthKeys.length) {
-    var total=monthKeys.reduce(function(s,k){return s+(eventMap[k]||[]).length;},0);
+    var total=monthKeys.reduce(function(s,k){return s+(calDayEventMap[k]||[]).length;},0);
     html+='<div class="section-label" style="margin-top:14px"><div class="section-label-text">📋 Events this month</div><div class="section-label-line"></div><div class="section-label-count">'+total+' events</div></div>';
     monthKeys.forEach(function(key){
-      var dayEvs=eventMap[key]||[];
+      var dayEvs=calDayEventMap[key]||[];
       if(!dayEvs.length) return;
       var parts=key.split('-');
       var d=new Date(parseInt(parts[0]),parseInt(parts[1]),parseInt(parts[2]));
@@ -1421,6 +1616,365 @@ async function deleteEvent() {
   if(!id||!confirm('Delete this event?')) return;
   try{const{error}=await db.from('family_events').delete().eq('id',id);if(error)throw error;toast('Deleted','success');closeModal('eventModal');await loadAll();}
   catch(e){toast('Error: '+e.message,'error');}
+}
+
+// ── CALENDAR DAY POPUP ──
+let calDayEventMap = {};
+
+function openDayPopup(key) {
+  const evs = calDayEventMap[key]||[];
+  if(!evs.length) return;
+  const parts=key.split('-');
+  const d=new Date(parseInt(parts[0]),parseInt(parts[1]),parseInt(parts[2]));
+  document.getElementById('dayPopupTitle').textContent=d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('dayPopupContent').innerHTML=evs.map(function(e){
+    const cat=CATS[e.category]||CATS.other;
+    const days=getEffectiveDays(e);
+    const exp=parseFloat(e.expense_estimate)||0;
+    const members=membersOf(e);
+    return '<div class="day-popup-event '+memberBgClass(e)+'">'
+      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">'
+      +'<div class="event-icon '+cat.catClass+'" style="width:32px;height:32px;font-size:14px;border-radius:8px">'+cat.icon+'</div>'
+      +'<div><div class="day-popup-event-title">'+esc(e.title)+'</div>'
+      +'<div class="day-popup-event-meta">'+repeatShort(e)+(exp>0?' · ฿'+exp.toLocaleString('en'):'')+(members.length?' · '+members.join(', '):'')+'</div>'
+      +'</div></div>'
+      +'<div class="day-popup-actions">'
+      +'<button class="day-popup-btn btn-primary" style="background:var(--accent);color:#fff" onclick="closeDayPopup();openDetail(\''+e.id+'\')">View</button>'
+      +'<button class="day-popup-btn btn-secondary" style="background:var(--border-lt);color:var(--sub);border:1px solid var(--border)" onclick="closeDayPopup();openEditModal(\''+e.id+'\')">Edit</button>'
+      +'<button class="day-popup-btn btn-danger" style="background:#fef2f2;color:var(--red);border:1px solid var(--red-bd)" onclick="deleteDayEvent(\''+e.id+'\')">Delete</button>'
+      +'</div>'
+      +'</div>';
+  }).join('');
+  document.getElementById('dayPopup').classList.add('open');
+}
+
+function closeDayPopup() { document.getElementById('dayPopup').classList.remove('open'); }
+
+async function deleteDayEvent(id) {
+  if(!confirm('Delete this event?')) return;
+  try {
+    const{error}=await db.from('family_events').delete().eq('id',id);
+    if(error) throw error;
+    toast('Deleted','success');
+    closeDayPopup();
+    await loadAll();
+  } catch(e){toast('Error: '+e.message,'error');}
+}
+
+document.getElementById('dayPopup').addEventListener('click',function(e){if(e.target===this)closeDayPopup();});
+
+// ── IMPORTANT NUMBERS ──
+const NUM_CATS = {
+  doctor:    {icon:'👨‍⚕️',label:'Doctor / Hospital'},
+  emergency: {icon:'🚨',label:'Emergency'},
+  family:    {icon:'👨‍👩‍👦',label:'Family'},
+  work:      {icon:'💼',label:'Work'},
+  service:   {icon:'🔧',label:'Service / Repair'},
+  insurance: {icon:'🛡️',label:'Insurance'},
+  school:    {icon:'🏫',label:'School'},
+  other:     {icon:'⭐',label:'Other'},
+};
+
+function renderNumbers() {
+  const el=document.getElementById('numbersContent'); if(!el) return;
+  if(!importantNumbers.length) {
+    el.innerHTML='<div class="empty"><div class="empty-icon">📞</div><div class="empty-title">No numbers saved yet</div>Tap + to add a contact</div>';
+    return;
+  }
+  const grouped={};
+  importantNumbers.forEach(n=>{const c=n.category||'other';if(!grouped[c])grouped[c]=[];grouped[c].push(n);});
+  let html='';
+  const order=['emergency','doctor','family','work','insurance','service','school','other'];
+  order.forEach(function(cat){
+    if(!grouped[cat]) return;
+    const nc=NUM_CATS[cat]||NUM_CATS.other;
+    html+='<div class="section-label"><div class="section-label-text">'+nc.icon+' '+nc.label+'</div><div class="section-label-line"></div><div class="section-label-count">'+grouped[cat].length+'</div></div>';
+    grouped[cat].forEach(function(n){
+      html+='<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:7px;display:flex;align-items:center;gap:12px">'
+        +'<a href="tel:'+esc(n.phone)+'" style="width:44px;height:44px;border-radius:50%;background:var(--teal-bg);border:1px solid var(--teal-bd);display:flex;align-items:center;justify-content:center;font-size:20px;text-decoration:none;flex-shrink:0">📞</a>'
+        +'<div style="flex:1;min-width:0">'
+        +'<div style="font-size:14px;font-weight:600;color:var(--text)">'+esc(n.name)+'</div>'
+        +'<a href="tel:'+esc(n.phone)+'" style="font-size:13px;color:var(--teal);font-weight:600;text-decoration:none">'+esc(n.phone)+'</a>'
+        +(n.notes?'<div style="font-size:11px;color:var(--muted);margin-top:2px">'+esc(n.notes)+'</div>':'')
+        +'</div>'
+        +'<div style="color:var(--muted);font-size:13px;cursor:pointer;padding:8px" onclick="openNumModal(\''+n.id+'\')">✏️</div>'
+        +'</div>';
+    });
+  });
+  el.innerHTML=html;
+}
+
+function openNumModal(id) {
+  document.getElementById('numEditId').value=id||'';
+  document.getElementById('numModalTitle').textContent=id?'Edit Number':'Add Number';
+  document.getElementById('numDeleteBtn').style.display=id?'':'none';
+  if(id) {
+    const n=importantNumbers.find(x=>x.id===id); if(!n) return;
+    document.getElementById('numName').value=n.name||'';
+    document.getElementById('numPhone').value=n.phone||'';
+    document.getElementById('numCategory').value=n.category||'other';
+    document.getElementById('numNotes').value=n.notes||'';
+  } else {
+    document.getElementById('numName').value='';
+    document.getElementById('numPhone').value='';
+    document.getElementById('numCategory').value='doctor';
+    document.getElementById('numNotes').value='';
+  }
+  document.getElementById('numModal').classList.add('open');
+}
+
+async function saveNumber() {
+  const id=document.getElementById('numEditId').value;
+  const name=document.getElementById('numName').value.trim();
+  const phone=document.getElementById('numPhone').value.trim();
+  const category=document.getElementById('numCategory').value;
+  const notes=document.getElementById('numNotes').value.trim()||null;
+  if(!name){toast('Please enter a name','error');return;}
+  if(!phone){toast('Please enter a phone number','error');return;}
+  const payload={name,phone,category,notes,updated_at:new Date().toISOString()};
+  try {
+    if(id){const{error}=await db.from('important_numbers').update(payload).eq('id',id);if(error)throw error;toast('Updated ✓','success');}
+    else{const{error}=await db.from('important_numbers').insert(payload);if(error)throw error;toast('Added ✓','success');}
+    closeModal('numModal');
+    const{data}=await db.from('important_numbers').select('*').order('category').order('name');
+    importantNumbers=data||[];
+    renderNumbers();
+  } catch(e){toast('Error: '+e.message,'error');}
+}
+
+async function deleteNumber() {
+  const id=document.getElementById('numEditId').value;
+  if(!id||!confirm('Delete this number?')) return;
+  try {
+    const{error}=await db.from('important_numbers').delete().eq('id',id);
+    if(error) throw error;
+    toast('Deleted','success');
+    closeModal('numModal');
+    const{data}=await db.from('important_numbers').select('*').order('category').order('name');
+    importantNumbers=data||[];
+    renderNumbers();
+  } catch(e){toast('Error: '+e.message,'error');}
+}
+
+// ── SHOPPING ──
+const SHOP_CATS = {
+  grocery:     {icon:'🛒',label:'Grocery'},
+  household:   {icon:'🏠',label:'Household'},
+  health:      {icon:'💊',label:'Health / Pharmacy'},
+  kids:        {icon:'👶',label:'Kids'},
+  clothing:    {icon:'👕',label:'Clothing'},
+  electronics: {icon:'📱',label:'Electronics'},
+  other:       {icon:'⭐',label:'Other'},
+};
+
+let shopView='list'; // 'list' or 'log'
+
+function renderShopping() {
+  const el=document.getElementById('shoppingContent'); if(!el) return;
+  const totalBudget=shoppingItems.reduce((s,i)=>s+(parseFloat(i.price)||0)*(parseInt(i.quantity)||1),0);
+  const totalSpent=shoppingExpenses.reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
+  const pending=shoppingItems.filter(i=>!i.purchased);
+  const bought=shoppingItems.filter(i=>i.purchased);
+
+  let html='<div style="display:flex;gap:8px;margin-bottom:12px">'
+    +'<div class="filter-chip'+(shopView==='list'?' active':'')+'" onclick="shopView=\'list\';renderShopping()">🛒 Shopping List</div>'
+    +'<div class="filter-chip'+(shopView==='log'?' active':'')+'" onclick="shopView=\'log\';renderShopping()">💳 Expense Log</div>'
+    +'</div>';
+
+  if(shopView==='list') {
+    html+='<div class="metric-grid" style="margin-bottom:12px">'
+      +'<div class="metric-card"><div class="metric-card-title">Pending Items</div><div class="metric-num accent">'+pending.length+'</div><div class="metric-sub">'+bought.length+' bought</div></div>'
+      +'<div class="metric-card"><div class="metric-card-title">Est. Budget</div><div class="metric-num teal">'+fmtMoney(totalBudget)+'</div><div class="metric-sub">Total in list</div></div>'
+      +'</div>';
+
+    if(!shoppingItems.length) {
+      html+='<div class="empty"><div class="empty-icon">🛒</div><div class="empty-title">Shopping list is empty</div>Tap + to add items</div>';
+    } else {
+      if(pending.length) {
+        html+='<div class="section-label"><div class="section-label-text">🛒 To Buy</div><div class="section-label-line"></div><div class="section-label-count">'+pending.length+'</div></div>';
+        html+=pending.map(i=>shopItemHtml(i)).join('');
+      }
+      if(bought.length) {
+        html+='<div class="section-label" style="margin-top:12px"><div class="section-label-text" style="color:var(--muted)">✅ Bought</div><div class="section-label-line"></div><div class="section-label-count">'+bought.length+'</div></div>';
+        html+=bought.map(i=>shopItemHtml(i)).join('');
+      }
+    }
+  } else {
+    html+='<div class="metric-grid" style="margin-bottom:12px">'
+      +'<div class="metric-card"><div class="metric-card-title">Total Spent</div><div class="metric-num teal">'+fmtMoney(totalSpent)+'</div><div class="metric-sub">'+shoppingExpenses.length+' purchases</div></div>'
+      +'<div class="metric-card"><div style="display:flex;justify-content:flex-end"><button class="btn-sm btn-primary" style="background:var(--accent);color:#fff;border:none" onclick="openExpModal()">+ Log</button></div><div class="metric-card-title" style="margin-top:6px">This Month</div><div class="metric-num accent">'+fmtMoney(shoppingExpenses.filter(e=>new Date(e.purchase_date).getMonth()===new Date().getMonth()).reduce((s,e)=>s+(parseFloat(e.amount)||0),0))+'</div></div>'
+      +'</div>';
+    if(!shoppingExpenses.length) {
+      html+='<div class="empty"><div class="empty-icon">💳</div><div class="empty-title">No purchases logged yet</div>Tap + Log to record a purchase</div>';
+    } else {
+      html+=shoppingExpenses.map(function(e){
+        var d=new Date(e.purchase_date||e.created_at);
+        var dateStr=d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+        return '<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:7px;display:flex;align-items:center;gap:10px">'
+          +'<div style="flex:1;min-width:0">'
+          +'<div style="font-size:14px;font-weight:600;color:var(--text)">'+esc(e.item_name)+'</div>'
+          +'<div style="font-size:11px;color:var(--muted);margin-top:2px">'+dateStr+(e.store?' · '+esc(e.store):'')+(e.paid_by?' · '+esc(e.paid_by):'')+'</div>'
+          +'</div>'
+          +'<div style="text-align:right;flex-shrink:0">'
+          +'<div style="font-size:14px;font-weight:700;color:var(--teal)">'+fmtMoney(parseFloat(e.amount)||0)+'</div>'
+          +'<div style="font-size:11px;color:var(--muted);cursor:pointer;margin-top:2px" onclick="openExpModal(\''+e.id+'\')">Edit</div>'
+          +'</div>'
+          +'</div>';
+      }).join('');
+    }
+  }
+  el.innerHTML=html;
+}
+
+function shopItemHtml(i) {
+  const sc=SHOP_CATS[i.category]||SHOP_CATS.other;
+  const price=(parseFloat(i.price)||0)*(parseInt(i.quantity)||1);
+  return '<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:7px;display:flex;align-items:center;gap:10px;'+(i.purchased?'opacity:0.55':'')+'">'
+    +'<div onclick="toggleBought(\''+i.id+'\','+(!i.purchased)+')" style="width:22px;height:22px;border-radius:50%;border:2px solid '+(i.purchased?'var(--green)':'var(--border)')+';background:'+(i.purchased?'var(--green)':'transparent')+';display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;color:#fff;font-size:12px">'+(i.purchased?'✓':'')+'</div>'
+    +'<div style="font-size:18px;flex-shrink:0">'+sc.icon+'</div>'
+    +'<div style="flex:1;min-width:0">'
+    +'<div style="font-size:14px;font-weight:600;color:var(--text);'+(i.purchased?'text-decoration:line-through':'')+'">'+esc(i.item_name)+'</div>'
+    +'<div style="font-size:11px;color:var(--muted);margin-top:2px">'+sc.label+(i.quantity>1?' · qty '+i.quantity:'')+(i.notes?' · '+esc(i.notes):'')+'</div>'
+    +(i.members&&i.members.length?'<div class="member-chips" style="margin-top:3px">'+i.members.map(m=>'<span class="member-chip '+memberChipClass(m)+'">'+esc(m)+'</span>').join('')+'</div>':'')
+    +'</div>'
+    +'<div style="text-align:right;flex-shrink:0">'
+    +(price>0?'<div style="font-size:13px;font-weight:700;color:var(--teal)">'+fmtMoney(price)+'</div>':'')
+    +'<div style="font-size:11px;color:var(--muted);cursor:pointer;margin-top:2px" onclick="openShopModal(\''+i.id+'\')">Edit</div>'
+    +'</div>'
+    +'</div>';
+}
+
+async function toggleBought(id,val) {
+  try {
+    const{error}=await db.from('shopping_items').update({purchased:val,updated_at:new Date().toISOString()}).eq('id',id);
+    if(error) throw error;
+    const idx=shoppingItems.findIndex(i=>i.id===id);
+    if(idx>=0) shoppingItems[idx].purchased=val;
+    renderShopping();
+  } catch(e){toast('Error: '+e.message,'error');}
+}
+
+function openShopModal(id) {
+  document.getElementById('shopEditId').value=id||'';
+  document.getElementById('shopModalTitle').textContent=id?'Edit Item':'Add Item';
+  document.getElementById('shopDeleteBtn').style.display=id?'':'none';
+  buildMemberGrid2('shopMemberGrid',[]);
+  if(id) {
+    const i=shoppingItems.find(x=>x.id===id); if(!i) return;
+    document.getElementById('shopItem').value=i.item_name||'';
+    document.getElementById('shopCategory').value=i.category||'grocery';
+    document.getElementById('shopPrice').value=i.price||'';
+    document.getElementById('shopQty').value=i.quantity||1;
+    document.getElementById('shopNotes').value=i.notes||'';
+    buildMemberGrid2('shopMemberGrid',i.members||[]);
+  } else {
+    document.getElementById('shopItem').value='';
+    document.getElementById('shopCategory').value='grocery';
+    document.getElementById('shopPrice').value='';
+    document.getElementById('shopQty').value='1';
+    document.getElementById('shopNotes').value='';
+  }
+  document.getElementById('shopModal').classList.add('open');
+}
+
+async function saveShopItem() {
+  const id=document.getElementById('shopEditId').value;
+  const item_name=document.getElementById('shopItem').value.trim();
+  const category=document.getElementById('shopCategory').value;
+  const price=parseFloat(document.getElementById('shopPrice').value)||null;
+  const quantity=parseInt(document.getElementById('shopQty').value)||1;
+  const notes=document.getElementById('shopNotes').value.trim()||null;
+  const members=getSelectedMembers2('shopMemberGrid');
+  if(!item_name){toast('Please enter an item name','error');return;}
+  const payload={item_name,category,price,quantity,notes,members,purchased:false,updated_at:new Date().toISOString()};
+  try {
+    if(id){const{error}=await db.from('shopping_items').update(payload).eq('id',id);if(error)throw error;toast('Updated ✓','success');}
+    else{const{error}=await db.from('shopping_items').insert(payload);if(error)throw error;toast('Added ✓','success');}
+    closeModal('shopModal');
+    const{data}=await db.from('shopping_items').select('*').order('created_at',{ascending:false});
+    shoppingItems=data||[];
+    renderShopping();
+  } catch(e){toast('Error: '+e.message,'error');}
+}
+
+async function deleteShopItem() {
+  const id=document.getElementById('shopEditId').value;
+  if(!id||!confirm('Delete this item?')) return;
+  try {
+    const{error}=await db.from('shopping_items').delete().eq('id',id);
+    if(error) throw error;
+    toast('Deleted','success');
+    closeModal('shopModal');
+    const{data}=await db.from('shopping_items').select('*').order('created_at',{ascending:false});
+    shoppingItems=data||[];
+    renderShopping();
+  } catch(e){toast('Error: '+e.message,'error');}
+}
+
+function openExpModal(id) {
+  document.getElementById('expEditId').value=id||'';
+  document.getElementById('expDeleteBtn').style.display=id?'':'none';
+  buildMemberGrid2('expMemberGrid',[]);
+  if(id) {
+    const e=shoppingExpenses.find(x=>x.id===id); if(!e) return;
+    document.getElementById('expItem').value=e.item_name||'';
+    document.getElementById('expAmount').value=e.amount||'';
+    document.getElementById('expDate').value=e.purchase_date||'';
+    document.getElementById('expStore').value=e.store||'';
+    buildMemberGrid2('expMemberGrid',e.paid_by?[e.paid_by]:[]);
+  } else {
+    document.getElementById('expItem').value='';
+    document.getElementById('expAmount').value='';
+    document.getElementById('expDate').value=new Date().toISOString().slice(0,10);
+    document.getElementById('expStore').value='';
+  }
+  document.getElementById('expModal').classList.add('open');
+}
+
+async function saveExpense() {
+  const id=document.getElementById('expEditId').value;
+  const item_name=document.getElementById('expItem').value.trim();
+  const amount=parseFloat(document.getElementById('expAmount').value)||null;
+  const purchase_date=document.getElementById('expDate').value||null;
+  const store=document.getElementById('expStore').value.trim()||null;
+  const paidByArr=getSelectedMembers2('expMemberGrid');
+  const paid_by=paidByArr.length?paidByArr[0]:null;
+  if(!item_name){toast('Please enter an item name','error');return;}
+  if(!amount){toast('Please enter an amount','error');return;}
+  const payload={item_name,amount,purchase_date,store,paid_by,updated_at:new Date().toISOString()};
+  try {
+    if(id){const{error}=await db.from('shopping_expenses').update(payload).eq('id',id);if(error)throw error;toast('Updated ✓','success');}
+    else{const{error}=await db.from('shopping_expenses').insert(payload);if(error)throw error;toast('Added ✓','success');}
+    closeModal('expModal');
+    const{data}=await db.from('shopping_expenses').select('*').order('purchase_date',{ascending:false});
+    shoppingExpenses=data||[];
+    renderShopping();
+  } catch(e){toast('Error: '+e.message,'error');}
+}
+
+async function deleteExpense() {
+  const id=document.getElementById('expEditId').value;
+  if(!id||!confirm('Delete this expense?')) return;
+  try {
+    const{error}=await db.from('shopping_expenses').delete().eq('id',id);
+    if(error) throw error;
+    toast('Deleted','success');
+    closeModal('expModal');
+    const{data}=await db.from('shopping_expenses').select('*').order('purchase_date',{ascending:false});
+    shoppingExpenses=data||[];
+    renderShopping();
+  } catch(e){toast('Error: '+e.message,'error');}
+}
+
+// Member grid helpers for shopping/expense modals (separate from event member grid)
+function buildMemberGrid2(gridId, selected) {
+  const members=settings.members||['Anan','Prangkwan','Mark','Matt','Malee'];
+  const sel=Array.isArray(selected)?selected:[];
+  const el=document.getElementById(gridId); if(!el) return;
+  el.innerHTML=members.map(m=>'<div class="member-toggle'+(sel.includes(m)?' on':'')+'" onclick="this.classList.toggle(\'on\')">'+esc(m)+'</div>').join('');
+}
+function getSelectedMembers2(gridId) {
+  return Array.from(document.querySelectorAll('#'+gridId+' .member-toggle.on')).map(el=>el.textContent.trim());
 }
 
 // ── SETTINGS ──
