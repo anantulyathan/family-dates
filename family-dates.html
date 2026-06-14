@@ -2245,7 +2245,7 @@ function pcSuccess() {
   pcUpdateDots('');
   document.getElementById('passcodeScreen').classList.add('hidden');
   setTimeout(()=>{ document.getElementById('passcodeScreen').style.display='none'; },320);
-  init();
+  // app already loaded at startup — no re-init needed
 }
 
 function pcFail() {
@@ -2351,6 +2351,7 @@ function pcHandleNewPasscode() {
 // ── START ──
 if(!pcCheckSession()) {
   pcCheckLockout();
+  init(); // load app behind passcode screen so it is ready on unlock
 } else {
   document.getElementById('passcodeScreen').style.display = 'none';
   init();
