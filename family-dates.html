@@ -942,8 +942,8 @@ async function loadAll() {
       Promise.all([
         db.from('family_events').select('*').order('event_date'),
         db.from('family_settings').select('*').limit(1),
-        db.from('important_numbers').select('*').order('category').order('name'),
-        db.from('shopping_items').select('*').order('created_at',{ascending:false}),
+        db.from('important_numbers').select('id,name,phone,category,notes,created_at,updated_at').order('category').order('name'),
+        db.from('shopping_items').select('id,item_name,category,price,quantity,notes,members,purchased,created_at,updated_at').order('created_at',{ascending:false}),
         db.from('shopping_expenses').select('*').order('purchase_date',{ascending:false})
       ]),
       timeout.then(()=>{ throw new Error('Connection timed out'); })
@@ -1758,12 +1758,11 @@ async function saveNumber() {
   if(!name){toast('Please enter a name','error');return;}
   if(!phone){toast('Please enter a phone number','error');return;}
   const payload={name,phone,category,notes,updated_at:new Date().toISOString()};
-  if(!id) payload.created_by=currentUser||null;
   try {
     if(id){const{error}=await db.from('important_numbers').update(payload).eq('id',id);if(error)throw error;toast('Updated ✓','success');}
     else{const{error}=await db.from('important_numbers').insert(payload);if(error)throw error;toast('Added ✓','success');}
     closeModal('numModal');
-    const{data}=await db.from('important_numbers').select('*').order('category').order('name');
+    const{data}=await db.from('important_numbers').select('id,name,phone,category,notes,created_at,updated_at').order('category').order('name');
     importantNumbers=data||[];
     renderNumbers();
   } catch(e){toast('Error: '+e.message,'error');}
@@ -1777,7 +1776,7 @@ async function deleteNumber() {
     if(error) throw error;
     toast('Deleted','success');
     closeModal('numModal');
-    const{data}=await db.from('important_numbers').select('*').order('category').order('name');
+    const{data}=await db.from('important_numbers').select('id,name,phone,category,notes,created_at,updated_at').order('category').order('name');
     importantNumbers=data||[];
     renderNumbers();
   } catch(e){toast('Error: '+e.message,'error');}
@@ -1917,12 +1916,11 @@ async function saveShopItem() {
   const members=getSelectedMembers2('shopMemberGrid');
   if(!item_name){toast('Please enter an item name','error');return;}
   const payload={item_name,category,price,quantity,notes,members,purchased:false,updated_at:new Date().toISOString()};
-  if(!id) payload.created_by=currentUser||null;
   try {
     if(id){const{error}=await db.from('shopping_items').update(payload).eq('id',id);if(error)throw error;toast('Updated ✓','success');}
     else{const{error}=await db.from('shopping_items').insert(payload);if(error)throw error;toast('Added ✓','success');}
     closeModal('shopModal');
-    const{data}=await db.from('shopping_items').select('*').order('created_at',{ascending:false});
+    const{data}=await db.from('shopping_items').select('id,item_name,category,price,quantity,notes,members,purchased,created_at,updated_at').order('created_at',{ascending:false});
     shoppingItems=data||[];
     renderShopping();
   } catch(e){toast('Error: '+e.message,'error');}
@@ -1936,7 +1934,7 @@ async function deleteShopItem() {
     if(error) throw error;
     toast('Deleted','success');
     closeModal('shopModal');
-    const{data}=await db.from('shopping_items').select('*').order('created_at',{ascending:false});
+    const{data}=await db.from('shopping_items').select('id,item_name,category,price,quantity,notes,members,purchased,created_at,updated_at').order('created_at',{ascending:false});
     shoppingItems=data||[];
     renderShopping();
   } catch(e){toast('Error: '+e.message,'error');}
