@@ -922,20 +922,25 @@ function updateUserBadge() {
 async function init() {
   document.getElementById('headerDate').textContent =
     new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+  updateUserBadge();
+  renderCurrentPage(); // show app shell immediately — don't wait for data
   await loadAll();
   setStatus('connected');
-  updateUserBadge();
   if(!currentUser) setTimeout(showIdentityModal, 1200);
 }
 
 async function loadAll() {
+  const timeout = new Promise((_,rej) => setTimeout(() => rej(new Error('Connection timed out')), 10000));
   try {
-    const [evRes,setRes,numRes,shopRes,expRes] = await Promise.all([
-      db.from('family_events').select('*').order('event_date'),
-      db.from('family_settings').select('*').limit(1),
-      db.from('important_numbers').select('*').order('category').order('name'),
-      db.from('shopping_items').select('*').order('created_at',{ascending:false}),
-      db.from('shopping_expenses').select('*').order('purchase_date',{ascending:false})
+    const [evRes,setRes,numRes,shopRes,expRes] = await Promise.race([
+      Promise.all([
+        db.from('family_events').select('*').order('event_date'),
+        db.from('family_settings').select('*').limit(1),
+        db.from('important_numbers').select('*').order('category').order('name'),
+        db.from('shopping_items').select('*').order('created_at',{ascending:false}),
+        db.from('shopping_expenses').select('*').order('purchase_date',{ascending:false})
+      ]),
+      timeout.then(()=>{ throw new Error('Connection timed out'); })
     ]);
     if(evRes.error) throw evRes.error;
     if(setRes.error) throw setRes.error;
@@ -947,7 +952,15 @@ async function loadAll() {
     buildMemberColorMap();
     updateStats();
     renderCurrentPage();
-  } catch(e) { setStatus('error'); toast('Could not load: '+e.message,'error'); }
+  } catch(e) {
+    setStatus('error');
+    events=[]; settings={reminder_days:[30,14,7,3,1],notify_emails:['anantulyathan@gmail.com'],members:['Anan','Prangkwan','Mark','Matt','Malee']};
+    importantNumbers=[]; shoppingItems=[]; shoppingExpenses=[];
+    buildMemberColorMap();
+    updateStats();
+    renderCurrentPage();
+    toast('⚠️ ' + e.message + ' — check connection or restore Supabase', 'error');
+  }
 }
 
 function setStatus(s) {
