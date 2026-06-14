@@ -1760,13 +1760,15 @@ function pcHandleNewPasscode() {
       localStorage.setItem(PASSCODE_HASH_KEY, simpleHash(pcEntry));
       localStorage.setItem(PASSCODE_KEY, 'ok');
       localStorage.setItem(PASSCODE_EXPIRY_KEY, String(Date.now() + SESSION_HOURS*3600*1000));
-      toast('Passcode updated ✓','success');
       pcIsSettingNew = false;
       pcFirstEntry = '';
       pcEntry = '';
       document.querySelector('.pc-sub').textContent = 'Enter passcode to continue';
       document.getElementById('passcodeScreen').classList.add('hidden');
-      setTimeout(()=>{ document.getElementById('passcodeScreen').style.display='none'; },320);
+      setTimeout(()=>{
+        document.getElementById('passcodeScreen').style.display='none';
+        toast('Passcode updated ✓','success');
+      },320);
     } else {
       document.getElementById('pcErrMsg').textContent = 'Passcodes do not match. Try again.';
       pcFirstEntry = '';
