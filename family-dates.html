@@ -24,6 +24,8 @@
   --blue:#2563eb;--blue-bg:#eff6ff;--blue-bd:#bfdbfe;
   --purple:#7c3aed;--purple-bg:#f5f3ff;--purple-bd:#ddd6fe;
   --teal:#0d9488;--teal-bg:#f0fdfa;--teal-bd:#99f6e4;
+  --pink:#db2777;--pink-bg:#fdf2f8;--pink-bd:#fbcfe8;
+  --orange:#ea580c;--orange-bg:#fff7ed;--orange-bd:#fed7aa;
   --accent:#1d4ed8
 }
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;padding-bottom:env(safe-area-inset-bottom)}
@@ -35,247 +37,262 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .header-sub{font-size:13px;color:rgba(255,255,255,0.4);margin-top:4px}
 .header-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
 .live-dot{display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,0.5)}
-.live-dot .dot{width:7px;height:7px;border-radius:50%;background:#6b7280;box-shadow:0 0 0 3px rgba(107,114,128,0.2);transition:background .3s,box-shadow .3s}
+.live-dot .dot{width:7px;height:7px;border-radius:50%;background:#6b7280;box-shadow:0 0 0 3px rgba(107,114,128,0.2);transition:background .3s}
 .live-dot .dot.connected{background:#34d399;box-shadow:0 0 0 3px rgba(52,211,153,0.2)}
-.live-dot .dot.error{background:#f87171;box-shadow:0 0 0 3px rgba(248,113,113,0.2)}
+.live-dot .dot.error{background:#f87171}
 .header-date{font-size:11px;color:rgba(255,255,255,0.3)}
 .header-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,0.06);border-radius:12px 12px 0 0;overflow:hidden}
 .hstat{padding:12px 6px;background:rgba(255,255,255,0.04);text-align:center}
-.hstat-num{font-size:18px;font-weight:700;color:#fff;line-height:1}
-.hstat-num.red{color:#f87171}.hstat-num.amber{color:#fbbf24}.hstat-num.green{color:#34d399}.hstat-num.blue{color:#93c5fd}.hstat-num.teal{color:#5eead4}
+.hstat-num{font-size:16px;font-weight:700;color:#fff;line-height:1}
+.hstat-num.red{color:#f87171}.hstat-num.amber{color:#fbbf24}.hstat-num.green{color:#34d399}.hstat-num.teal{color:#5eead4}
 .hstat-lbl{font-size:9px;color:rgba(255,255,255,0.35);margin-top:3px;line-height:1.3}
 
 /* TABS */
-.tabs{background:var(--card);border-bottom:1px solid var(--border);display:flex;padding:0 16px;position:sticky;top:0;z-index:50;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow-x:auto;scrollbar-width:none}
+.tabs{background:var(--card);border-bottom:1px solid var(--border);display:flex;padding:0 12px;position:sticky;top:0;z-index:50;box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow-x:auto;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
-.tab{padding:14px 12px;font-size:13px;font-weight:500;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;cursor:pointer;display:flex;align-items:center;gap:5px;transition:color .15s;flex-shrink:0}
+.tab{padding:13px 10px;font-size:12px;font-weight:500;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;cursor:pointer;display:flex;align-items:center;gap:4px;transition:color .15s;flex-shrink:0}
 .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
-.tab-badge{background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px}
+.tab-badge{background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:1px 5px;border-radius:10px}
 
 /* MAIN */
 .main{max-width:680px;margin:0 auto;padding:16px 16px 100px}
 .page{display:none}.page.active{display:block}
 
 /* SECTION LABEL */
-.section-label{display:flex;align-items:center;gap:8px;margin:20px 0 10px}
+.section-label{display:flex;align-items:center;gap:8px;margin:18px 0 10px}
 .section-label-text{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.09em;white-space:nowrap}
 .section-label-line{flex:1;height:1px;background:var(--border)}
 .section-label-count{font-size:11px;color:var(--muted);background:var(--border-lt);border:1px solid var(--border);padding:1px 8px;border-radius:10px;white-space:nowrap}
 
-/* METRIC CARDS */
-.metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px}
-.metric-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
-.metric-card.full{grid-column:1/-1}
-.metric-card-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px}
-.metric-num{font-size:26px;font-weight:700;line-height:1}
-.metric-num.accent{color:var(--accent)}
-.metric-num.teal{color:var(--teal)}
-.metric-num.green{color:var(--green)}
-.metric-num.amber{color:var(--amber)}
-.metric-sub{font-size:11px;color:var(--muted);margin-top:3px}
-.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
-.bar-row:last-child{margin-bottom:0}
-.bar-label{font-size:12px;color:var(--text);width:90px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.bar-track{flex:1;height:6px;background:var(--border-lt);border-radius:3px;overflow:hidden}
-.bar-fill{height:100%;border-radius:3px;background:var(--accent);transition:width .4s}
-.bar-fill.green{background:var(--green)}
-.bar-fill.amber{background:var(--amber)}
-.bar-fill.teal{background:var(--teal)}
-.bar-fill.purple{background:var(--purple)}
-.bar-val{font-size:11px;font-weight:600;color:var(--sub);width:36px;text-align:right;flex-shrink:0}
-.month-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.month-cell{text-align:center;padding:8px 4px;border-radius:8px;border:1px solid var(--border);background:var(--border-lt)}
-.month-cell.has-events{background:var(--blue-bg);border-color:var(--blue-bd)}
-.month-cell.urgent{background:var(--red-bg);border-color:var(--red-bd)}
-.month-name{font-size:10px;color:var(--muted);font-weight:600}
-.month-count{font-size:16px;font-weight:700;color:var(--text);margin-top:2px}
-.month-cell.has-events .month-count{color:var(--accent)}
-.month-cell.urgent .month-count{color:var(--red)}
-.year-chip{padding:3px 8px;border-radius:6px;font-size:11px;font-weight:600;color:var(--muted);border:1px solid var(--border);background:var(--card);cursor:pointer;transition:all .15s}
-.year-chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-.year-filter-bar{display:flex;gap:8px;padding:12px 16px 4px;overflow-x:auto;scrollbar-width:none;background:var(--bg)}
-.year-filter-bar::-webkit-scrollbar{display:none}
-.year-filter-btn{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid var(--border);background:var(--card);color:var(--sub);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .15s}
-.year-filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-.member-filter-bar{display:flex;gap:8px;padding:8px 16px 0;overflow-x:auto;scrollbar-width:none}
-.member-filter-bar::-webkit-scrollbar{display:none}
-.member-btn{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid var(--border);background:var(--card);color:var(--sub);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .15s;display:flex;align-items:center;gap:4px}
-.member-btn.active{background:var(--deep);color:#fff;border-color:var(--deep)}
-/* CALENDAR */
-.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.cal-nav{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--sub)}
-.cal-nav:hover{background:var(--border-lt)}
-.cal-title{font-size:16px;font-weight:700;color:var(--text)}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
-.cal-dow{text-align:center;font-size:10px;font-weight:700;color:var(--muted);padding:4px 0;text-transform:uppercase}
-.cal-day{min-height:52px;border-radius:8px;padding:4px;border:1px solid transparent;cursor:pointer;transition:all .15s;position:relative}
-.cal-day:hover{background:var(--border-lt)}
-.cal-day.other-month .cal-day-num{color:var(--border)}
-.cal-day.today{border-color:var(--accent);background:var(--blue-bg)}
-.cal-day.today .cal-day-num{color:var(--accent);font-weight:700}
-.cal-day.has-events{background:var(--card);border-color:var(--border)}
-.cal-day-num{font-size:12px;color:var(--sub);font-weight:500;margin-bottom:2px}
-.cal-dots{display:flex;flex-wrap:wrap;gap:2px;margin-top:2px}
-.cal-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.cal-dot.red{background:var(--red)}.cal-dot.amber{background:var(--amber)}.cal-dot.green{background:var(--green)}.cal-dot.blue{background:var(--blue)}.cal-dot.purple{background:var(--purple)}.cal-dot.teal{background:var(--teal)}
-.cal-event-list{margin-top:12px}
-.cal-selected-date{font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px;padding:8px 12px;background:var(--blue-bg);border-radius:8px;border:1px solid var(--blue-bd)}
+/* CATEGORY PASTELS */
+.cat-birthday{background:#fdf2f8;border-left-color:#db2777}
+.cat-car{background:#fef2f2;border-left-color:#ef4444}
+.cat-health{background:#ecfdf5;border-left-color:#059669}
+.cat-house{background:#eff6ff;border-left-color:#2563eb}
+.cat-work{background:#f5f3ff;border-left-color:#7c3aed}
+.cat-license{background:#fff7ed;border-left-color:#ea580c}
+.cat-inspector{background:#f0fdfa;border-left-color:#0d9488}
+.cat-payment{background:#fffbeb;border-left-color:#d97706}
+.cat-id{background:#fdf4ff;border-left-color:#a855f7}
+.cat-document{background:#f0f9ff;border-left-color:#0284c7}
+.cat-passport{background:#f0fdf4;border-left-color:#16a34a}
+.cat-anniversary{background:#fff1f2;border-left-color:#f43f5e}
+.cat-other{background:#f9fafb;border-left-color:#6b7280}
 
-/* BIRTHDAYS */
-.bday-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:10px;display:flex;align-items:center;gap:16px;cursor:pointer}
-.bday-card:hover{box-shadow:0 2px 12px rgba(0,0,0,0.07)}
-.bday-avatar{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;font-weight:700;color:#fff}
-.bday-info{flex:1}
-.bday-name{font-size:16px;font-weight:700;color:var(--text)}
-.bday-date{font-size:13px;color:var(--muted);margin-top:2px}
-.bday-age{font-size:12px;color:var(--sub);margin-top:3px}
-.bday-countdown{text-align:right;flex-shrink:0}
-.bday-days{font-size:22px;font-weight:800;line-height:1}
-.bday-days-label{font-size:10px;color:var(--muted);margin-top:2px}
-.bday-days.today-color{color:var(--amber)}
-.bday-days.soon-color{color:var(--red)}
-.bday-days.ok-color{color:var(--accent)}
-.couple-card{background:linear-gradient(135deg,#1d4ed8,#0d9488);border-radius:16px;padding:20px;margin-bottom:16px;color:#fff}
-.couple-card-title{font-size:12px;font-weight:600;opacity:0.7;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
-.couple-years{font-size:36px;font-weight:800;line-height:1}
-.couple-sub{font-size:13px;opacity:0.7;margin-top:4px}
-.gift-note{font-size:12px;color:var(--muted);font-style:italic;margin-top:4px}
-
-
-
-
+/* MEMBER TAG COLORS */
+.mtag-0{background:#dbeafe;color:#1d4ed8;border-color:#bfdbfe}
+.mtag-1{background:#fce7f3;color:#be185d;border-color:#fbcfe8}
+.mtag-2{background:#d1fae5;color:#065f46;border-color:#a7f3d0}
+.mtag-3{background:#ede9fe;color:#5b21b6;border-color:#ddd6fe}
+.mtag-4{background:#ffedd5;color:#c2410c;border-color:#fed7aa}
+.mtag-5{background:#fef9c3;color:#854d0e;border-color:#fef08a}
 
 /* EVENT ROW */
-.event-row{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 14px;margin-bottom:6px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:box-shadow .15s}
+.event-row{border:1px solid var(--border);border-left:3px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:6px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:box-shadow .15s}
 .event-row:hover{box-shadow:0 2px 12px rgba(0,0,0,0.07)}
-.event-row.urgent{border-left:3px solid var(--red)}
-.event-row.warning{border-left:3px solid var(--amber)}
-.event-row.safe{border-left:3px solid var(--green)}
-.event-row.future{border-left:3px solid var(--blue)}
-.event-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.icon-red{background:var(--red-bg)}.icon-amber{background:var(--amber-bg)}.icon-green{background:var(--green-bg)}.icon-blue{background:var(--blue-bg)}.icon-purple{background:var(--purple-bg)}.icon-teal{background:var(--teal-bg)}
+.event-row.urgent{border-left-color:var(--red)}
+.event-row.warning{border-left-color:var(--amber)}
+.event-row.safe{border-left-color:var(--green)}
+.event-row.future{border-left-color:var(--blue)}
+.event-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
 .event-body{flex:1;min-width:0}
 .event-name{font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.event-detail{font-size:12px;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.event-detail{font-size:11px;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
 .detail-sep{color:var(--border)}
-.member-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
-.member-chip{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:500;color:var(--sub);background:var(--border-lt);border:1px solid var(--border);padding:1px 7px;border-radius:5px}
-.expense-chip{display:inline-flex;align-items:center;font-size:10px;font-weight:600;color:var(--teal);background:var(--teal-bg);border:1px solid var(--teal-bd);padding:1px 7px;border-radius:5px;margin-top:4px}
-.urgency-pill{font-size:11px;font-weight:600;padding:5px 9px;border-radius:20px;flex-shrink:0;min-width:54px;text-align:center;line-height:1.4}
-.urgency-pill small{display:block;font-size:10px;font-weight:400;opacity:.7}
+.member-chips{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px}
+.member-chip{display:inline-flex;align-items:center;font-size:10px;font-weight:600;padding:2px 7px;border-radius:5px;border:1px solid}
+.expense-chip{display:inline-flex;align-items:center;font-size:10px;font-weight:600;color:var(--teal);background:var(--teal-bg);border:1px solid var(--teal-bd);padding:2px 7px;border-radius:5px;margin-top:3px}
+.location-chip{display:inline-flex;align-items:center;gap:3px;font-size:10px;color:var(--blue);background:var(--blue-bg);border:1px solid var(--blue-bd);padding:2px 7px;border-radius:5px;margin-top:3px;cursor:pointer;text-decoration:none}
+.urgency-pill{font-size:11px;font-weight:600;padding:4px 8px;border-radius:20px;flex-shrink:0;min-width:50px;text-align:center;line-height:1.4}
+.urgency-pill small{display:block;font-size:9px;font-weight:400;opacity:.7}
 .pill-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd)}
 .pill-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bd)}
 .pill-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd)}
 .pill-blue{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-bd)}
 
-/* EMPTY */
-.empty{text-align:center;padding:48px 24px;color:var(--muted);font-size:14px}
-.empty-icon{font-size:40px;margin-bottom:12px}
-.empty-title{font-size:15px;font-weight:600;color:var(--sub);margin-bottom:6px}
+/* METRIC CARDS */
+.metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.metric-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
+.metric-card.full{grid-column:1/-1}
+.metric-card-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px}
+.metric-num{font-size:24px;font-weight:700;line-height:1}
+.metric-num.accent{color:var(--accent)}.metric-num.teal{color:var(--teal)}.metric-num.green{color:var(--green)}.metric-num.amber{color:var(--amber)}
+.metric-sub{font-size:11px;color:var(--muted);margin-top:3px}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.bar-row:last-child{margin-bottom:0}
+.bar-label{font-size:12px;color:var(--text);width:90px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar-track{flex:1;height:6px;background:var(--border-lt);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;background:var(--accent)}
+.bar-fill.green{background:var(--green)}.bar-fill.amber{background:var(--amber)}.bar-fill.teal{background:var(--teal)}.bar-fill.purple{background:var(--purple)}.bar-fill.pink{background:var(--pink)}.bar-fill.orange{background:var(--orange)}
+.bar-val{font-size:11px;font-weight:600;color:var(--sub);width:50px;text-align:right;flex-shrink:0}
+.month-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.month-cell{text-align:center;padding:8px 4px;border-radius:8px;border:1px solid var(--border);background:var(--border-lt)}
+.month-cell.has-events{background:var(--blue-bg);border-color:var(--blue-bd)}
+.month-cell.urgent-month{background:var(--red-bg);border-color:var(--red-bd)}
+.month-name{font-size:10px;color:var(--muted);font-weight:600}
+.month-count{font-size:16px;font-weight:700;color:var(--text);margin-top:2px}
+.month-cell.has-events .month-count{color:var(--accent)}
+.month-cell.urgent-month .month-count{color:var(--red)}
+
+/* YEAR + MEMBER FILTER BARS */
+.year-filter-bar{display:flex;gap:8px;padding:12px 16px 4px;overflow-x:auto;scrollbar-width:none;background:var(--bg)}
+.year-filter-bar::-webkit-scrollbar{display:none}
+.year-filter-btn{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid var(--border);background:var(--card);color:var(--sub);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .15s}
+.year-filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.member-filter-bar{display:flex;gap:7px;padding:6px 16px 4px;overflow-x:auto;scrollbar-width:none}
+.member-filter-bar::-webkit-scrollbar{display:none}
+.member-btn{padding:4px 11px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid var(--border);background:var(--card);color:var(--sub);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .15s}
+.member-btn.active{background:var(--deep);color:#fff;border-color:var(--deep)}
 
 /* FILTER BAR */
-.filter-bar{display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.filter-bar{display:flex;gap:8px;margin-bottom:12px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;align-items:center}
 .filter-bar::-webkit-scrollbar{display:none}
 .filter-chip{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid var(--border);background:var(--card);color:var(--sub);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .15s}
 .filter-chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.form-select-inline{padding:5px 10px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid var(--border);background:var(--card);color:var(--sub);cursor:pointer;flex-shrink:0;outline:none;-webkit-appearance:none;appearance:none;padding-right:24px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236b7280' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
 
 /* SEARCH */
-.search-wrap{position:relative;margin-bottom:12px}
-.search-wrap input{width:100%;padding:10px 16px 10px 38px;border:1px solid var(--border);border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;background:var(--card);color:var(--text);outline:none;transition:border .15s}
+.search-wrap{position:relative;margin-bottom:10px}
+.search-wrap input{width:100%;padding:9px 16px 9px 36px;border:1px solid var(--border);border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;background:var(--card);color:var(--text);outline:none;transition:border .15s}
 .search-wrap input:focus{border-color:var(--accent)}
-.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:16px;pointer-events:none}
+.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:15px;pointer-events:none}
 
 /* FAB */
-.fab{position:fixed;bottom:calc(28px + env(safe-area-inset-bottom));right:20px;height:48px;background:var(--accent);color:#fff;border-radius:24px;display:flex;align-items:center;gap:8px;padding:0 20px;font-size:14px;font-weight:600;box-shadow:0 4px 20px rgba(29,78,216,0.35);cursor:pointer;z-index:40;font-family:'Inter',sans-serif;border:none}
+.fab{position:fixed;bottom:calc(28px + env(safe-area-inset-bottom));right:20px;height:46px;background:var(--accent);color:#fff;border-radius:23px;display:flex;align-items:center;gap:7px;padding:0 18px;font-size:14px;font-weight:600;box-shadow:0 4px 20px rgba(29,78,216,0.35);cursor:pointer;z-index:40;font-family:'Inter',sans-serif;border:none}
 
 /* MODAL */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;align-items:flex-end;justify-content:center}
 .modal-overlay.open{display:flex}
 .modal{background:var(--card);border-radius:20px 20px 0 0;width:100%;max-width:680px;padding:24px 20px calc(24px + env(safe-area-inset-bottom));max-height:92vh;overflow-y:auto}
-.modal-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px}
-.modal-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:20px}
+.modal-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 18px}
+.modal-title{font-size:17px;font-weight:700;color:var(--text);margin-bottom:18px}
 
 /* FORM */
-.form-group{margin-bottom:14px}
-.form-label{display:block;font-size:12px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
-.form-input,.form-select,.form-textarea{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;color:var(--text);background:var(--card);outline:none;transition:border .15s;-webkit-appearance:none}
+.form-group{margin-bottom:13px}
+.form-label{display:block;font-size:11px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.form-hint{font-size:11px;color:var(--muted);margin-top:3px;font-style:italic}
+.form-input,.form-select,.form-textarea{width:100%;padding:10px 13px;border:1px solid var(--border);border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;color:var(--text);background:var(--card);outline:none;transition:border .15s;-webkit-appearance:none}
 .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--accent)}
 .form-textarea{resize:vertical;min-height:70px}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.form-hint{font-size:11px;color:var(--muted);margin-top:4px}
+.expense-wrap{position:relative}
+.expense-wrap .currency{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--muted);pointer-events:none}
+.expense-wrap input{padding-left:28px}
 
-/* MEMBER TOGGLE */
-.member-select-grid{display:flex;flex-wrap:wrap;gap:8px}
-.member-toggle{padding:7px 14px;border-radius:20px;font-size:13px;font-weight:500;border:1px solid var(--border);background:var(--card);color:var(--sub);cursor:pointer;transition:all .15s;user-select:none}
-.member-toggle.on{background:var(--blue-bg);border-color:var(--accent);color:var(--accent)}
-
-/* REPEAT GRID */
-.repeat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
-.repeat-opt{padding:9px 6px;border:1px solid var(--border);border-radius:10px;text-align:center;cursor:pointer;transition:all .15s;background:var(--card)}
-.repeat-opt:hover{border-color:var(--accent)}
+/* REPEAT */
+.repeat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.repeat-opt{padding:8px 5px;border:1px solid var(--border);border-radius:9px;text-align:center;cursor:pointer;transition:all .15s;background:var(--card)}
 .repeat-opt.selected{background:var(--blue-bg);border-color:var(--accent)}
-.repeat-opt-icon{font-size:16px;margin-bottom:3px}
-.repeat-opt-label{font-size:11px;font-weight:600;color:var(--text)}
+.repeat-opt-icon{font-size:15px;margin-bottom:2px}
+.repeat-opt-label{font-size:10px;font-weight:600;color:var(--text)}
 .repeat-opt.selected .repeat-opt-label{color:var(--accent)}
 .repeat-opt-sub{font-size:9px;color:var(--muted);margin-top:1px}
-.extra-wrap{display:none;margin-top:10px}
+.extra-wrap{display:none;margin-top:9px}
 .extra-wrap.show{display:block}
-.inline-row{display:flex;align-items:center;gap:10px}
+.inline-row{display:flex;align-items:center;gap:8px}
 .inline-row input,.inline-row select{flex:1}
 .inline-row span{font-size:13px;color:var(--sub);white-space:nowrap}
 
-/* EXPENSE */
-.expense-input-wrap{position:relative}
-.expense-input-wrap .currency{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--muted);pointer-events:none}
-.expense-input-wrap input{padding-left:30px}
+/* MEMBER TOGGLE */
+.member-select-grid{display:flex;flex-wrap:wrap;gap:7px}
+.member-toggle{padding:6px 13px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid var(--border);background:var(--card);color:var(--sub);cursor:pointer;transition:all .15s;user-select:none}
+.member-toggle.on{background:var(--blue-bg);border-color:var(--accent);color:var(--accent)}
 
 /* BUTTONS */
-.btn-row{display:flex;gap:10px;margin-top:20px}
-.btn{flex:1;padding:13px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:opacity .15s}
+.btn-row{display:flex;gap:9px;margin-top:18px}
+.btn{flex:1;padding:12px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:opacity .15s}
 .btn:active{opacity:.8}
 .btn-primary{background:var(--accent);color:#fff}
 .btn-secondary{background:var(--border-lt);color:var(--sub);border:1px solid var(--border)}
 .btn-danger{background:#fef2f2;color:var(--red);border:1px solid var(--red-bd)}
 .btn-teal{background:var(--teal);color:#fff}
+.btn-sm{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;font-family:'Inter',sans-serif;flex:none}
 
 /* SETTINGS */
-.settings-section{margin-bottom:22px}
-.settings-title{font-size:12px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.settings-section{margin-bottom:20px}
+.settings-title{font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.08em;margin-bottom:9px}
 .settings-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.settings-row{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid var(--border-lt)}
+.settings-row{display:flex;align-items:center;justify-content:space-between;padding:12px 15px;border-bottom:1px solid var(--border-lt)}
 .settings-row:last-child{border-bottom:none}
 .settings-row-label{font-size:14px;font-weight:500;color:var(--text)}
 .settings-row-sub{font-size:12px;color:var(--muted);margin-top:2px}
-.settings-row-action{color:var(--accent);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;margin-left:12px;flex-shrink:0}
-.send-now-btn{width:100%;padding:14px;background:var(--teal);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .15s}
-.send-now-btn:active{opacity:.8}
+.settings-row-action{color:var(--accent);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;margin-left:10px;flex-shrink:0}
+.send-now-btn{width:100%;padding:13px;background:var(--teal);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px}
 .send-now-btn:disabled{opacity:.5;cursor:not-allowed}
 
 /* TAGS */
-.tag-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-.tag{display:inline-flex;align-items:center;gap:6px;background:var(--border-lt);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:13px;font-weight:500}
-.tag-remove{color:var(--muted);cursor:pointer;font-size:16px;line-height:1;transition:color .15s}
+.tag-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.tag{display:inline-flex;align-items:center;gap:5px;background:var(--border-lt);border:1px solid var(--border);border-radius:7px;padding:5px 10px;font-size:13px;font-weight:500}
+.tag-remove{color:var(--muted);cursor:pointer;font-size:15px;line-height:1}
 .tag-remove:hover{color:var(--red)}
-.tag-add-row{display:flex;gap:8px;margin-top:10px}
-.tag-add-input{flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border .15s}
+.tag-add-row{display:flex;gap:7px;margin-top:9px}
+.tag-add-input{flex:1;padding:8px 11px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:'Inter',sans-serif;outline:none}
 .tag-add-input:focus{border-color:var(--accent)}
-.tag-add-btn{padding:8px 16px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
+.tag-add-btn{padding:8px 14px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
 
 /* DETAIL */
-.detail-field{margin-bottom:13px}
-.detail-field-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
-.detail-field-value{font-size:15px;color:var(--text);font-weight:500}
-.detail-badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600}
+.detail-field{margin-bottom:12px}
+.detail-field-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+.detail-field-value{font-size:14px;color:var(--text);font-weight:500}
+.detail-badge{display:inline-block;padding:4px 11px;border-radius:20px;font-size:12px;font-weight:600}
+
+/* EMPTY */
+.empty{text-align:center;padding:40px 24px;color:var(--muted);font-size:14px}
+.empty-icon{font-size:36px;margin-bottom:10px}
+.empty-title{font-size:14px;font-weight:600;color:var(--sub);margin-bottom:5px}
+
+/* CALENDAR */
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cal-nav{width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;color:var(--sub)}
+.cal-title{font-size:15px;font-weight:700;color:var(--text)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal-dow{text-align:center;font-size:9px;font-weight:700;color:var(--muted);padding:3px 0;text-transform:uppercase}
+.cal-day{min-height:48px;border-radius:7px;padding:3px;border:1px solid transparent;position:relative}
+.cal-day.other-month .cal-day-num{color:var(--border)}
+.cal-day.today{border-color:var(--accent);background:var(--blue-bg)}
+.cal-day.today .cal-day-num{color:var(--accent);font-weight:700}
+.cal-day.has-events{background:var(--card);border-color:var(--border)}
+.cal-day-num{font-size:11px;color:var(--sub);font-weight:500;margin-bottom:2px}
+.cal-dots{display:flex;flex-wrap:wrap;gap:2px}
+.cal-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.cal-dot.red{background:var(--red)}.cal-dot.amber{background:var(--amber)}.cal-dot.green{background:var(--green)}.cal-dot.blue{background:var(--blue)}.cal-dot.purple{background:var(--purple)}.cal-dot.teal{background:var(--teal)}.cal-dot.pink{background:var(--pink)}
+.cal-shop-dot{width:5px;height:5px;border-radius:2px;background:var(--orange);flex-shrink:0}
+.cal-event-list{margin-top:14px}
+.cal-date-header{font-size:12px;font-weight:700;color:var(--sub);padding:6px 10px;background:var(--border-lt);border-radius:7px;margin:10px 0 6px}
+
+/* BIRTHDAYS */
+.bday-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:9px;display:flex;align-items:center;gap:14px;cursor:pointer}
+.bday-avatar{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-weight:700;color:#fff;flex-shrink:0}
+.bday-name{font-size:15px;font-weight:700;color:var(--text)}
+.bday-date{font-size:12px;color:var(--muted);margin-top:2px}
+.bday-age{font-size:12px;color:var(--sub);margin-top:2px}
+.bday-countdown{text-align:right;flex-shrink:0}
+.bday-days{font-size:20px;font-weight:800;line-height:1}
+.bday-days.today-color{color:var(--amber)}.bday-days.soon-color{color:var(--red)}.bday-days.ok-color{color:var(--accent)}
+.bday-days-label{font-size:10px;color:var(--muted);margin-top:2px}
+
+/* CALCULATOR */
+.calc-display{background:var(--deep);border-radius:14px;padding:20px 18px 14px;margin-bottom:14px}
+.calc-expr{font-size:13px;color:rgba(255,255,255,0.4);min-height:18px;text-align:right;margin-bottom:4px;font-family:'JetBrains Mono',monospace}
+.calc-result{font-size:36px;font-weight:700;color:#fff;text-align:right;font-family:'JetBrains Mono',monospace;letter-spacing:-.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.calc-btn{padding:16px 8px;border-radius:11px;font-size:18px;font-weight:600;cursor:pointer;border:none;font-family:'Inter',sans-serif;text-align:center;transition:opacity .1s}
+.calc-btn:active{opacity:.7}
+.calc-btn.num{background:var(--card);color:var(--text);border:1px solid var(--border)}
+.calc-btn.op{background:var(--blue-bg);color:var(--accent);border:1px solid var(--blue-bd)}
+.calc-btn.eq{background:var(--accent);color:#fff}
+.calc-btn.clear{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd)}
+.calc-btn.wide{grid-column:span 2}
 
 /* TOAST */
 .toast-wrap{position:fixed;bottom:calc(90px + env(safe-area-inset-bottom));right:16px;z-index:200;display:flex;flex-direction:column;gap:8px;align-items:flex-end}
-.toast{background:var(--deep2);color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:500;box-shadow:0 4px 16px rgba(0,0,0,0.2);animation:slideIn .2s ease;max-width:280px}
+.toast{background:var(--deep2);color:#fff;padding:10px 15px;border-radius:10px;font-size:13px;font-weight:500;box-shadow:0 4px 16px rgba(0,0,0,0.2);animation:slideIn .2s ease;max-width:280px}
 .toast.success{background:#065f46}.toast.error{background:#991b1b}
 @keyframes slideIn{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
 
 /* LOADING */
 .loading{display:flex;align-items:center;justify-content:center;padding:48px;color:var(--muted);gap:10px;font-size:14px}
-.spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+.spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
@@ -296,64 +313,111 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
     <div class="hstat"><div class="hstat-num red" id="statWeek">—</div><div class="hstat-lbl">This week</div></div>
     <div class="hstat"><div class="hstat-num amber" id="statMonth">—</div><div class="hstat-lbl">This month</div></div>
     <div class="hstat"><div class="hstat-num green" id="statTotal">—</div><div class="hstat-lbl">Total events</div></div>
-    <div class="hstat"><div class="hstat-num teal" id="statExpense">—</div><div class="hstat-lbl">Est. annual</div></div>
+    <div class="hstat"><div class="hstat-num teal" id="statExpense">—</div><div class="hstat-lbl">Annual cost</div></div>
   </div>
 </div>
 
 <div class="tabs">
   <div class="tab active" onclick="switchTab('dashboard')">Dashboard</div>
-  <div class="tab" onclick="switchTab('upcoming')">Upcoming <span class="tab-badge" id="urgentBadge" style="display:none">0</span></div>
-  <div class="tab" onclick="switchTab('all')">All Events</div>
+  <div class="tab" onclick="switchTab('events')">Events <span class="tab-badge" id="urgentBadge" style="display:none">0</span></div>
   <div class="tab" onclick="switchTab('calendar')">📆 Calendar</div>
   <div class="tab" onclick="switchTab('birthdays')">🎂 Birthdays</div>
-  <div class="tab" onclick="switchTab('settings')">Settings</div>
+  <div class="tab" onclick="switchTab('calculator')">🧮 Calc</div>
+  <div class="tab" onclick="switchTab('settings')">⚙️ Settings</div>
 </div>
 
 <div class="main">
+  <!-- DASHBOARD -->
   <div class="page active" id="page-dashboard">
     <div class="year-filter-bar" id="yearFilterBar"></div>
     <div class="member-filter-bar" id="dashMemberBar"></div>
     <div id="dashContent"><div class="loading"><div class="spinner"></div>Loading…</div></div>
   </div>
-  <div class="page" id="page-upcoming">
-    <div class="filter-bar" id="upcomingFilters">
-      <div class="filter-chip active" onclick="setUpcomingFilter(30,this)">30 days</div>
-      <div class="filter-chip" onclick="setUpcomingFilter(60,this)">60 days</div>
-      <div class="filter-chip" onclick="setUpcomingFilter(90,this)">90 days</div>
-      <div class="filter-chip" onclick="setUpcomingFilter(365,this)">1 year</div>
-      <div class="filter-chip" onclick="setUpcomingFilter(9999,this)">All</div>
+
+  <!-- EVENTS (merged upcoming + all) -->
+  <div class="page" id="page-events">
+    <div class="filter-bar" id="eventTimeFilters" style="margin-bottom:8px">
+      <div class="filter-chip active" onclick="setTimeFilter('all',this)">All</div>
+      <div class="filter-chip" onclick="setTimeFilter(30,this)">30 days</div>
+      <div class="filter-chip" onclick="setTimeFilter(60,this)">60 days</div>
+      <div class="filter-chip" onclick="setTimeFilter(90,this)">90 days</div>
+      <div class="filter-chip" onclick="setTimeFilter(365,this)">1 year</div>
     </div>
-    <div class="member-filter-bar" id="upcomingMemberBar"></div>
-    <div id="upcomingContent"><div class="loading"><div class="spinner"></div>Loading…</div></div>
-  </div>
-  <div class="page" id="page-all">
-    <div class="search-wrap"><span class="search-icon">🔍</span><input class="form-input" type="text" id="searchInput" placeholder="Search events…" oninput="renderAll()"></div>
-    <div class="filter-bar" id="categoryFilters">
-      <div class="filter-chip active" onclick="setCatFilter('all',this)">All</div>
-      <div class="filter-chip" onclick="setCatFilter('birthday',this)">🎂</div>
-      <div class="filter-chip" onclick="setCatFilter('car',this)">🚗</div>
-      <div class="filter-chip" onclick="setCatFilter('health',this)">💉</div>
-      <div class="filter-chip" onclick="setCatFilter('house',this)">🏠</div>
-      <div class="filter-chip" onclick="setCatFilter('work',this)">💼</div>
-      <div class="filter-chip" onclick="setCatFilter('license',this)">🪪</div>
-      <div class="filter-chip" onclick="setCatFilter('inspector',this)">✈️</div>
-      <div class="filter-chip" onclick="setCatFilter('payment',this)">💳</div>
-      <div class="filter-chip" onclick="setCatFilter('id',this)">🆔</div>
-      <div class="filter-chip" onclick="setCatFilter('document',this)">📄</div>
-      <div class="filter-chip" onclick="setCatFilter('other',this)">⭐</div>
+    <div style="display:flex;gap:8px;margin-bottom:10px;align-items:center">
+      <div class="search-wrap" style="flex:1;margin-bottom:0">
+        <span class="search-icon">🔍</span>
+        <input class="form-input" type="text" id="searchInput" placeholder="Search events…" oninput="renderEvents()">
+      </div>
+      <select class="form-select-inline" id="catFilterSelect" onchange="renderEvents()">
+        <option value="all">All categories</option>
+        <option value="birthday">🎂 Birthday</option>
+        <option value="car">🚗 Car</option>
+        <option value="health">💉 Health</option>
+        <option value="house">🏠 House</option>
+        <option value="work">💼 Work</option>
+        <option value="license">🪪 Driver's License</option>
+        <option value="inspector">✈️ Inspector Credentials</option>
+        <option value="payment">💳 Payment to Service</option>
+        <option value="id">🆔 Personal ID</option>
+        <option value="passport">🛂 Passport</option>
+        <option value="anniversary">💍 Anniversary</option>
+        <option value="document">📄 Document</option>
+        <option value="other">⭐ Other</option>
+      </select>
     </div>
-    <div class="member-filter-bar" id="allMemberBar"></div>
-    <div id="allContent"><div class="loading"><div class="spinner"></div>Loading…</div></div>
+    <div class="member-filter-bar" id="eventsMemberBar" style="padding:0 0 8px"></div>
+    <div id="eventsContent"><div class="loading"><div class="spinner"></div>Loading…</div></div>
   </div>
-  <div class="page" id="page-calendar"><div id="calendarContent"><div class="loading"><div class="spinner"></div>Loading…</div></div></div>
-  <div class="page" id="page-birthdays"><div id="birthdaysContent"><div class="loading"><div class="spinner"></div>Loading…</div></div></div>
-  <div class="page" id="page-settings"><div id="settingsContent"><div class="loading"><div class="spinner"></div>Loading…</div></div></div>
+
+  <!-- CALENDAR -->
+  <div class="page" id="page-calendar">
+    <div id="calendarContent"><div class="loading"><div class="spinner"></div>Loading…</div></div>
+  </div>
+
+  <!-- BIRTHDAYS -->
+  <div class="page" id="page-birthdays">
+    <div id="birthdaysContent"><div class="loading"><div class="spinner"></div>Loading…</div></div>
+  </div>
+
+  <!-- CALCULATOR -->
+  <div class="page" id="page-calculator">
+    <div class="calc-display">
+      <div class="calc-expr" id="calcExpr"></div>
+      <div class="calc-result" id="calcResult">0</div>
+    </div>
+    <div class="calc-grid">
+      <div class="calc-btn clear" onclick="calcClear()">C</div>
+      <div class="calc-btn op" onclick="calcSign()">+/-</div>
+      <div class="calc-btn op" onclick="calcPercent()">%</div>
+      <div class="calc-btn op" onclick="calcOp('/')">÷</div>
+      <div class="calc-btn num" onclick="calcNum('7')">7</div>
+      <div class="calc-btn num" onclick="calcNum('8')">8</div>
+      <div class="calc-btn num" onclick="calcNum('9')">9</div>
+      <div class="calc-btn op" onclick="calcOp('*')">×</div>
+      <div class="calc-btn num" onclick="calcNum('4')">4</div>
+      <div class="calc-btn num" onclick="calcNum('5')">5</div>
+      <div class="calc-btn num" onclick="calcNum('6')">6</div>
+      <div class="calc-btn op" onclick="calcOp('-')">−</div>
+      <div class="calc-btn num" onclick="calcNum('1')">1</div>
+      <div class="calc-btn num" onclick="calcNum('2')">2</div>
+      <div class="calc-btn num" onclick="calcNum('3')">3</div>
+      <div class="calc-btn op" onclick="calcOp('+')">+</div>
+      <div class="calc-btn num wide" onclick="calcNum('0')">0</div>
+      <div class="calc-btn num" onclick="calcDot()">.</div>
+      <div class="calc-btn eq" onclick="calcEquals()">=</div>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="page" id="page-settings">
+    <div id="settingsContent"><div class="loading"><div class="spinner"></div>Loading…</div></div>
+  </div>
 </div>
 
-<button class="fab" onclick="openAddModal()">＋ Add Event</button>
+<button class="fab" id="mainFab" onclick="openAddModal()">＋ Add Event</button>
 <div class="toast-wrap" id="toastWrap"></div>
 
-<!-- ADD/EDIT MODAL -->
+<!-- ADD/EDIT EVENT MODAL -->
 <div class="modal-overlay" id="eventModal">
   <div class="modal">
     <div class="modal-handle"></div>
@@ -367,47 +431,60 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
       <div class="form-group">
         <label class="form-label">Category</label>
         <select class="form-select" id="fCategory">
+          <option value="payment">💳 Payment to Service</option>
           <option value="birthday">🎂 Birthday</option>
+          <option value="anniversary">💍 Anniversary</option>
           <option value="car">🚗 Car</option>
           <option value="health">💉 Health</option>
           <option value="house">🏠 House</option>
           <option value="work">💼 Work</option>
           <option value="license">🪪 Driver's License</option>
           <option value="inspector">✈️ Inspector Credentials</option>
-          <option value="payment">💳 Payment to Service</option>
-          <option value="id">🆔 Personal ID Card</option>
+          <option value="id">🆔 Personal ID</option>
+          <option value="passport">🛂 Passport</option>
           <option value="document">📄 Document</option>
           <option value="other">⭐ Other</option>
         </select>
       </div>
       <div class="form-group">
         <label class="form-label">Est. Expense (฿)</label>
-        <div class="expense-input-wrap">
+        <div class="expense-wrap">
           <span class="currency">฿</span>
           <input class="form-input" id="fExpense" type="number" min="0" placeholder="0">
         </div>
       </div>
     </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Date *</label>
+        <input class="form-input" id="fDate" type="date">
+        <div class="form-hint" id="dateHint">Enter the next occurrence date</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Time (optional)</label>
+        <input class="form-input" id="fTime" type="time">
+      </div>
+    </div>
     <div class="form-group">
-      <label class="form-label">Date *</label>
-      <input class="form-input" id="fDate" type="date">
+      <label class="form-label">Location (optional)</label>
+      <input class="form-input" id="fLocation" placeholder="e.g. Samitivej Hospital, Bangkok">
+      <div class="form-hint">Tap in event detail to open in Google Maps</div>
     </div>
     <div class="form-group">
       <label class="form-label">Family Members</label>
       <div class="member-select-grid" id="memberSelectGrid"></div>
-      <div class="form-hint">Tap to select — multiple allowed</div>
     </div>
     <div class="form-group">
       <label class="form-label">Repeat Schedule</label>
       <div class="repeat-grid">
         <div class="repeat-opt" data-val="none" onclick="selectRepeat('none')"><div class="repeat-opt-icon">📌</div><div class="repeat-opt-label">One-time</div><div class="repeat-opt-sub">No repeat</div></div>
         <div class="repeat-opt" data-val="monthly" onclick="selectRepeat('monthly')"><div class="repeat-opt-icon">📅</div><div class="repeat-opt-label">Monthly</div><div class="repeat-opt-sub">Every month</div></div>
-        <div class="repeat-opt" data-val="3months" onclick="selectRepeat('3months')"><div class="repeat-opt-icon">🔄</div><div class="repeat-opt-label">Quarterly</div><div class="repeat-opt-sub">Every 3 months</div></div>
-        <div class="repeat-opt" data-val="6months" onclick="selectRepeat('6months')"><div class="repeat-opt-icon">🗓️</div><div class="repeat-opt-label">6 Months</div><div class="repeat-opt-sub">Twice a year</div></div>
+        <div class="repeat-opt" data-val="3months" onclick="selectRepeat('3months')"><div class="repeat-opt-icon">🔄</div><div class="repeat-opt-label">Quarterly</div><div class="repeat-opt-sub">3 months</div></div>
+        <div class="repeat-opt" data-val="6months" onclick="selectRepeat('6months')"><div class="repeat-opt-icon">🗓️</div><div class="repeat-opt-label">6 Months</div><div class="repeat-opt-sub">Twice/year</div></div>
         <div class="repeat-opt selected" data-val="yearly" onclick="selectRepeat('yearly')"><div class="repeat-opt-icon">🔁</div><div class="repeat-opt-label">Yearly</div><div class="repeat-opt-sub">Every year</div></div>
-        <div class="repeat-opt" data-val="multiyear" onclick="selectRepeat('multiyear')"><div class="repeat-opt-icon">📆</div><div class="repeat-opt-label">Multi-year</div><div class="repeat-opt-sub">2–10 years</div></div>
+        <div class="repeat-opt" data-val="multiyear" onclick="selectRepeat('multiyear')"><div class="repeat-opt-icon">📆</div><div class="repeat-opt-label">Multi-year</div><div class="repeat-opt-sub">2–10 yrs</div></div>
         <div class="repeat-opt" data-val="custom" onclick="selectRepeat('custom')"><div class="repeat-opt-icon">✏️</div><div class="repeat-opt-label">Custom days</div><div class="repeat-opt-sub">Set interval</div></div>
-        <div class="repeat-opt" data-val="customdate" onclick="selectRepeat('customdate')"><div class="repeat-opt-icon">📍</div><div class="repeat-opt-label">Set date</div><div class="repeat-opt-sub">Specific date</div></div>
+        <div class="repeat-opt" data-val="customdate" onclick="selectRepeat('customdate')"><div class="repeat-opt-icon">📍</div><div class="repeat-opt-label">Set date</div><div class="repeat-opt-sub">Specific</div></div>
       </div>
       <div class="extra-wrap" id="multiyearWrap">
         <div class="inline-row"><span>Every</span>
@@ -422,9 +499,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
         <div class="inline-row"><span>Every</span><input class="form-input" id="fCustomDays" type="number" min="1" max="9999" placeholder="e.g. 45"><span>days</span></div>
       </div>
       <div class="extra-wrap" id="customDateWrap">
-        <label class="form-label" style="margin-top:8px">Next occurrence date</label>
+        <label class="form-label" style="margin-top:6px">Next occurrence date</label>
         <input class="form-input" id="fCustomDate" type="date">
-        <div class="form-hint">One-time event on this specific date</div>
       </div>
     </div>
     <div class="form-group">
@@ -458,7 +534,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
     <div class="modal-title">Notification Emails</div>
     <div id="emailTagList" class="tag-list"></div>
     <div class="tag-add-row">
-      <input class="tag-add-input" id="newEmailInput" type="email" placeholder="Add email address…">
+      <input class="tag-add-input" id="newEmailInput" type="email" placeholder="Add email…">
       <button class="tag-add-btn" onclick="addEmail()">Add</button>
     </div>
     <div class="btn-row">
@@ -473,7 +549,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title">Reminder Days</div>
-    <div class="form-group" style="margin-bottom:8px"><label class="form-label">Send reminders this many days before the event</label></div>
+    <div class="form-hint" style="margin-bottom:10px">Send reminders this many days before the event</div>
     <div id="reminderTagList" class="tag-list"></div>
     <div class="tag-add-row">
       <input class="tag-add-input" id="newReminderInput" type="number" min="1" max="365" placeholder="e.g. 14">
@@ -504,670 +580,726 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 </div>
 
 <script>
+// ── CONFIG ──
 const SUPABASE_URL  = 'https://fkcjjprewnjrwobyaglb.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZrY2pqcHJld25qcndvYnlhZ2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzNTc4OTAsImV4cCI6MjA5NjkzMzg5MH0.VANzCQDqqSeLIbVbTx30eN53P2rdwtKRNv2b2MlxZDg';
 const RESEND_KEY    = 're_afX9rcCP_J84MXFCkpXeRSMkuvurcj9vG';
-const {createClient}=supabase;
-const db=createClient(SUPABASE_URL,SUPABASE_ANON);
+const EDGE_FN_URL   = 'https://fkcjjprewnjrwobyaglb.supabase.co/functions/v1/swift-function';
+const {createClient} = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_ANON);
 
-let events=[],settings={},currentTab='dashboard',upcomingDays=30,categoryFilter='all',currentDetailId=null,dashYear='all',memberFilter='all',upcomingMemberFilter='all',dashMemberFilter='all',calYear=new Date().getFullYear(),calMonth=new Date().getMonth();
+// ── STATE ──
+let events=[], settings={}, currentTab='dashboard';
+let dashYear='all', dashMemberFilter='all';
+let eventsTimeFilter='all', eventsMemberFilter='all';
+let calYear=new Date().getFullYear(), calMonth=new Date().getMonth();
+let currentDetailId=null;
 
-const CATS={
-  birthday:{icon:'🎂',label:'Birthday',color:'amber'},
-  car:{icon:'🚗',label:'Car',color:'red'},
-  health:{icon:'💉',label:'Health',color:'red'},
-  house:{icon:'🏠',label:'House',color:'green'},
-  work:{icon:'💼',label:'Work',color:'blue'},
-  license:{icon:'🪪',label:"Driver's License",color:'purple'},
-  inspector:{icon:'✈️',label:'Inspector Credentials',color:'teal'},
-  payment:{icon:'💳',label:'Payment to Service',color:'amber'},
-  id:{icon:'🆔',label:'Personal ID Card',color:'purple'},
-  document:{icon:'📄',label:'Document',color:'blue'},
-  other:{icon:'⭐',label:'Other',color:'purple'},
+// ── CONSTANTS ──
+const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const AVATAR_COLORS=['#1d4ed8','#db2777','#059669','#7c3aed','#ea580c','#0d9488'];
+const MEMBER_TAG_CLASSES=['mtag-0','mtag-1','mtag-2','mtag-3','mtag-4','mtag-5'];
+
+const CATS = {
+  payment:     {icon:'💳',label:'Payment to Service',color:'amber',catClass:'cat-payment'},
+  birthday:    {icon:'🎂',label:'Birthday',color:'pink',catClass:'cat-birthday'},
+  anniversary: {icon:'💍',label:'Anniversary',color:'pink',catClass:'cat-anniversary'},
+  car:         {icon:'🚗',label:'Car',color:'red',catClass:'cat-car'},
+  health:      {icon:'💉',label:'Health',color:'green',catClass:'cat-health'},
+  house:       {icon:'🏠',label:'House',color:'blue',catClass:'cat-house'},
+  work:        {icon:'💼',label:'Work',color:'purple',catClass:'cat-work'},
+  license:     {icon:'🪪',label:"Driver's License",color:'orange',catClass:'cat-license'},
+  inspector:   {icon:'✈️',label:'Inspector Credentials',color:'teal',catClass:'cat-inspector'},
+  id:          {icon:'🆔',label:'Personal ID',color:'purple',catClass:'cat-id'},
+  passport:    {icon:'🛂',label:'Passport',color:'green',catClass:'cat-passport'},
+  document:    {icon:'📄',label:'Document',color:'blue',catClass:'cat-document'},
+  other:       {icon:'⭐',label:'Other',color:'',catClass:'cat-other'},
 };
 
-const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DATE_HINTS = {
+  birthday:    'Enter birth date (year + month + day) — repeats same day every year',
+  anniversary: 'Enter the original anniversary date — repeats same day every year',
+  payment:     'Enter the next payment due date',
+  car:         'Enter the next service / renewal date',
+  health:      'Enter the next appointment date',
+  house:       'Enter the next maintenance / renewal date',
+  license:     'Enter the expiry date of your license',
+  passport:    'Enter the passport expiry date',
+  id:          'Enter the ID card expiry date',
+  inspector:   'Enter the credential expiry date',
+  document:    'Enter the next relevant date for this document',
+  work:        'Enter the next relevant work date',
+  other:       'Enter the next date for this event',
+};
 
 // ── REPEAT ──
-function getRepeatDays(ev){
-  const r=ev.repeat_type||'none';
-  if(r==='none'||r==='customdate')return 0;
-  if(r==='monthly')return 30;
-  if(r==='3months')return 91;
-  if(r==='6months')return 182;
-  if(r==='yearly')return 365;
-  if(r==='multiyear')return(ev.repeat_years||2)*365;
-  if(r==='custom')return ev.repeat_days||0;
+function getRepeatDays(ev) {
+  const r = ev.repeat_type||'none';
+  if(r==='none'||r==='customdate') return 0;
+  if(r==='monthly') return 30;
+  if(r==='3months') return 91;
+  if(r==='6months') return 182;
+  if(r==='yearly') return 365;
+  if(r==='multiyear') return (ev.repeat_years||2)*365;
+  if(r==='custom') return ev.repeat_days||0;
   return 0;
 }
-function getEffectiveDate(ev){
-  const today=new Date();today.setHours(0,0,0,0);
-  if(ev.repeat_type==='customdate'&&ev.custom_date){const d=new Date(ev.custom_date);d.setHours(0,0,0,0);return d;}
-  let d=new Date(ev.event_date);d.setHours(0,0,0,0);
-  const rd=getRepeatDays(ev);
-  if(rd>0){while(d<today)d=new Date(d.getTime()+rd*86400000);}
+
+function getEffectiveDate(ev) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  if(ev.repeat_type==='customdate'&&ev.custom_date) {
+    const d=new Date(ev.custom_date); d.setHours(0,0,0,0); return d;
+  }
+  // For birthday and anniversary — always same month/day, advance by year
+  if(ev.category==='birthday'||ev.category==='anniversary'||(ev.repeat_type==='yearly')) {
+    const orig = new Date(ev.event_date); orig.setHours(0,0,0,0);
+    let d = new Date(today.getFullYear(), orig.getMonth(), orig.getDate());
+    if(d < today) d = new Date(today.getFullYear()+1, orig.getMonth(), orig.getDate());
+    return d;
+  }
+  let d = new Date(ev.event_date); d.setHours(0,0,0,0);
+  const rd = getRepeatDays(ev);
+  if(rd>0) { while(d<today) d = new Date(d.getTime()+rd*86400000); }
   return d;
 }
-function getEffectiveDays(ev){
-  const today=new Date();today.setHours(0,0,0,0);
+
+function getEffectiveDays(ev) {
+  const today = new Date(); today.setHours(0,0,0,0);
   return Math.round((getEffectiveDate(ev)-today)/86400000);
 }
-function isPastEvent(ev){
-  // One-time or custom-date events where the date has already passed
-  const r=ev.repeat_type||'none';
-  const isRepeating=r!=='none'&&r!=='customdate'&&getRepeatDays(ev)>0;
-  if(isRepeating)return false;
+
+function isPastEvent(ev) {
+  const r = ev.repeat_type||'none';
+  const repeats = r!=='none'&&r!=='customdate'&&(getRepeatDays(ev)>0||r==='yearly'||ev.category==='birthday'||ev.category==='anniversary');
+  if(repeats) return false;
   return getEffectiveDays(ev)<0;
 }
-function repeatLabel(ev){
+
+function repeatLabel(ev) {
   const r=ev.repeat_type||'none';
-  if(r==='none')return'📌 One-time';if(r==='monthly')return'📅 Every month';
-  if(r==='3months')return'🔄 Every 3 months';if(r==='6months')return'🗓️ Every 6 months';
-  if(r==='yearly')return'🔁 Every year';if(r==='multiyear')return`📆 Every ${ev.repeat_years||2} years`;
-  if(r==='custom')return`✏️ Every ${ev.repeat_days||'?'} days`;if(r==='customdate')return`📍 ${ev.custom_date||'Set date'}`;
-  return'📌 One-time';
+  if(r==='none') return '📌 One-time';
+  if(r==='monthly') return '📅 Every month';
+  if(r==='3months') return '🔄 Every 3 months';
+  if(r==='6months') return '🗓️ Every 6 months';
+  if(r==='yearly') return '🔁 Every year';
+  if(r==='multiyear') return '📆 Every '+(ev.repeat_years||2)+' years';
+  if(r==='custom') return '✏️ Every '+(ev.repeat_days||'?')+' days';
+  if(r==='customdate') return '📍 '+(ev.custom_date||'Set date');
+  return '📌 One-time';
 }
-function repeatShort(ev){
+
+function repeatShort(ev) {
   const r=ev.repeat_type||'none';
-  if(r==='none')return'One-time';if(r==='monthly')return'Monthly';if(r==='3months')return'Quarterly';
-  if(r==='6months')return'6-monthly';if(r==='yearly')return'Yearly';
-  if(r==='multiyear')return`${ev.repeat_years||2}yr`;if(r==='custom')return`${ev.repeat_days||'?'}d`;
-  if(r==='customdate')return'Set date';return'One-time';
+  if(r==='none') return 'One-time';
+  if(r==='monthly') return 'Monthly';
+  if(r==='3months') return 'Quarterly';
+  if(r==='6months') return '6-monthly';
+  if(r==='yearly') return 'Yearly';
+  if(r==='multiyear') return (ev.repeat_years||2)+'yr';
+  if(r==='custom') return (ev.repeat_days||'?')+'d';
+  if(r==='customdate') return 'Set date';
+  return 'One-time';
 }
 
 // ── EXPENSE ──
-function annualExpense(ev){
-  const amt=parseFloat(ev.expense_estimate)||0;if(!amt)return 0;
+function annualExpense(ev) {
+  const amt=parseFloat(ev.expense_estimate)||0; if(!amt) return 0;
   const r=ev.repeat_type||'none';
-  if(r==='none'||r==='customdate')return amt;if(r==='monthly')return amt*12;
-  if(r==='3months')return amt*4;if(r==='6months')return amt*2;if(r==='yearly')return amt;
-  if(r==='multiyear')return amt/(ev.repeat_years||2);
-  if(r==='custom'&&ev.repeat_days)return amt*(365/ev.repeat_days);
+  if(r==='none'||r==='customdate') return amt;
+  if(r==='monthly') return amt*12;
+  if(r==='3months') return amt*4;
+  if(r==='6months') return amt*2;
+  if(r==='yearly') return amt;
+  if(r==='multiyear') return amt/(ev.repeat_years||2);
+  if(r==='custom'&&ev.repeat_days) return amt*(365/ev.repeat_days);
   return amt;
 }
-function fmtMoney(n){return'฿'+Math.round(n).toLocaleString('en');}
+function fmtMoney(n) { return '฿'+Math.round(n).toLocaleString('en'); }
+
+// ── MEMBER COLORS ──
+let memberColorMap = {};
+function buildMemberColorMap() {
+  const members = settings.members||[];
+  memberColorMap = {};
+  members.forEach((m,i) => { memberColorMap[m] = MEMBER_TAG_CLASSES[i%MEMBER_TAG_CLASSES.length]; });
+}
+function memberChipClass(m) { return memberColorMap[m]||'mtag-0'; }
 
 // ── INIT ──
-async function init(){
-  document.getElementById('headerDate').textContent=
+async function init() {
+  document.getElementById('headerDate').textContent =
     new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
-  await loadAll();setStatus('connected');
+  await loadAll();
+  setStatus('connected');
 }
-async function loadAll(){
-  try{
-    const[evRes,setRes]=await Promise.all([
+
+async function loadAll() {
+  try {
+    const [evRes,setRes] = await Promise.all([
       db.from('family_events').select('*').order('event_date'),
       db.from('family_settings').select('*').limit(1)
     ]);
-    if(evRes.error)throw evRes.error;if(setRes.error)throw setRes.error;
-    events=evRes.data||[];
-    settings=setRes.data[0]||{reminder_days:[30,14,7,3,1],notify_emails:['anantulyathan@gmail.com','prangkwan@gmail.com'],members:['Anan','Prangkwan','Mark','Matt','Malee']};
-    updateStats();renderCurrentPage();
-  }catch(e){setStatus('error');toast('Could not load: '+e.message,'error');}
+    if(evRes.error) throw evRes.error;
+    if(setRes.error) throw setRes.error;
+    events = evRes.data||[];
+    settings = setRes.data[0]||{reminder_days:[30,14,7,3,1],notify_emails:['anantulyathan@gmail.com'],members:['Anan','Prangkwan','Mark','Matt','Malee']};
+    buildMemberColorMap();
+    updateStats();
+    renderCurrentPage();
+  } catch(e) { setStatus('error'); toast('Could not load: '+e.message,'error'); }
 }
-function setStatus(s){
+
+function setStatus(s) {
   document.getElementById('statusDot').className='dot '+s;
   document.getElementById('statusText').textContent=s==='connected'?'Connected':s==='error'?'Error':'Connecting';
 }
 
 // ── STATS ──
-function updateStats(){
-  const futureEvents=events.filter(e=>!isPastEvent(e));
-  const upcoming=futureEvents.map(e=>({e,days:getEffectiveDays(e)})).filter(x=>x.days>=0).sort((a,b)=>a.days-b.days);
-  const week=upcoming.filter(x=>x.days<=7).length;
-  const month=upcoming.filter(x=>x.days<=30).length;
-  const totalAnnual=futureEvents.reduce((s,e)=>s+annualExpense(e),0);
+function updateStats() {
+  const future = events.filter(e=>!isPastEvent(e));
+  const upcoming = future.map(e=>({e,days:getEffectiveDays(e)})).filter(x=>x.days>=0).sort((a,b)=>a.days-b.days);
+  const week = upcoming.filter(x=>x.days<=7).length;
+  const month = upcoming.filter(x=>x.days<=30).length;
+  const totalAnnual = future.reduce((s,e)=>s+annualExpense(e),0);
   document.getElementById('statWeek').textContent=week;
   document.getElementById('statMonth').textContent=month;
-  document.getElementById('statTotal').textContent=futureEvents.length;
+  document.getElementById('statTotal').textContent=future.length;
   document.getElementById('statExpense').textContent=totalAnnual>0?fmtMoney(totalAnnual):'—';
   const badge=document.getElementById('urgentBadge');
   if(week>0){badge.textContent=week;badge.style.display='';}else badge.style.display='none';
 }
 
-function switchTab(tab){
+// ── TAB SWITCHING ──
+function switchTab(tab) {
   currentTab=tab;
-  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['dashboard','upcoming','all','calendar','birthdays','settings'][i]===tab));
+  const tabs=['dashboard','events','calendar','birthdays','calculator','settings'];
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',tabs[i]===tab));
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+tab).classList.add('active');
+  const fab=document.getElementById('mainFab');
+  fab.style.display=(['calculator','settings'].includes(tab))?'none':'flex';
   renderCurrentPage();
 }
-function renderCurrentPage(){
-  if(currentTab==='dashboard')renderDashboard();
-  if(currentTab==='upcoming')renderUpcoming();
-  if(currentTab==='all')renderAll();
-  if(currentTab==='calendar')renderCalendar();
-  if(currentTab==='birthdays')renderBirthdays();
-  if(currentTab==='settings')renderSettings();
+
+function renderCurrentPage() {
+  if(currentTab==='dashboard') renderDashboard();
+  if(currentTab==='events') renderEvents();
+  if(currentTab==='calendar') renderCalendar();
+  if(currentTab==='birthdays') renderBirthdays();
+  if(currentTab==='settings') renderSettings();
 }
 
 // ── HELPERS ──
 function urgencyClass(d){if(d<=7)return'urgent';if(d<=30)return'warning';if(d<=90)return'safe';return'future';}
 function pillClass(d){if(d<=7)return'pill-red';if(d<=30)return'pill-amber';if(d<=90)return'pill-green';return'pill-blue';}
 function daysLabel(d){if(d===0)return'Today';if(d===1)return'1 day';return d+' days';}
-function membersHTML(ev){
-  const m=Array.isArray(ev.members)&&ev.members.length?ev.members:(ev.member?[ev.member]:[]);
-  if(!m.length)return'';
-  return`<div class="member-chips">${m.map(x=>`<span class="member-chip">👤 ${esc(x)}</span>`).join('')}</div>`;
+function esc(str){if(!str)return'';return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function membersOf(ev) {
+  return Array.isArray(ev.members)&&ev.members.length?ev.members:(ev.member?[ev.member]:[]);
 }
-function eventRowHTML(ev,days){
+
+function memberChipsHtml(ev) {
+  const m=membersOf(ev); if(!m.length) return '';
+  return '<div class="member-chips">'+m.map(x=>'<span class="member-chip '+memberChipClass(x)+'">'+esc(x)+'</span>').join('')+'</div>';
+}
+
+function eventRowHtml(ev, days) {
   const cat=CATS[ev.category]||CATS.other;
   const d=getEffectiveDate(ev);
+  const dateStr=d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
   const exp=parseFloat(ev.expense_estimate)||0;
-  return`<div class="event-row ${urgencyClass(days)}" onclick="openDetail('${ev.id}')">
-    <div class="event-icon icon-${cat.color}">${cat.icon}</div>
-    <div class="event-body">
-      <div class="event-name">${esc(ev.title)}</div>
-      <div class="event-detail">${d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}<span class="detail-sep">·</span>${repeatShort(ev)}</div>
-      ${membersHTML(ev)}
-      ${exp>0?`<div class="expense-chip">฿${exp.toLocaleString('en')}</div>`:''}
-    </div>
-    <div class="urgency-pill ${pillClass(days)}">${daysLabel(days)}<small>${d.toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</small></div>
-  </div>`;
-}
-function sectionHTML(label,items,count){
-  if(!items.length)return'';
-  return`<div class="section-label"><div class="section-label-text">${label}</div><div class="section-label-line"></div><div class="section-label-count">${count} event${count!==1?'s':''}</div></div>${items.join('')}`;
+  const timeStr=ev.event_time?(' · '+ev.event_time.slice(0,5)):'';
+  const locHtml=ev.location?('<a class="location-chip" href="https://maps.google.com/?q='+encodeURIComponent(ev.location)+'" target="_blank">📍 '+esc(ev.location)+'</a>'):'';
+  return '<div class="event-row '+urgencyClass(days)+' '+cat.catClass+'" onclick="openDetail(\''+ev.id+'\')">'
+    +'<div class="event-icon '+cat.catClass+'" style="border:1px solid var(--border)">'+cat.icon+'</div>'
+    +'<div class="event-body">'
+    +'<div class="event-name">'+esc(ev.title)+'</div>'
+    +'<div class="event-detail">'+dateStr+timeStr+'<span class="detail-sep">·</span>'+repeatShort(ev)+'</div>'
+    +memberChipsHtml(ev)
+    +(exp>0?'<div class="expense-chip">฿'+exp.toLocaleString('en')+'</div>':'')
+    +locHtml
+    +'</div>'
+    +'<div class="urgency-pill '+pillClass(days)+'">'+daysLabel(days)+'<small>'+d.toLocaleDateString('en-GB',{day:'numeric',month:'short'})+'</small></div>'
+    +'</div>';
 }
 
-// ── DASHBOARD ──
-function buildDashMemberBar(){buildMemberBar('dashMemberBar',dashMemberFilter,'setDashMember');}
+function sectionHtml(label,rows,count) {
+  if(!rows.length) return '';
+  return '<div class="section-label"><div class="section-label-text">'+label+'</div><div class="section-label-line"></div><div class="section-label-count">'+count+' event'+(count!==1?'s':'')+'</div></div>'+rows.join('');
+}
 
-function buildYearFilterBar(){
-  const today=new Date();
-  const thisYear=today.getFullYear();
-  const bar=document.getElementById('yearFilterBar');
-  if(!bar)return;
-  // collect all years from events
+function memberMatchFn(e,mf) {
+  if(mf==='all') return true;
+  const m=membersOf(e);
+  if(mf==='unassigned') return m.length===0;
+  return m.includes(mf);
+}
+
+// ── MEMBER BAR ──
+function buildMemberBar(barId, currentFilter, onClickFn) {
+  const bar=document.getElementById(barId); if(!bar) return;
+  const members=settings.members||[];
+  const btns=[{val:'all',label:'👥 All'},...members.map(m=>({val:m,label:m}))];
+  bar.innerHTML=btns.map(b=>'<div class="member-btn'+(b.val===currentFilter?' active':'')+'" onclick="'+onClickFn+'(\''+b.val+'\',this)">'+esc(b.label)+'</div>').join('');
+}
+
+function setDashMember(m,el){dashMemberFilter=m;document.querySelectorAll('#dashMemberBar .member-btn').forEach(b=>b.classList.remove('active'));if(el)el.classList.add('active');renderDashboard();}
+function setEventsMember(m,el){eventsMemberFilter=m;document.querySelectorAll('#eventsMemberBar .member-btn').forEach(b=>b.classList.remove('active'));if(el)el.classList.add('active');renderEvents();}
+
+// ── YEAR FILTER ──
+function buildYearFilterBar() {
+  const bar=document.getElementById('yearFilterBar'); if(!bar) return;
+  const today=new Date(); const thisYear=today.getFullYear();
   const yearsSet=new Set();
   events.forEach(e=>{
     if(isPastEvent(e)){yearsSet.add(new Date(e.event_date).getFullYear());return;}
-    const d=getEffectiveDate(e);
-    yearsSet.add(d.getFullYear());
-    // for repeating events add next few occurrences
+    const d=getEffectiveDate(e); yearsSet.add(d.getFullYear());
     const rd=getRepeatDays(e);
-    if(rd>0){
-      let dd=new Date(d.getTime());
-      for(let i=0;i<10;i++){dd=new Date(dd.getTime()+rd*86400000);yearsSet.add(dd.getFullYear());if(dd.getFullYear()>thisYear+10)break;}
-    }
+    if(rd>0){let dd=new Date(d.getTime());for(let i=0;i<10;i++){dd=new Date(dd.getTime()+rd*86400000);yearsSet.add(dd.getFullYear());if(dd.getFullYear()>thisYear+10)break;}}
   });
   const years=['all',...Array.from(yearsSet).sort((a,b)=>a-b)];
-  bar.innerHTML=years.map(y=>`<div class="year-filter-btn${dashYear===y?' active':''}" onclick="setDashYear(${y==='all'?'\'all\'':y},this)">${y==='all'?'All Years':y}</div>`).join('');
+  bar.innerHTML=years.map(y=>'<div class="year-filter-btn'+(y===dashYear?' active':'')+'" onclick="setDashYear(\''+(y==='all'?'all':y)+'\',this)">'+(y==='all'?'All Years':y)+'</div>').join('');
 }
 
-function setDashYear(y,el){
-  dashYear=y;
+function setDashYear(y,el) {
+  dashYear=(y==='all'?'all':parseInt(y));
   document.querySelectorAll('.year-filter-btn').forEach(b=>b.classList.remove('active'));
   if(el)el.classList.add('active');
   renderDashboard();
 }
 
-function getEventsForYear(year){
-  if(year==='all')return events.filter(e=>!isPastEvent(e));
+function getEventsForYear(year) {
+  if(year==='all') return events.filter(e=>!isPastEvent(e));
   return events.filter(e=>{
-    if(isPastEvent(e))return false;
+    if(isPastEvent(e)) return false;
     const d=getEffectiveDate(e);
-    if(d.getFullYear()===year)return true;
-    // for repeating events check if any occurrence lands in that year
+    if(d.getFullYear()===year) return true;
     const rd=getRepeatDays(e);
-    if(rd>0){
-      let dd=new Date(d.getTime());
-      for(let i=0;i<20;i++){
-        if(dd.getFullYear()===year)return true;
-        if(dd.getFullYear()>year)return false;
-        dd=new Date(dd.getTime()+rd*86400000);
-      }
-    }
+    if(rd>0){let dd=new Date(d.getTime());for(let i=0;i<20;i++){if(dd.getFullYear()===year)return true;if(dd.getFullYear()>year)return false;dd=new Date(dd.getTime()+rd*86400000);}}
     return false;
   });
 }
 
-function getEffectiveDateForYear(ev,year){
-  if(year==='all')return getEffectiveDate(ev);
-  const d=getEffectiveDate(ev);
-  if(d.getFullYear()===year)return d;
-  // advance repeating event to the given year
-  const rd=getRepeatDays(ev);
-  if(rd>0){
-    let dd=new Date(d.getTime());
-    for(let i=0;i<50;i++){
-      if(dd.getFullYear()===year)return dd;
-      if(dd.getFullYear()>year)return null;
-      dd=new Date(dd.getTime()+rd*86400000);
-    }
-  }
-  return null;
-}
-
-function renderDashboard(){
-  const today=new Date();today.setHours(0,0,0,0);
+// ── DASHBOARD ──
+function renderDashboard() {
+  const today=new Date(); today.setHours(0,0,0,0);
   const thisYear=today.getFullYear();
-
   buildYearFilterBar();
-  buildDashMemberBar();
+  buildMemberBar('dashMemberBar',dashMemberFilter,'setDashMember');
 
-  const isAllYears=dashYear==='all';
-  const yearLabel=isAllYears?'All Years':String(dashYear);
-
-  // Filtered events for selected year + member
+  const isAll=dashYear==='all';
+  const yearLabel=isAll?'All Years':String(dashYear);
   const yearEvents=getEventsForYear(dashYear).filter(e=>memberMatchFn(e,dashMemberFilter));
+  const pastEvents=(isAll||dashYear===thisYear)?events.filter(e=>isPastEvent(e)&&memberMatchFn(e,dashMemberFilter)).sort((a,b)=>new Date(b.event_date)-new Date(a.event_date)):[];
+  const sorted=yearEvents.map(e=>({e,days:getEffectiveDays(e)})).filter(x=>x.days>=0).sort((a,b)=>a.days-b.days);
 
-  // Separate past vs future (past only relevant for All Years / current year)
-  const pastEvents=isAllYears||dashYear===thisYear
-    ? events.filter(e=>isPastEvent(e)).sort((a,b)=>new Date(b.event_date)-new Date(a.event_date))
-    : [];
+  let html='<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">'
+    +'<span style="font-size:12px;font-weight:700;color:var(--accent);background:var(--blue-bg);border:1px solid var(--blue-bd);padding:3px 10px;border-radius:20px">📅 '+yearLabel+'</span>'
+    +'<span style="font-size:12px;color:var(--muted)">'+yearEvents.length+' event'+(yearEvents.length!==1?'s':'')+'</span>'
+    +'</div>';
 
-  // For urgency sections — only show when All Years or current year selected
-  const sorted=isAllYears||dashYear===thisYear
-    ? yearEvents.map(e=>({e,days:getEffectiveDays(e)})).filter(x=>x.days>=0).sort((a,b)=>a.days-b.days)
-    : [];
-
-  let html='';
-
-  // Year badge
-  html+=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-    <span style="font-size:12px;font-weight:700;color:var(--accent);background:var(--blue-bg);border:1px solid var(--blue-bd);padding:3px 10px;border-radius:20px">📅 ${yearLabel}</span>
-    <span style="font-size:12px;color:var(--muted)">${yearEvents.length} event${yearEvents.length!==1?'s':''}</span>
-  </div>`;
-
-  // Urgency sections (current year / all years only)
-  if(isAllYears||dashYear===thisYear){
-    html+=sectionHTML('🔴 Needs attention — within 7 days',sorted.filter(x=>x.days<=7).map(x=>eventRowHTML(x.e,x.days)),sorted.filter(x=>x.days<=7).length);
-    html+=sectionHTML('🟡 Coming up — within 30 days',sorted.filter(x=>x.days>7&&x.days<=30).map(x=>eventRowHTML(x.e,x.days)),sorted.filter(x=>x.days>7&&x.days<=30).length);
+  // Urgent sections for current/all years
+  if(isAll||dashYear===thisYear) {
+    html+=sectionHtml('🔴 Needs attention — within 7 days',sorted.filter(x=>x.days<=7).map(x=>eventRowHtml(x.e,x.days)),sorted.filter(x=>x.days<=7).length);
+    html+=sectionHtml('🟡 Coming up — within 30 days',sorted.filter(x=>x.days>7&&x.days<=30).map(x=>eventRowHtml(x.e,x.days)),sorted.filter(x=>x.days>7&&x.days<=30).length);
   } else {
-    // Show all events for that year sorted by month
+    // Future year — list all events for that year by month
     const yearSorted=yearEvents.map(e=>{
-      const d=getEffectiveDateForYear(e,dashYear);
+      let d=getEffectiveDate(e);
+      const rd=getRepeatDays(e);
+      if(rd>0&&d.getFullYear()!==dashYear){let dd=new Date(d.getTime());for(let i=0;i<50;i++){if(dd.getFullYear()===dashYear){d=dd;break;}dd=new Date(dd.getTime()+rd*86400000);}}
       return{e,d};
-    }).filter(x=>x.d).sort((a,b)=>a.d-b.d);
-    if(yearSorted.length){
-      html+=`<div class="section-label"><div class="section-label-text">📋 Events in ${dashYear}</div><div class="section-label-line"></div><div class="section-label-count">${yearSorted.length}</div></div>`;
-      html+=yearSorted.map(({e,d})=>{
-        const cat=CATS[e.category]||CATS.other;
-        const dateStr=d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
-        const members=Array.isArray(e.members)&&e.members.length?e.members:(e.member?[e.member]:[]);
-        const exp=parseFloat(e.expense_estimate)||0;
-        return`<div class="event-row safe" onclick="openDetail('${e.id}')">
-          <div class="event-icon icon-${cat.color}">${cat.icon}</div>
-          <div class="event-body">
-            <div class="event-name">${esc(e.title)}</div>
-            <div class="event-detail">${dateStr}<span class="detail-sep">·</span>${repeatShort(e)}</div>
-            ${members.length?`<div class="member-chips">${members.map(m=>`<span class="member-chip">👤 ${esc(m)}</span>`).join('')}</div>`:''}
-            ${exp>0?`<div class="expense-chip">฿${exp.toLocaleString('en')}</div>`:''}
-          </div>
-          <div class="urgency-pill pill-green">${d.toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</div>
-        </div>`;
+    }).filter(x=>x.d.getFullYear()===dashYear).sort((a,b)=>a.d-b.d);
+    if(yearSorted.length) {
+      html+='<div class="section-label"><div class="section-label-text">📋 Events in '+dashYear+'</div><div class="section-label-line"></div><div class="section-label-count">'+yearSorted.length+'</div></div>';
+      html+=yearSorted.map(function(item){
+        var e=item.e, d=item.d;
+        var cat=CATS[e.category]||CATS.other;
+        var dateStr=d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+        var exp=parseFloat(e.expense_estimate)||0;
+        return '<div class="event-row safe '+cat.catClass+'" onclick="openDetail(\''+e.id+'\')">'
+          +'<div class="event-icon '+cat.catClass+'">'+cat.icon+'</div>'
+          +'<div class="event-body">'
+          +'<div class="event-name">'+esc(e.title)+'</div>'
+          +'<div class="event-detail">'+dateStr+'<span class="detail-sep">·</span>'+repeatShort(e)+'</div>'
+          +memberChipsHtml(e)
+          +(exp>0?'<div class="expense-chip">฿'+exp.toLocaleString('en')+'</div>':'')
+          +'</div>'
+          +'<div class="urgency-pill pill-green">'+d.toLocaleDateString('en-GB',{day:'numeric',month:'short'})+'</div>'
+          +'</div>';
       }).join('');
     } else {
-      html+=`<div class="empty"><div class="empty-icon">📅</div><div class="empty-title">No events in ${dashYear}</div></div>`;
+      html+='<div class="empty"><div class="empty-icon">📅</div><div class="empty-title">No events in '+dashYear+'</div></div>';
     }
   }
 
   // ── METRICS ──
-  html+=`<div class="section-label" style="margin-top:20px"><div class="section-label-text">📊 Metrics — ${yearLabel}</div><div class="section-label-line"></div></div>`;
+  html+='<div class="section-label" style="margin-top:20px"><div class="section-label-text">📊 Metrics — '+yearLabel+'</div><div class="section-label-line"></div></div>';
 
-  const withExpense=yearEvents.filter(e=>parseFloat(e.expense_estimate)>0);
+  const recurring=yearEvents.filter(e=>e.repeat_type&&e.repeat_type!=='none'&&e.repeat_type!=='customdate');
+  const oneTime=yearEvents.filter(e=>!e.repeat_type||e.repeat_type==='none'||e.repeat_type==='customdate');
+  const recurringCost=recurring.reduce((s,e)=>s+annualExpense(e),0);
+  const oneTimeCost=oneTime.reduce((s,e)=>s+(parseFloat(e.expense_estimate)||0),0);
   const totalCost=yearEvents.reduce((s,e)=>s+(parseFloat(e.expense_estimate)||0),0);
-  const recurringCount=yearEvents.filter(e=>e.repeat_type&&e.repeat_type!=='none'&&e.repeat_type!=='customdate').length;
-  html+=`<div class="metric-grid">
-    <div class="metric-card"><div class="metric-card-title">${isAllYears?'Total Active':'Events in '+dashYear}</div><div class="metric-num accent">${yearEvents.length}</div><div class="metric-sub">${recurringCount} recurring · ${yearEvents.length-recurringCount} one-time</div></div>
-    <div class="metric-card"><div class="metric-card-title">Est. ${isAllYears?'Annual':'Year'} Cost</div><div class="metric-num teal">${totalCost>0?fmtMoney(totalCost):'฿0'}</div><div class="metric-sub">${withExpense.length} events with cost</div></div>
-  </div>`;
+
+  html+='<div class="metric-grid">'
+    +'<div class="metric-card"><div class="metric-card-title">'+( isAll?'Active':'In '+dashYear)+' Events</div><div class="metric-num accent">'+yearEvents.length+'</div><div class="metric-sub">'+recurring.length+' recurring · '+oneTime.length+' one-time</div></div>'
+    +'<div class="metric-card"><div class="metric-card-title">Est. '+(isAll?'Annual':'Year')+' Cost</div><div class="metric-num teal">'+fmtMoney(totalCost)+'</div><div class="metric-sub">Recurring: '+fmtMoney(recurringCost)+'</div></div>'
+    +'</div>';
+
+  // Recurring costs by member
+  if(recurringCost>0) {
+    const mExp={};
+    recurring.forEach(e=>{
+      const amt=annualExpense(e); if(!amt) return;
+      const m=membersOf(e); const keys=m.length?m:['Unassigned'];
+      keys.forEach(x=>{mExp[x]=(mExp[x]||0)+amt/keys.length;});
+    });
+    const maxE=Math.max(...Object.values(mExp),1);
+    html+='<div class="metric-card" style="margin-bottom:10px"><div class="metric-card-title">💰 Annual Recurring Cost by Member</div>'
+      +Object.entries(mExp).sort((a,b)=>b[1]-a[1]).map(function(entry,i){
+        var k=entry[0],v=entry[1];
+        var fills=['','green','amber','teal','purple','pink'];
+        return '<div class="bar-row"><div class="bar-label">'+esc(k)+'</div><div class="bar-track"><div class="bar-fill '+(fills[i%fills.length])+'" style="width:'+Math.round(v/maxE*100)+'%"></div></div><div class="bar-val">'+fmtMoney(v)+'</div></div>';
+      }).join('')
+      +'</div>';
+  }
 
   // Events by member
-  const memberCounts={};
-  yearEvents.forEach(e=>{
-    const m=Array.isArray(e.members)&&e.members.length?e.members:(e.member?[e.member]:['Unassigned']);
-    m.forEach(x=>{memberCounts[x]=(memberCounts[x]||0)+1;});
-  });
-  if(Object.keys(memberCounts).length){
-    const maxM=Math.max(...Object.values(memberCounts),1);
-    const memberColors=['accent','green','amber','teal','purple'];
-    html+=`<div class="metric-card" style="margin-bottom:10px"><div class="metric-card-title">👨‍👩‍👦 Events by Member</div>
-      ${Object.entries(memberCounts).sort((a,b)=>b[1]-a[1]).map(([k,v],i)=>`
-        <div class="bar-row">
-          <div class="bar-label">${esc(k)}</div>
-          <div class="bar-track"><div class="bar-fill ${memberColors[i%memberColors.length]}" style="width:${Math.round(v/maxM*100)}%"></div></div>
-          <div class="bar-val">${v}</div>
-        </div>`).join('')}
-    </div>`;
+  const mCounts={};
+  yearEvents.forEach(e=>{const m=membersOf(e);(m.length?m:['Unassigned']).forEach(x=>{mCounts[x]=(mCounts[x]||0)+1;});});
+  if(Object.keys(mCounts).length) {
+    const maxM=Math.max(...Object.values(mCounts),1);
+    const fills=['','green','amber','teal','purple','pink'];
+    html+='<div class="metric-card" style="margin-bottom:10px"><div class="metric-card-title">👨‍👩‍👦 Events by Member</div>'
+      +Object.entries(mCounts).sort((a,b)=>b[1]-a[1]).map(function(entry,i){
+        var k=entry[0],v=entry[1];
+        return '<div class="bar-row"><div class="bar-label">'+esc(k)+'</div><div class="bar-track"><div class="bar-fill '+(fills[i%fills.length])+'" style="width:'+Math.round(v/maxM*100)+'%"></div></div><div class="bar-val">'+v+'</div></div>';
+      }).join('')
+      +'</div>';
   }
 
   // Events by category
-  const catCounts={};const catExpense={};
+  const cCounts={}, cCost={};
   yearEvents.forEach(e=>{
     const c=e.category||'other';
-    catCounts[c]=(catCounts[c]||0)+1;
-    catExpense[c]=(catExpense[c]||0)+(parseFloat(e.expense_estimate)||0);
+    cCounts[c]=(cCounts[c]||0)+1;
+    cCost[c]=(cCost[c]||0)+(parseFloat(e.expense_estimate)||0);
   });
-  if(Object.keys(catCounts).length){
-    const maxC=Math.max(...Object.values(catCounts),1);
-    const catColorArr=['accent','green','amber','teal','purple','red'];
-    html+=`<div class="metric-card" style="margin-bottom:10px"><div class="metric-card-title">📂 Events by Category</div>
-      ${Object.entries(catCounts).sort((a,b)=>b[1]-a[1]).map(([k,v],i)=>{
-        const cat=CATS[k]||CATS.other;
-        const exp=catExpense[k]||0;
-        return`<div class="bar-row">
-          <div class="bar-label">${cat.icon} ${cat.label}</div>
-          <div class="bar-track"><div class="bar-fill ${catColorArr[i%catColorArr.length]}" style="width:${Math.round(v/maxC*100)}%"></div></div>
-          <div class="bar-val">${v}${exp>0?'<br><span style="font-size:9px;color:var(--teal)">'+fmtMoney(exp)+'</span>':''}</div>
-        </div>`;}).join('')}
-    </div>`;
+  if(Object.keys(cCounts).length) {
+    const maxC=Math.max(...Object.values(cCounts),1);
+    const fills=['','green','amber','teal','purple','pink','orange'];
+    html+='<div class="metric-card" style="margin-bottom:10px"><div class="metric-card-title">📂 Events by Category</div>'
+      +Object.entries(cCounts).sort((a,b)=>b[1]-a[1]).map(function(entry,i){
+        var k=entry[0],v=entry[1];
+        var cat=CATS[k]||CATS.other;
+        var exp=cCost[k]||0;
+        return '<div class="bar-row"><div class="bar-label">'+cat.icon+' '+cat.label+'</div><div class="bar-track"><div class="bar-fill '+(fills[i%fills.length])+'" style="width:'+Math.round(v/maxC*100)+'%"></div></div><div class="bar-val">'+v+(exp>0?'<br><span style="font-size:9px;color:var(--teal)">'+fmtMoney(exp)+'</span>':'')+'</div></div>';
+      }).join('')
+      +'</div>';
   }
 
-  // Events by month for selected year
-  const mCounts=new Array(12).fill(0);
-  yearEvents.forEach(e=>{
-    const d=isAllYears?getEffectiveDate(e):getEffectiveDateForYear(e,dashYear);
-    if(d)mCounts[d.getMonth()]++;
-  });
-  html+=`<div class="metric-card" style="margin-bottom:10px"><div class="metric-card-title">📅 Events by Month — ${yearLabel}</div>
-    <div class="month-grid">
-      ${MONTHS.map((m,i)=>{
-        const count=mCounts[i];
-        const cls=count===0?'':(count>=3?'urgent':'has-events');
-        return`<div class="month-cell ${cls}"><div class="month-name">${m}</div><div class="month-count">${count||'·'}</div></div>`;
-      }).join('')}
-    </div>
-  </div>`;
+  // Events by month
+  const moCounts=new Array(12).fill(0);
+  yearEvents.forEach(e=>{const d=getEffectiveDate(e);moCounts[d.getMonth()]++;});
+  html+='<div class="metric-card" style="margin-bottom:10px"><div class="metric-card-title">📅 Events by Month — '+yearLabel+'</div>'
+    +'<div class="month-grid">'
+    +MONTHS.map(function(m,i){
+      var count=moCounts[i];
+      var cls='month-cell'+(count===0?'':(count>=3?' urgent-month':' has-events'));
+      return '<div class="'+cls+'"><div class="month-name">'+m+'</div><div class="month-count">'+(count||'·')+'</div></div>';
+    }).join('')
+    +'</div></div>';
 
-  // Expense by member
-  if(withExpense.length>0){
-    const memberExp={};
-    yearEvents.forEach(e=>{
-      const amt=parseFloat(e.expense_estimate)||0;if(!amt)return;
-      const m=Array.isArray(e.members)&&e.members.length?e.members:(e.member?[e.member]:['Unassigned']);
-      m.forEach(x=>{memberExp[x]=(memberExp[x]||0)+amt/m.length;});
-    });
-    const maxE=Math.max(...Object.values(memberExp),1);
-    html+=`<div class="metric-card" style="margin-bottom:10px"><div class="metric-card-title">💰 Est. Cost by Member — ${yearLabel}</div>
-      ${Object.entries(memberExp).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`
-        <div class="bar-row">
-          <div class="bar-label">${esc(k)}</div>
-          <div class="bar-track"><div class="bar-fill teal" style="width:${Math.round(v/maxE*100)}%"></div></div>
-          <div class="bar-val" style="font-size:10px">${fmtMoney(v)}</div>
-        </div>`).join('')}
-    </div>`;
-  }
-
-  // Quarter summary (only for current year / all years)
-  if(isAllYears||dashYear===thisYear){
+  // Quarter summary
+  if(isAll||dashYear===thisYear) {
     const q1=sorted.filter(x=>x.days<=90).length;
     const q2=sorted.filter(x=>x.days>90&&x.days<=180).length;
     const q3=sorted.filter(x=>x.days>180&&x.days<=270).length;
     const q4=sorted.filter(x=>x.days>270&&x.days<=365).length;
-    html+=`<div class="metric-card full" style="margin-bottom:4px"><div class="metric-card-title">📆 Events by Quarter (Next 12 Months)</div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px">
-        ${[['Next 3mo',q1,'accent'],['3–6mo',q2,'green'],['6–9mo',q3,'amber'],['9–12mo',q4,'blue']].map(([label,count,color])=>`
-          <div style="text-align:center;padding:10px 6px;background:var(--border-lt);border-radius:10px;border:1px solid var(--border)">
-            <div style="font-size:20px;font-weight:700;color:var(--${color})">${count}</div>
-            <div style="font-size:10px;color:var(--muted);margin-top:3px">${label}</div>
-          </div>`).join('')}
-      </div>
-    </div>`;
+    html+='<div class="metric-card full" style="margin-bottom:4px"><div class="metric-card-title">📆 Events by Quarter (Next 12 Months)</div>'
+      +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px">'
+      +[['Next 3mo',q1,'accent'],['3–6mo',q2,'green'],['6–9mo',q3,'amber'],['9–12mo',q4,'blue']].map(function(item){
+        return '<div style="text-align:center;padding:10px 4px;background:var(--border-lt);border-radius:10px;border:1px solid var(--border)">'
+          +'<div style="font-size:18px;font-weight:700;color:var(--'+item[2]+')">'+item[1]+'</div>'
+          +'<div style="font-size:9px;color:var(--muted);margin-top:3px">'+item[0]+'</div>'
+          +'</div>';
+      }).join('')
+      +'</div></div>';
   }
 
-  // Past events (always shown at bottom)
-  if(pastEvents.length){
-    html+=`<div class="section-label" style="margin-top:24px"><div class="section-label-text" style="color:var(--muted)">🕰 Past Events</div><div class="section-label-line"></div><div class="section-label-count">${pastEvents.length}</div></div>`;
-    html+=pastEvents.map(ev=>{
-      const cat=CATS[ev.category]||CATS.other;
-      const d=new Date(ev.event_date);
-      const daysAgo=Math.abs(Math.round((d-new Date().setHours(0,0,0,0))/86400000));
-      const members=Array.isArray(ev.members)&&ev.members.length?ev.members:(ev.member?[ev.member]:[]);
-      return`<div class="event-row future" style="opacity:0.5;cursor:pointer" onclick="openDetail('${ev.id}')">
-        <div class="event-icon" style="background:var(--border-lt)">${cat.icon}</div>
-        <div class="event-body">
-          <div class="event-name" style="color:var(--muted)">${esc(ev.title)}</div>
-          <div class="event-detail" style="color:var(--muted)">${d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}<span class="detail-sep">·</span>${repeatShort(ev)}</div>
-          ${members.length?`<div class="member-chips">${members.map(m=>`<span class="member-chip" style="opacity:0.6">👤 ${esc(m)}</span>`).join('')}</div>`:''}
-        </div>
-        <div class="urgency-pill" style="background:var(--border-lt);color:var(--muted);border:1px solid var(--border)">${daysAgo}d ago</div>
-      </div>`;
+  // Past events
+  if(pastEvents.length) {
+    html+='<div class="section-label" style="margin-top:20px"><div class="section-label-text" style="color:var(--muted)">🕰 Past Events</div><div class="section-label-line"></div><div class="section-label-count">'+pastEvents.length+'</div></div>';
+    html+=pastEvents.map(function(ev){
+      var cat=CATS[ev.category]||CATS.other;
+      var d=new Date(ev.event_date);
+      var daysAgo=Math.abs(Math.round((d-new Date().setHours(0,0,0,0))/86400000));
+      return '<div class="event-row future" style="opacity:0.5" onclick="openDetail(\''+ev.id+'\')">'
+        +'<div class="event-icon" style="background:var(--border-lt)">'+cat.icon+'</div>'
+        +'<div class="event-body">'
+        +'<div class="event-name" style="color:var(--muted)">'+esc(ev.title)+'</div>'
+        +'<div class="event-detail" style="color:var(--muted)">'+d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})+'</div>'
+        +memberChipsHtml(ev)
+        +'</div>'
+        +'<div class="urgency-pill" style="background:var(--border-lt);color:var(--muted);border:1px solid var(--border)">'+daysAgo+'d ago</div>'
+        +'</div>';
     }).join('');
   }
 
-  if(!html)html=`<div class="empty"><div class="empty-icon">📅</div><div class="empty-title">No events yet</div>Tap + to add your first event.</div>`;
+  if(!html) html='<div class="empty"><div class="empty-icon">📅</div><div class="empty-title">No events yet</div>Tap + to add one.</div>';
   document.getElementById('dashContent').innerHTML=html;
 }
 
-
-// ── MEMBER FILTER HELPERS ──
-function memberMatchFn(e, mFilter){
-  if(mFilter==='all')return true;
-  const mArr=Array.isArray(e.members)&&e.members.length?e.members:(e.member?[e.member]:[]);
-  if(mFilter==='unassigned')return mArr.length===0;
-  return mArr.includes(mFilter);
-}
-
-function buildMemberBar(barId, currentFilter, onClickFn){
-  const bar=document.getElementById(barId);
-  if(!bar)return;
-  const members=settings.members||[];
-  const btns=[{val:'all',label:'👥 All'},...members.map(m=>({val:m,label:'👤 '+m})),{val:'unassigned',label:'— None'}];
-  bar.innerHTML=btns.map(b=>`<div class="member-btn${b.val===currentFilter?' active':''}" onclick="${onClickFn}('${b.val}',this)">${b.label}</div>`).join('');
-}
-
-function setDashMember(m,el){
-  dashMemberFilter=m;
-  document.querySelectorAll('#dashMemberBar .member-btn').forEach(b=>b.classList.remove('active'));
+// ── EVENTS PAGE (merged upcoming + all) ──
+function setTimeFilter(val,el) {
+  eventsTimeFilter=val;
+  document.querySelectorAll('#eventTimeFilters .filter-chip').forEach(c=>c.classList.remove('active'));
   if(el)el.classList.add('active');
-  renderDashboard();
-}
-function setUpcomingMember(m,el){
-  upcomingMemberFilter=m;
-  document.querySelectorAll('#upcomingMemberBar .member-btn').forEach(b=>b.classList.remove('active'));
-  if(el)el.classList.add('active');
-  renderUpcoming();
-}
-function setAllMember(m,el){
-  memberFilter=m;
-  document.querySelectorAll('#allMemberBar .member-btn').forEach(b=>b.classList.remove('active'));
-  if(el)el.classList.add('active');
-  renderAll();
+  renderEvents();
 }
 
-function setUpcomingFilter(days,el){
-  upcomingDays=days;
-  document.querySelectorAll('#upcomingFilters .filter-chip').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');renderUpcoming();
-}
-function renderUpcoming(){
-  buildMemberBar('upcomingMemberBar', upcomingMemberFilter, 'setUpcomingMember');
-  const sorted=events.filter(e=>!isPastEvent(e)&&memberMatchFn(e,upcomingMemberFilter)).map(e=>({e,days:getEffectiveDays(e)})).filter(x=>x.days>=0&&x.days<=upcomingDays).sort((a,b)=>a.days-b.days);
-  if(!sorted.length){document.getElementById('upcomingContent').innerHTML=`<div class="empty"><div class="empty-icon">📅</div><div class="empty-title">Nothing in this range</div></div>`;return;}
-  document.getElementById('upcomingContent').innerHTML=sorted.map(x=>eventRowHTML(x.e,x.days)).join('');
-}
-function setCatFilter(cat,el){
-  categoryFilter=cat;
-  document.querySelectorAll('#categoryFilters .filter-chip').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');renderAll();
-}
-function renderAll(){
-  buildMemberBar('allMemberBar', memberFilter, 'setAllMember');
+function renderEvents() {
+  buildMemberBar('eventsMemberBar',eventsMemberFilter,'setEventsMember');
   const q=(document.getElementById('searchInput')?.value||'').toLowerCase();
-  const matchFn=e=>{
-    const mArr=Array.isArray(e.members)?e.members:(e.member?[e.member]:[]);
-    return(categoryFilter==='all'||e.category===categoryFilter)&&
-      (!q||e.title.toLowerCase().includes(q)||mArr.join(' ').toLowerCase().includes(q))&&
-      memberMatchFn(e,memberFilter);
-  };
-  const future=events.filter(e=>!isPastEvent(e)&&matchFn(e)).map(e=>({e,days:getEffectiveDays(e)})).sort((a,b)=>a.days-b.days);
-  const past=events.filter(e=>isPastEvent(e)&&matchFn(e)).sort((a,b)=>new Date(b.event_date)-new Date(a.event_date));
-  if(!future.length&&!past.length){document.getElementById('allContent').innerHTML=`<div class="empty"><div class="empty-icon">🔍</div><div class="empty-title">No events found</div></div>`;return;}
-  let html=future.map(x=>eventRowHTML(x.e,x.days)).join('');
-  if(past.length){
-    html+=`<div class="section-label" style="margin-top:16px"><div class="section-label-text" style="color:var(--muted)">🕰 Past Events</div><div class="section-label-line"></div><div class="section-label-count">${past.length}</div></div>`;
-    html+=past.map(ev=>{
-      const cat=CATS[ev.category]||CATS.other;
-      const d=new Date(ev.event_date);
-      const daysAgo=Math.abs(Math.round((d-new Date().setHours(0,0,0,0))/86400000));
-      const members=Array.isArray(ev.members)&&ev.members.length?ev.members:(ev.member?[ev.member]:[]);
-      return`<div class="event-row future" style="opacity:0.5" onclick="openDetail('${ev.id}')">
-        <div class="event-icon" style="background:var(--border-lt)">${cat.icon}</div>
-        <div class="event-body">
-          <div class="event-name" style="color:var(--muted)">${esc(ev.title)}</div>
-          <div class="event-detail" style="color:var(--muted)">${d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</div>
-          ${members.length?`<div class="member-chips">${members.map(m=>`<span class="member-chip" style="opacity:0.6">👤 ${esc(m)}</span>`).join('')}</div>`:''}
-        </div>
-        <div class="urgency-pill" style="background:var(--border-lt);color:var(--muted);border:1px solid var(--border)">${daysAgo}d ago</div>
-      </div>`;
+  const cat=document.getElementById('catFilterSelect')?.value||'all';
+  const future=events.filter(e=>{
+    if(isPastEvent(e)) return false;
+    const days=getEffectiveDays(e);
+    if(eventsTimeFilter!=='all'&&days>eventsTimeFilter) return false;
+    if(cat!=='all'&&e.category!==cat) return false;
+    if(!memberMatchFn(e,eventsMemberFilter)) return false;
+    if(q&&!e.title.toLowerCase().includes(q)&&!membersOf(e).join(' ').toLowerCase().includes(q)) return false;
+    return true;
+  }).map(e=>({e,days:getEffectiveDays(e)})).sort((a,b)=>a.days-b.days);
+
+  const past=events.filter(e=>{
+    if(!isPastEvent(e)) return false;
+    if(cat!=='all'&&e.category!==cat) return false;
+    if(!memberMatchFn(e,eventsMemberFilter)) return false;
+    if(q&&!e.title.toLowerCase().includes(q)&&!membersOf(e).join(' ').toLowerCase().includes(q)) return false;
+    return true;
+  }).sort((a,b)=>new Date(b.event_date)-new Date(a.event_date));
+
+  let html=future.map(x=>eventRowHtml(x.e,x.days)).join('');
+  if(past.length) {
+    html+='<div class="section-label" style="margin-top:14px"><div class="section-label-text" style="color:var(--muted)">🕰 Past Events</div><div class="section-label-line"></div><div class="section-label-count">'+past.length+'</div></div>';
+    html+=past.map(function(ev){
+      var cat2=CATS[ev.category]||CATS.other;
+      var d=new Date(ev.event_date);
+      var daysAgo=Math.abs(Math.round((d-new Date().setHours(0,0,0,0))/86400000));
+      return '<div class="event-row future" style="opacity:0.5" onclick="openDetail(\''+ev.id+'\')">'
+        +'<div class="event-icon" style="background:var(--border-lt)">'+cat2.icon+'</div>'
+        +'<div class="event-body">'
+        +'<div class="event-name" style="color:var(--muted)">'+esc(ev.title)+'</div>'
+        +'<div class="event-detail" style="color:var(--muted)">'+d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})+'</div>'
+        +memberChipsHtml(ev)
+        +'</div>'
+        +'<div class="urgency-pill" style="background:var(--border-lt);color:var(--muted);border:1px solid var(--border)">'+daysAgo+'d ago</div>'
+        +'</div>';
     }).join('');
   }
-  document.getElementById('allContent').innerHTML=html;
+  if(!html) html='<div class="empty"><div class="empty-icon">📅</div><div class="empty-title">No events found</div></div>';
+  document.getElementById('eventsContent').innerHTML=html;
 }
 
-// ── SETTINGS ──
-function renderSettings(){
-  const s=settings;
-  const emails=(s.notify_emails||[]).join(', ')||'—';
-  const reminders=(s.reminder_days||[]).sort((a,b)=>b-a).join(', ')+' days before';
-  const members=(s.members||[]).join(', ')||'—';
-  document.getElementById('settingsContent').innerHTML=`
-    <div class="settings-section">
-      <div class="settings-title">Send Reminders</div>
-      <div class="settings-card">
-        <div class="settings-row" style="flex-direction:column;align-items:stretch;gap:10px">
-          <div>
-            <div class="settings-row-label">📨 Send Reminder Now</div>
-            <div class="settings-row-sub">Sends one grouped email for all events due within 30 days to all recipients</div>
-          </div>
-          <button class="send-now-btn" id="sendNowBtn" onclick="sendRemindersNow()">
-            <span>📧</span> Send Reminder Email Now
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="settings-section">
-      <div class="settings-title">Notification Settings</div>
-      <div class="settings-card">
-        <div class="settings-row"><div><div class="settings-row-label">📧 Email Recipients</div><div class="settings-row-sub">${esc(emails)}</div></div><div class="settings-row-action" onclick="openEmailModal()">Edit</div></div>
-        <div class="settings-row"><div><div class="settings-row-label">⏰ Reminder Schedule</div><div class="settings-row-sub">${esc(reminders)}</div></div><div class="settings-row-action" onclick="openReminderModal()">Edit</div></div>
-      </div>
-    </div>
-    <div class="settings-section">
-      <div class="settings-title">Family Members</div>
-      <div class="settings-card">
-        <div class="settings-row"><div><div class="settings-row-label">👨‍👩‍👦 Members</div><div class="settings-row-sub">${esc(members)}</div></div><div class="settings-row-action" onclick="openMemberModal()">Edit</div></div>
-      </div>
-    </div>
-    <div class="settings-section">
-      <div class="settings-title">About</div>
-      <div class="settings-card">
-        <div class="settings-row"><div><div class="settings-row-label">Version</div><div class="settings-row-sub">Family Dates v1.3</div></div></div>
-        <div class="settings-row"><div><div class="settings-row-label">Total Events</div><div class="settings-row-sub">${events.length} events tracked</div></div></div>
-      </div>
-    </div>`;
-}
+// ── CALENDAR ──
+function renderCalendar() {
+  const el=document.getElementById('calendarContent'); if(!el) return;
+  const today=new Date(); today.setHours(0,0,0,0);
+  const firstDay=new Date(calYear,calMonth,1);
+  const lastDay=new Date(calYear,calMonth+1,0);
+  const startDow=firstDay.getDay();
+  const totalDays=lastDay.getDate();
+  const monthName=new Date(calYear,calMonth).toLocaleDateString('en-GB',{month:'long',year:'numeric'});
 
-// ── SEND REMINDER NOW ──
-async function sendRemindersNow(){
-  const btn=document.getElementById('sendNowBtn');
-  if(!btn)return;
-  btn.disabled=true;btn.innerHTML='<div class="spinner" style="border-color:rgba(255,255,255,0.3);border-top-color:#fff;width:16px;height:16px"></div> Sending…';
-
-  try{
-    const recipients=settings.notify_emails||[];
-    if(!recipients.length){toast('No email recipients configured in Settings','error');btn.disabled=false;btn.innerHTML='<span>📧</span> Send Reminder Email Now';return;}
-
-    // Group events due within 30 days
-    const due=events.map(e=>({e,days:getEffectiveDays(e)}))
-      .filter(x=>x.days>=0&&x.days<=30)
-      .sort((a,b)=>a.days-b.days);
-
-    if(!due.length){toast('No events due within 30 days','error');btn.disabled=false;btn.innerHTML='<span>📧</span> Send Reminder Email Now';return;}
-
-    // Build single grouped email
-    const emailHTML=buildReminderEmailHTML(due);
-
-    // Send ONE email via Supabase Edge Function (avoids CORS)
-    const res=await fetch('https://fkcjjprewnjrwobyaglb.supabase.co/functions/v1/swift-function',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+SUPABASE_ANON},
-      body:JSON.stringify({
-        to:['anantulyathan@gmail.com'],
-        subject:`📅 Family Dates Reminder — ${due.length} event${due.length!==1?'s':''} coming up`,
-        html:emailHTML
-      })
-    });
-
-    if(!res.ok){const err=await res.json();throw new Error(JSON.stringify(err.error)||'Send failed');}
-
-    // Log to Supabase
-    const logEntries=due.map(x=>({event_id:x.e.id,days_before:x.days,email_to:recipients.join(', '),status:'sent'}));
-    await db.from('family_notifications_log').insert(logEntries);
-
-    toast(`✓ Reminder sent for ${due.length} event${due.length!==1?'s':''}`,'success');
-  }catch(e){
-    toast('Error: '+e.message,'error');
+  // Build event map for this month view
+  const eventMap={};
+  function addToMap(date,ev) {
+    const key=date.getFullYear()+'-'+date.getMonth()+'-'+date.getDate();
+    if(!eventMap[key]) eventMap[key]=[];
+    eventMap[key].push(ev);
   }
-  btn.disabled=false;btn.innerHTML='<span>📧</span> Send Reminder Email Now';
+  const viewStart=new Date(calYear,calMonth,1-startDow);
+  const viewEnd=new Date(calYear,calMonth+1,7);
+  events.forEach(function(e){
+    if(isPastEvent(e)) return;
+    const d=getEffectiveDate(e);
+    if(d>=viewStart&&d<=viewEnd) addToMap(d,e);
+    const rd=getRepeatDays(e);
+    if(rd>0){let dd=new Date(d.getTime());for(let i=0;i<60;i++){dd=new Date(dd.getTime()+rd*86400000);if(dd>viewEnd)break;if(dd>=viewStart)addToMap(dd,e);}}
+  });
+
+  // Build grid cells
+  const cells=[];
+  for(let i=0;i<startDow;i++) cells.push({date:new Date(calYear,calMonth,1-startDow+i),current:false});
+  for(let i=1;i<=totalDays;i++) cells.push({date:new Date(calYear,calMonth,i),current:true});
+  const rem=(7-cells.length%7)%7;
+  for(let i=1;i<=rem;i++) cells.push({date:new Date(calYear,calMonth+1,i),current:false});
+
+  let html='<div class="cal-header">'
+    +'<div class="cal-nav" onclick="calNav(-1)">‹</div>'
+    +'<div class="cal-title">'+monthName+'</div>'
+    +'<div class="cal-nav" onclick="calNav(1)">›</div>'
+    +'</div>'
+    +'<div class="cal-grid">'
+    +DOW.map(d=>'<div class="cal-dow">'+d+'</div>').join('');
+
+  cells.forEach(function(cell){
+    var date=cell.date, current=cell.current;
+    var key=date.getFullYear()+'-'+date.getMonth()+'-'+date.getDate();
+    var dayEvs=eventMap[key]||[];
+    var isToday=date.getTime()===today.getTime();
+    var cls='cal-day'+(current?'':' other-month')+(isToday?' today':'')+(dayEvs.length?' has-events':'');
+    var dots=dayEvs.slice(0,6).map(function(e){
+      var cat=CATS[e.category]||CATS.other;
+      return '<div class="cal-dot '+cat.color+'"></div>';
+    }).join('');
+    html+='<div class="'+cls+'"><div class="cal-day-num">'+date.getDate()+'</div>'+(dots?'<div class="cal-dots">'+dots+'</div>':'')+'</div>';
+  });
+  html+='</div>';
+
+  // All events this month listed below grid
+  const monthKeys=Object.keys(eventMap).filter(function(k){
+    var parts=k.split('-');
+    return parseInt(parts[0])===calYear&&parseInt(parts[1])===calMonth;
+  }).sort();
+
+  html+='<div class="cal-event-list">';
+  if(monthKeys.length) {
+    var total=monthKeys.reduce(function(s,k){return s+(eventMap[k]||[]).length;},0);
+    html+='<div class="section-label" style="margin-top:14px"><div class="section-label-text">📋 Events this month</div><div class="section-label-line"></div><div class="section-label-count">'+total+' events</div></div>';
+    monthKeys.forEach(function(key){
+      var dayEvs=eventMap[key]||[];
+      if(!dayEvs.length) return;
+      var parts=key.split('-');
+      var d=new Date(parseInt(parts[0]),parseInt(parts[1]),parseInt(parts[2]));
+      html+='<div class="cal-date-header">'+d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})+'</div>';
+      dayEvs.forEach(function(e){
+        var days=getEffectiveDays(e);
+        html+=eventRowHtml(e,days);
+      });
+    });
+  } else {
+    html+='<div class="empty" style="padding:20px"><div class="empty-icon">📅</div><div class="empty-title">No events this month</div></div>';
+  }
+  html+='</div>';
+
+  el.innerHTML=html;
 }
 
-function buildReminderEmailHTML(due){
-  const rows=due.map(({e,days})=>{
-    const cat=CATS[e.category]||CATS.other;
-    const d=getEffectiveDate(e);
-    const dateStr=d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-    const members=Array.isArray(e.members)&&e.members.length?e.members:(e.member?[e.member]:[]);
-    const urgColor=days<=7?'#ef4444':days<=14?'#d97706':'#059669';
-    const exp=parseFloat(e.expense_estimate)||0;
-    return`<tr>
-      <td style="padding:12px 16px;border-bottom:1px solid #e5e7eb">
-        <div style="font-size:15px;font-weight:600;color:#111827">${cat.icon} ${e.title}</div>
-        <div style="font-size:13px;color:#6b7280;margin-top:4px">${dateStr}</div>
-        ${members.length?`<div style="font-size:12px;color:#6b7280;margin-top:3px">👤 ${members.join(', ')}</div>`:''}
-        ${exp>0?`<div style="font-size:12px;color:#0d9488;margin-top:3px">Est. ${fmtMoney(exp)}</div>`:''}
-      </td>
-      <td style="padding:12px 16px;border-bottom:1px solid #e5e7eb;text-align:right;white-space:nowrap">
-        <span style="background:${urgColor}15;color:${urgColor};border:1px solid ${urgColor}40;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700">${days===0?'TODAY':days===1?'1 day':days+' days'}</span>
-      </td>
-    </tr>`;
-  }).join('');
+function calNav(dir) {
+  calMonth+=dir;
+  if(calMonth>11){calMonth=0;calYear++;}
+  if(calMonth<0){calMonth=11;calYear--;}
+  renderCalendar();
+}
 
-  return`<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f5f5f7;font-family:Inter,system-ui,sans-serif">
-  <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.08)">
-    <div style="background:#111827;padding:28px 32px">
-      <div style="font-size:24px;color:#fff;font-weight:600">📅 Family Dates</div>
-      <div style="font-size:14px;color:rgba(255,255,255,0.5);margin-top:6px">Upcoming event reminder • ${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</div>
-    </div>
-    <div style="padding:24px 32px 8px">
-      <div style="font-size:15px;color:#374151">You have <strong>${due.length} event${due.length!==1?'s':''}</strong> coming up in the next 30 days:</div>
-    </div>
-    <table style="width:100%;border-collapse:collapse">${rows}</table>
-    <div style="padding:20px 32px;background:#f9fafb;border-top:1px solid #e5e7eb">
-      <div style="font-size:12px;color:#9ca3af">Sent by Family Dates · Anan & Prangkwan</div>
-    </div>
-  </div>
-</body></html>`;
+// ── BIRTHDAYS ──
+function renderBirthdays() {
+  const el=document.getElementById('birthdaysContent'); if(!el) return;
+  const today=new Date(); today.setHours(0,0,0,0);
+  const thisYear=today.getFullYear();
+
+  const bdayEvents=events.filter(e=>e.category==='birthday'||e.category==='anniversary').map(function(e){
+    const d=getEffectiveDate(e);
+    const days=getEffectiveDays(e);
+    const origYear=new Date(e.event_date).getFullYear();
+    const age=(e.category==='birthday'&&origYear>1900)?thisYear-origYear:null;
+    return{e,d,days,age};
+  }).sort((a,b)=>a.days-b.days);
+
+  const jointEvents=events.filter(function(e){
+    const m=membersOf(e);
+    return m.includes('Anan')&&m.includes('Prangkwan');
+  });
+
+  let html='<div style="background:linear-gradient(135deg,#1d4ed8,#0d9488);border-radius:14px;padding:18px;margin-bottom:14px;color:#fff">'
+    +'<div style="font-size:11px;font-weight:600;opacity:.6;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">❤️ Anan & Prangkwan</div>'
+    +'<div style="font-size:28px;font-weight:800;line-height:1">'+jointEvents.length+'</div>'
+    +'<div style="font-size:13px;opacity:.7;margin-top:4px">shared events together</div>'
+    +'</div>';
+
+  if(!bdayEvents.length) {
+    html+='<div class="empty"><div class="empty-icon">🎂</div><div class="empty-title">No birthdays or anniversaries yet</div>Add events with the 🎂 Birthday or 💍 Anniversary category</div>';
+  } else {
+    html+='<div class="section-label"><div class="section-label-text">🎂 Birthdays & Anniversaries</div><div class="section-label-line"></div><div class="section-label-count">'+bdayEvents.length+'</div></div>';
+    bdayEvents.forEach(function(item,idx){
+      var e=item.e, d=item.d, days=item.days, age=item.age;
+      var members=membersOf(e);
+      var name=members.length?members[0]:e.title;
+      var avatarColor=AVATAR_COLORS[idx%AVATAR_COLORS.length];
+      var initials=name.split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
+      var dateStr=d.toLocaleDateString('en-GB',{day:'numeric',month:'long'});
+      var daysColorClass=days===0?'today-color':days<=7?'soon-color':'ok-color';
+      var countdownDisplay=days===0?'🎉':String(days);
+      var countdownLabel=days===0?'TODAY!':days===1?'day away':'days away';
+      var ageHtml=age?('<div class="bday-age">Turning '+age+' year'+(age!==1?'s':'')+' old</div>'):'';
+      var memberHtml=members.length>1?('<div class="member-chips" style="margin-top:5px">'+members.map(function(m){return '<span class="member-chip '+memberChipClass(m)+'">'+esc(m)+'</span>';}).join('')+'</div>'):'';
+      var catIcon=e.category==='anniversary'?'💍':'🎂';
+      html+='<div class="bday-card" onclick="openDetail(\''+e.id+'\')">'
+        +'<div class="bday-avatar" style="background:'+avatarColor+'">'+(initials||catIcon)+'</div>'
+        +'<div style="flex:1">'
+        +'<div class="bday-name">'+esc(e.title)+'</div>'
+        +'<div class="bday-date">📅 '+dateStr+(e.category==='anniversary'?' · Anniversary':'')+'</div>'
+        +ageHtml+memberHtml
+        +'</div>'
+        +'<div class="bday-countdown">'
+        +'<div class="bday-days '+daysColorClass+'">'+countdownDisplay+'</div>'
+        +'<div class="bday-days-label">'+countdownLabel+'</div>'
+        +'</div>'
+        +'</div>';
+    });
+  }
+
+  // Children's milestones
+  const childEvents=events.filter(function(e){
+    const m=membersOf(e);
+    return (m.includes('Mark')||m.includes('Matt'))&&e.category!=='birthday';
+  }).map(e=>({e,days:getEffectiveDays(e)})).filter(x=>!isPastEvent(x.e)&&x.days>=0).sort((a,b)=>a.days-b.days);
+
+  if(childEvents.length) {
+    html+='<div class="section-label" style="margin-top:8px"><div class="section-label-text">👶 Mark & Matt — Upcoming</div><div class="section-label-line"></div><div class="section-label-count">'+childEvents.length+'</div></div>';
+    html+=childEvents.map(x=>eventRowHtml(x.e,x.days)).join('');
+  }
+
+  el.innerHTML=html;
 }
 
 // ── DETAIL ──
-function openDetail(id){
+function openDetail(id) {
   currentDetailId=id;
-  const ev=events.find(e=>e.id===id);if(!ev)return;
+  const ev=events.find(e=>e.id===id); if(!ev) return;
   const cat=CATS[ev.category]||CATS.other;
   const days=getEffectiveDays(ev);
   const d=getEffectiveDate(ev);
-  const members=Array.isArray(ev.members)&&ev.members.length?ev.members:(ev.member?[ev.member]:[]);
+  const members=membersOf(ev);
   const exp=parseFloat(ev.expense_estimate)||0;
-  document.getElementById('detailContent').innerHTML=`
-    <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px">
-      <div class="event-icon icon-${cat.color}" style="width:50px;height:50px;font-size:22px;border-radius:12px">${cat.icon}</div>
-      <div><div style="font-size:18px;font-weight:700;color:var(--text)">${esc(ev.title)}</div><div style="font-size:13px;color:var(--muted);margin-top:3px">${cat.label}</div></div>
-    </div>
-    <div class="detail-field"><div class="detail-field-label">Next Date</div><div class="detail-field-value">${d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</div></div>
-    <div class="detail-field"><div class="detail-field-label">Countdown</div><div><span class="detail-badge ${pillClass(days)}" style="font-size:14px;padding:6px 14px">${daysLabel(days)}</span></div></div>
-    ${members.length?`<div class="detail-field"><div class="detail-field-label">Members</div><div class="member-chips" style="margin-top:6px">${members.map(m=>`<span class="member-chip">👤 ${esc(m)}</span>`).join('')}</div></div>`:''}
-    ${exp>0?`<div class="detail-field"><div class="detail-field-label">Estimated Expense</div><div class="detail-field-value" style="color:var(--teal)">${fmtMoney(exp)} <span style="font-size:12px;color:var(--muted)">(≈ ${fmtMoney(annualExpense(ev))}/yr)</span></div></div>`:''}
-    ${ev.notes?`<div class="detail-field"><div class="detail-field-label">Notes</div><div class="detail-field-value" style="font-size:14px;color:var(--sub)">${esc(ev.notes)}</div></div>`:''}
-    <div class="detail-field"><div class="detail-field-label">Recurrence</div><div class="detail-field-value">${repeatLabel(ev)}</div></div>`;
+  const timeStr=ev.event_time?ev.event_time.slice(0,5):'';
+  const locHtml=ev.location?('<a class="location-chip" href="https://maps.google.com/?q='+encodeURIComponent(ev.location)+'" target="_blank" style="font-size:13px">📍 Open in Google Maps — '+esc(ev.location)+'</a>'):'';
+
+  document.getElementById('detailContent').innerHTML=
+    '<div style="display:flex;align-items:center;gap:13px;margin-bottom:18px">'
+    +'<div class="event-icon '+cat.catClass+'" style="width:48px;height:48px;font-size:22px;border-radius:12px;border:1px solid var(--border)">'+cat.icon+'</div>'
+    +'<div><div style="font-size:17px;font-weight:700;color:var(--text)">'+esc(ev.title)+'</div><div style="font-size:12px;color:var(--muted);margin-top:2px">'+cat.label+'</div></div>'
+    +'</div>'
+    +'<div class="detail-field"><div class="detail-field-label">Next Date</div><div class="detail-field-value">'+d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+(timeStr?' at '+timeStr:'')+'</div></div>'
+    +'<div class="detail-field"><div class="detail-field-label">Countdown</div><div><span class="detail-badge '+pillClass(days)+'" style="font-size:13px;padding:5px 13px">'+daysLabel(days)+'</span></div></div>'
+    +(members.length?'<div class="detail-field"><div class="detail-field-label">Members</div><div class="member-chips" style="margin-top:5px">'+members.map(m=>'<span class="member-chip '+memberChipClass(m)+'">'+esc(m)+'</span>').join('')+'</div></div>':'')
+    +(ev.location?'<div class="detail-field"><div class="detail-field-label">Location</div>'+locHtml+'</div>':'')
+    +(exp>0?'<div class="detail-field"><div class="detail-field-label">Estimated Expense</div><div class="detail-field-value" style="color:var(--teal)">'+fmtMoney(exp)+' <span style="font-size:11px;color:var(--muted)">(≈ '+fmtMoney(annualExpense(ev))+'/yr)</span></div></div>':'')
+    +(ev.notes?'<div class="detail-field"><div class="detail-field-label">Notes</div><div class="detail-field-value" style="font-size:13px;color:var(--sub)">'+esc(ev.notes)+'</div></div>':'')
+    +'<div class="detail-field"><div class="detail-field-label">Recurrence</div><div class="detail-field-value">'+repeatLabel(ev)+'</div></div>';
+
   document.getElementById('detailModal').classList.add('open');
 }
+
 function editFromDetail(){closeModal('detailModal');openEditModal(currentDetailId);}
 
 // ── REPEAT UI ──
-function selectRepeat(val){
+function selectRepeat(val) {
   document.querySelectorAll('.repeat-opt').forEach(o=>o.classList.toggle('selected',o.dataset.val===val));
   document.getElementById('multiyearWrap').classList.toggle('show',val==='multiyear');
   document.getElementById('customDaysWrap').classList.toggle('show',val==='custom');
@@ -1175,37 +1307,51 @@ function selectRepeat(val){
 }
 function getSelectedRepeat(){const s=document.querySelector('.repeat-opt.selected');return s?s.dataset.val:'yearly';}
 
+// ── DATE HINT ──
+function updateDateHint() {
+  const cat=document.getElementById('fCategory')?.value||'other';
+  const hint=document.getElementById('dateHint');
+  if(hint) hint.textContent=DATE_HINTS[cat]||DATE_HINTS.other;
+}
+
 // ── MEMBER SELECT ──
-function buildMemberGrid(selected){
+function buildMemberGrid(selected) {
   const members=settings.members||['Anan','Prangkwan','Mark','Matt','Malee'];
   const sel=Array.isArray(selected)?selected:(selected?[selected]:[]);
-  document.getElementById('memberSelectGrid').innerHTML=members.map(m=>
-    `<div class="member-toggle${sel.includes(m)?' on':''}" onclick="this.classList.toggle('on')">${esc(m)}</div>`).join('');
+  document.getElementById('memberSelectGrid').innerHTML=members.map(m=>'<div class="member-toggle'+(sel.includes(m)?' on':'')+'" onclick="this.classList.toggle(\'on\')">'+esc(m)+'</div>').join('');
 }
 function getSelectedMembers(){return Array.from(document.querySelectorAll('.member-toggle.on')).map(el=>el.textContent.trim());}
 
 // ── ADD / EDIT ──
-function openAddModal(){
+function openAddModal() {
   document.getElementById('modalTitle').textContent='Add Event';
   document.getElementById('editId').value='';
   document.getElementById('fTitle').value='';
   document.getElementById('fDate').value='';
-  document.getElementById('fCategory').value='birthday';
+  document.getElementById('fTime').value='';
+  document.getElementById('fLocation').value='';
+  document.getElementById('fCategory').value='payment';
   document.getElementById('fNotes').value='';
   document.getElementById('fCustomDays').value='';
   document.getElementById('fCustomDate').value='';
   document.getElementById('fExpense').value='';
   document.getElementById('fYears').value='2';
   document.getElementById('deleteBtn').style.display='none';
-  selectRepeat('yearly');buildMemberGrid([]);
+  selectRepeat('yearly');
+  buildMemberGrid([]);
+  updateDateHint();
+  document.getElementById('fCategory').onchange=updateDateHint;
   document.getElementById('eventModal').classList.add('open');
 }
-function openEditModal(id){
-  const ev=events.find(e=>e.id===id);if(!ev)return;
+
+function openEditModal(id) {
+  const ev=events.find(e=>e.id===id); if(!ev) return;
   document.getElementById('modalTitle').textContent='Edit Event';
   document.getElementById('editId').value=ev.id;
   document.getElementById('fTitle').value=ev.title;
   document.getElementById('fDate').value=ev.event_date;
+  document.getElementById('fTime').value=ev.event_time||'';
+  document.getElementById('fLocation').value=ev.location||'';
   document.getElementById('fCategory').value=ev.category;
   document.getElementById('fNotes').value=ev.notes||'';
   document.getElementById('fCustomDays').value=ev.repeat_days||'';
@@ -1215,335 +1361,156 @@ function openEditModal(id){
   document.getElementById('deleteBtn').style.display='';
   const rt=ev.repeat_type||(ev.repeat_yearly?'yearly':'none');
   selectRepeat(rt);
-  const members=Array.isArray(ev.members)&&ev.members.length?ev.members:(ev.member?[ev.member]:[]);
-  buildMemberGrid(members);
+  buildMemberGrid(membersOf(ev));
+  updateDateHint();
+  document.getElementById('fCategory').onchange=updateDateHint;
   document.getElementById('eventModal').classList.add('open');
 }
-async function saveEvent(){
+
+async function saveEvent() {
   const id=document.getElementById('editId').value;
   const title=document.getElementById('fTitle').value.trim();
   const date=document.getElementById('fDate').value;
+  const time=document.getElementById('fTime').value||null;
+  const location=document.getElementById('fLocation').value.trim()||null;
   const category=document.getElementById('fCategory').value;
-  const notes=document.getElementById('fNotes').value.trim();
+  const notes=document.getElementById('fNotes').value.trim()||null;
   const repeat_type=getSelectedRepeat();
-  const repeat_days=repeat_type==='custom'?parseInt(document.getElementById('fCustomDays').value)||0:null;
+  const repeat_days=repeat_type==='custom'?parseInt(document.getElementById('fCustomDays').value)||null:null;
   const repeat_years=repeat_type==='multiyear'?parseInt(document.getElementById('fYears').value)||2:null;
   const custom_date=repeat_type==='customdate'?document.getElementById('fCustomDate').value||null:null;
   const expense_estimate=parseFloat(document.getElementById('fExpense').value)||null;
   const repeat_yearly=repeat_type==='yearly';
   const members=getSelectedMembers();
+
   if(!title){toast('Please enter a title','error');return;}
   if(!date){toast('Please select a date','error');return;}
   if(repeat_type==='custom'&&(!repeat_days||repeat_days<1)){toast('Please enter number of days','error');return;}
   if(repeat_type==='customdate'&&!custom_date){toast('Please select the next occurrence date','error');return;}
-  const payload={title,event_date:date,category,notes:notes||null,repeat_yearly,repeat_type,repeat_days,repeat_years,custom_date,expense_estimate,members,updated_at:new Date().toISOString()};
-  try{
+
+  const payload={title,event_date:date,event_time:time,location,category,notes,repeat_yearly,repeat_type,repeat_days,repeat_years,custom_date,expense_estimate,members,updated_at:new Date().toISOString()};
+
+  try {
     if(id){const{error}=await db.from('family_events').update(payload).eq('id',id);if(error)throw error;toast('Event updated ✓','success');}
     else{const{error}=await db.from('family_events').insert(payload);if(error)throw error;toast('Event added ✓','success');}
     closeModal('eventModal');await loadAll();
-  }catch(e){toast('Error: '+e.message,'error');}
+  } catch(e){toast('Error: '+e.message,'error');}
 }
-async function deleteEvent(){
+
+async function deleteEvent() {
   const id=document.getElementById('editId').value;
-  if(!id||!confirm('Delete this event?'))return;
+  if(!id||!confirm('Delete this event?')) return;
   try{const{error}=await db.from('family_events').delete().eq('id',id);if(error)throw error;toast('Deleted','success');closeModal('eventModal');await loadAll();}
   catch(e){toast('Error: '+e.message,'error');}
 }
 
+// ── SETTINGS ──
+function renderSettings() {
+  const s=settings;
+  const emails=(s.notify_emails||[]).join(', ')||'—';
+  const reminders=(s.reminder_days||[]).sort((a,b)=>b-a).join(', ')+' days before';
+  const members=(s.members||[]).join(', ')||'—';
+  document.getElementById('settingsContent').innerHTML=
+    '<div class="settings-section"><div class="settings-title">Send Reminders</div>'
+    +'<div class="settings-card"><div class="settings-row" style="flex-direction:column;align-items:stretch;gap:9px">'
+    +'<div><div class="settings-row-label">📨 Send Reminder Now</div><div class="settings-row-sub">Sends one grouped email for all events due within 30 days</div></div>'
+    +'<button class="send-now-btn" id="sendNowBtn" onclick="sendRemindersNow()">📧 Send Reminder Email Now</button>'
+    +'</div></div></div>'
+    +'<div class="settings-section"><div class="settings-title">Notification Settings</div>'
+    +'<div class="settings-card">'
+    +'<div class="settings-row"><div><div class="settings-row-label">📧 Email Recipients</div><div class="settings-row-sub">'+esc(emails)+'</div></div><div class="settings-row-action" onclick="openEmailModal()">Edit</div></div>'
+    +'<div class="settings-row"><div><div class="settings-row-label">⏰ Reminder Schedule</div><div class="settings-row-sub">'+esc(reminders)+'</div></div><div class="settings-row-action" onclick="openReminderModal()">Edit</div></div>'
+    +'</div></div>'
+    +'<div class="settings-section"><div class="settings-title">Family Members</div>'
+    +'<div class="settings-card"><div class="settings-row"><div><div class="settings-row-label">👨‍👩‍👦 Members</div><div class="settings-row-sub">'+esc(members)+'</div></div><div class="settings-row-action" onclick="openMemberModal()">Edit</div></div></div></div>'
+    +'<div class="settings-section"><div class="settings-title">About</div>'
+    +'<div class="settings-card">'
+    +'<div class="settings-row"><div><div class="settings-row-label">Version</div><div class="settings-row-sub">Family Dates v2.0</div></div></div>'
+    +'<div class="settings-row"><div><div class="settings-row-label">Total Events</div><div class="settings-row-sub">'+events.length+' events tracked</div></div></div>'
+    +'</div></div>';
+}
+
+// ── SEND REMINDERS ──
+async function sendRemindersNow() {
+  const btn=document.getElementById('sendNowBtn'); if(!btn) return;
+  btn.disabled=true;btn.innerHTML='<div class="spinner" style="border-color:rgba(255,255,255,0.3);border-top-color:#fff;width:16px;height:16px"></div> Sending…';
+  try {
+    const recipients=settings.notify_emails||[];
+    if(!recipients.length){toast('No email recipients configured','error');return;}
+    const due=events.map(e=>({e,days:getEffectiveDays(e)})).filter(x=>!isPastEvent(x.e)&&x.days>=0&&x.days<=30).sort((a,b)=>a.days-b.days);
+    if(!due.length){toast('No events due within 30 days','error');return;}
+    const emailHTML=buildReminderEmailHTML(due);
+    const res=await fetch(EDGE_FN_URL,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+SUPABASE_ANON},body:JSON.stringify({to:['anantulyathan@gmail.com'],subject:'📅 Family Dates Reminder — '+due.length+' event'+(due.length!==1?'s':'')+' coming up',html:emailHTML})});
+    if(!res.ok){const err=await res.json();throw new Error(JSON.stringify(err.error)||'Send failed');}
+    const logEntries=due.map(x=>({event_id:x.e.id,days_before:x.days,email_to:recipients.join(', '),status:'sent'}));
+    await db.from('family_notifications_log').insert(logEntries);
+    toast('✓ Reminder sent for '+due.length+' event'+(due.length!==1?'s':''),'success');
+  } catch(e){toast('Error: '+e.message,'error');}
+  btn.disabled=false;btn.innerHTML='📧 Send Reminder Email Now';
+}
+
+function buildReminderEmailHTML(due) {
+  const rows=due.map(function(item){
+    var e=item.e,days=item.days;
+    var cat=CATS[e.category]||CATS.other;
+    var d=getEffectiveDate(e);
+    var dateStr=d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    var members=membersOf(e);
+    var urgColor=days<=7?'#ef4444':days<=14?'#d97706':'#059669';
+    var exp=parseFloat(e.expense_estimate)||0;
+    return '<tr><td style="padding:12px 16px;border-bottom:1px solid #e5e7eb">'
+      +'<div style="font-size:15px;font-weight:600;color:#111827">'+cat.icon+' '+e.title+'</div>'
+      +'<div style="font-size:13px;color:#6b7280;margin-top:4px">'+dateStr+'</div>'
+      +(members.length?'<div style="font-size:12px;color:#6b7280;margin-top:3px">👤 '+members.join(', ')+'</div>':'')
+      +(exp>0?'<div style="font-size:12px;color:#0d9488;margin-top:3px">Est. '+fmtMoney(exp)+'</div>':'')
+      +'</td><td style="padding:12px 16px;border-bottom:1px solid #e5e7eb;text-align:right;white-space:nowrap">'
+      +'<span style="background:'+urgColor+'15;color:'+urgColor+';border:1px solid '+urgColor+'40;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700">'+(days===0?'TODAY':days===1?'1 day':days+' days')+'</span>'
+      +'</td></tr>';
+  }).join('');
+  return '<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f5f5f7;font-family:Inter,system-ui,sans-serif">'
+    +'<div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.08)">'
+    +'<div style="background:#111827;padding:24px 28px"><div style="font-size:22px;color:#fff;font-weight:600">📅 Family Dates</div><div style="font-size:13px;color:rgba(255,255,255,0.5);margin-top:4px">Reminder · '+new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})+'</div></div>'
+    +'<div style="padding:20px 28px 8px"><div style="font-size:14px;color:#374151">You have <strong>'+due.length+' event'+(due.length!==1?'s':'')+' coming up in the next 30 days</strong></div></div>'
+    +'<table style="width:100%;border-collapse:collapse">'+rows+'</table>'
+    +'<div style="padding:16px 28px;background:#f9fafb;border-top:1px solid #e5e7eb"><div style="font-size:11px;color:#9ca3af">Sent by Family Dates · Anan & Prangkwan</div></div>'
+    +'</div></body></html>';
+}
+
 // ── SETTINGS MODALS ──
-function openEmailModal(){
-  renderTagList('emailTagList',[...(settings.notify_emails||[])],'email');
-  document.getElementById('newEmailInput').value='';
-  document.getElementById('emailModal').classList.add('open');
-}
-function addEmail(){
-  const v=document.getElementById('newEmailInput').value.trim();
-  if(!v||!v.includes('@')){toast('Enter a valid email','error');return;}
-  const tags=getTagValues('emailTagList');
-  if(tags.includes(v)){toast('Already added','error');return;}
-  tags.push(v);renderTagList('emailTagList',tags,'email');
-  document.getElementById('newEmailInput').value='';
-}
-async function saveEmails(){
-  const emails=getTagValues('emailTagList');
-  try{const{error}=await db.from('family_settings').update({notify_emails:emails,updated_at:new Date().toISOString()}).eq('id',settings.id);if(error)throw error;settings.notify_emails=emails;toast('Saved ✓','success');closeModal('emailModal');renderSettings();}
-  catch(e){toast('Error: '+e.message,'error');}
-}
-function openReminderModal(){
-  renderTagList('reminderTagList',[...(settings.reminder_days||[])].sort((a,b)=>b-a).map(String),'reminder');
-  document.getElementById('newReminderInput').value='';
-  document.getElementById('reminderModal').classList.add('open');
-}
-function addReminder(){
-  const v=parseInt(document.getElementById('newReminderInput').value);
-  if(!v||v<1||v>365){toast('Enter a number 1–365','error');return;}
-  const tags=getTagValues('reminderTagList');
-  if(tags.includes(String(v))){toast('Already added','error');return;}
-  tags.push(String(v));renderTagList('reminderTagList',tags.sort((a,b)=>b-a),'reminder');
-  document.getElementById('newReminderInput').value='';
-}
-async function saveReminders(){
-  const days=getTagValues('reminderTagList').map(Number).filter(Boolean);
-  try{const{error}=await db.from('family_settings').update({reminder_days:days,updated_at:new Date().toISOString()}).eq('id',settings.id);if(error)throw error;settings.reminder_days=days;toast('Saved ✓','success');closeModal('reminderModal');renderSettings();}
-  catch(e){toast('Error: '+e.message,'error');}
-}
-function openMemberModal(){
-  renderTagList('memberTagList',[...(settings.members||[])],'member');
-  document.getElementById('newMemberInput').value='';
-  document.getElementById('memberModal').classList.add('open');
-}
-function addMember(){
-  const v=document.getElementById('newMemberInput').value.trim();
-  if(!v){toast('Enter a name','error');return;}
-  const tags=getTagValues('memberTagList');
-  if(tags.includes(v)){toast('Already added','error');return;}
-  tags.push(v);renderTagList('memberTagList',tags,'member');
-  document.getElementById('newMemberInput').value='';
-}
-async function saveMembers(){
-  const members=getTagValues('memberTagList');
-  try{const{error}=await db.from('family_settings').update({members,updated_at:new Date().toISOString()}).eq('id',settings.id);if(error)throw error;settings.members=members;toast('Saved ✓','success');closeModal('memberModal');renderSettings();}
-  catch(e){toast('Error: '+e.message,'error');}
-}
+function openEmailModal(){renderTagList('emailTagList',[...(settings.notify_emails||[])],'email');document.getElementById('newEmailInput').value='';document.getElementById('emailModal').classList.add('open');}
+function addEmail(){const v=document.getElementById('newEmailInput').value.trim();if(!v||!v.includes('@')){toast('Enter a valid email','error');return;}const t=getTagValues('emailTagList');if(t.includes(v)){toast('Already added','error');return;}t.push(v);renderTagList('emailTagList',t,'email');document.getElementById('newEmailInput').value='';}
+async function saveEmails(){const emails=getTagValues('emailTagList');try{const{error}=await db.from('family_settings').update({notify_emails:emails,updated_at:new Date().toISOString()}).eq('id',settings.id);if(error)throw error;settings.notify_emails=emails;toast('Saved ✓','success');closeModal('emailModal');renderSettings();}catch(e){toast('Error: '+e.message,'error');}}
+
+function openReminderModal(){renderTagList('reminderTagList',[...(settings.reminder_days||[])].sort((a,b)=>b-a).map(String),'reminder');document.getElementById('newReminderInput').value='';document.getElementById('reminderModal').classList.add('open');}
+function addReminder(){const v=parseInt(document.getElementById('newReminderInput').value);if(!v||v<1||v>365){toast('Enter 1–365','error');return;}const t=getTagValues('reminderTagList');if(t.includes(String(v))){toast('Already added','error');return;}t.push(String(v));renderTagList('reminderTagList',t.sort((a,b)=>b-a),'reminder');document.getElementById('newReminderInput').value='';}
+async function saveReminders(){const days=getTagValues('reminderTagList').map(Number).filter(Boolean);try{const{error}=await db.from('family_settings').update({reminder_days:days,updated_at:new Date().toISOString()}).eq('id',settings.id);if(error)throw error;settings.reminder_days=days;toast('Saved ✓','success');closeModal('reminderModal');renderSettings();}catch(e){toast('Error: '+e.message,'error');}}
+
+function openMemberModal(){renderTagList('memberTagList',[...(settings.members||[])],'member');document.getElementById('newMemberInput').value='';document.getElementById('memberModal').classList.add('open');}
+function addMember(){const v=document.getElementById('newMemberInput').value.trim();if(!v){toast('Enter a name','error');return;}const t=getTagValues('memberTagList');if(t.includes(v)){toast('Already added','error');return;}t.push(v);renderTagList('memberTagList',t,'member');document.getElementById('newMemberInput').value='';}
+async function saveMembers(){const members=getTagValues('memberTagList');try{const{error}=await db.from('family_settings').update({members,updated_at:new Date().toISOString()}).eq('id',settings.id);if(error)throw error;settings.members=members;buildMemberColorMap();toast('Saved ✓','success');closeModal('memberModal');renderSettings();}catch(e){toast('Error: '+e.message,'error');}}
 
 // ── TAG HELPERS ──
-function renderTagList(containerId,values,type){
-  document.getElementById(containerId).innerHTML=values.map((v,i)=>
-    `<div class="tag" data-value="${esc(v)}">${type==='reminder'?v+' days':esc(v)}<span class="tag-remove" onclick="removeTag('${containerId}',${i})">×</span></div>`).join('');
-}
-function removeTag(containerId,idx){
-  const tags=getTagValues(containerId);tags.splice(idx,1);
-  const type=containerId.includes('email')?'email':containerId.includes('reminder')?'reminder':'member';
-  renderTagList(containerId,tags,type);
-}
-function getTagValues(containerId){return Array.from(document.querySelectorAll(`#${containerId} .tag`)).map(t=>t.dataset.value);}
+function renderTagList(cid,values,type){document.getElementById(cid).innerHTML=values.map((v,i)=>'<div class="tag" data-value="'+esc(v)+'">'+(type==='reminder'?v+' days':esc(v))+'<span class="tag-remove" onclick="removeTag(\''+cid+'\','+i+')">×</span></div>').join('');}
+function removeTag(cid,idx){const t=getTagValues(cid);t.splice(idx,1);const type=cid.includes('email')?'email':cid.includes('reminder')?'reminder':'member';renderTagList(cid,t,type);}
+function getTagValues(cid){return Array.from(document.querySelectorAll('#'+cid+' .tag')).map(t=>t.dataset.value);}
 
+// ── MODALS ──
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 document.querySelectorAll('.modal-overlay').forEach(o=>{o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');});});
 
-function toast(msg,type=''){
-  const t=document.createElement('div');t.className='toast '+type;t.textContent=msg;
-  document.getElementById('toastWrap').appendChild(t);setTimeout(()=>t.remove(),3500);
-}
-function esc(str){if(!str)return'';return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+// ── TOAST ──
+function toast(msg,type=''){const t=document.createElement('div');t.className='toast '+type;t.textContent=msg;document.getElementById('toastWrap').appendChild(t);setTimeout(()=>t.remove(),3500);}
 
-
-
-
-// ── CALENDAR ──
-const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-const AVATAR_COLORS=['#1d4ed8','#0d9488','#d97706','#7c3aed','#ef4444','#059669','#e8637c'];
-let calSelectedDate=null;
-
-function renderCalendar(){
-  const el=document.getElementById('calendarContent');
-  if(!el)return;
-  const today=new Date();today.setHours(0,0,0,0);
-  const firstDay=new Date(calYear,calMonth,1);
-  const lastDay=new Date(calYear,calMonth+1,0);
-  const startDow=firstDay.getDay();
-  const totalDays=lastDay.getDate();
-
-  // Map events to dates in this month view
-  const eventMap={};
-  events.forEach(e=>{
-    if(isPastEvent(e))return;
-    const d=getEffectiveDate(e);
-    // Check if event falls in displayed month range
-    const viewStart=new Date(calYear,calMonth,1-startDow);
-    const viewEnd=new Date(calYear,calMonth+1,7-lastDay.getDay());
-    // For repeating events, check all occurrences in view range
-    const addIfInRange=(dd)=>{
-      const key=`${dd.getFullYear()}-${dd.getMonth()}-${dd.getDate()}`;
-      if(!eventMap[key])eventMap[key]=[];
-      eventMap[key].push(e);
-    };
-    if(d>=viewStart&&d<=viewEnd){addIfInRange(d);}
-    const rd=getRepeatDays(e);
-    if(rd>0){
-      let dd=new Date(d.getTime());
-      for(let i=0;i<60;i++){
-        dd=new Date(dd.getTime()+rd*86400000);
-        if(dd>viewEnd)break;
-        if(dd>=viewStart)addIfInRange(dd);
-      }
-    }
-  });
-
-  // Build grid
-  const cells=[];
-  // Previous month days
-  for(let i=0;i<startDow;i++){
-    const d=new Date(calYear,calMonth,1-startDow+i);
-    cells.push({date:d,current:false});
-  }
-  // This month
-  for(let i=1;i<=totalDays;i++){
-    cells.push({date:new Date(calYear,calMonth,i),current:true});
-  }
-  // Next month padding
-  const remainder=(7-cells.length%7)%7;
-  for(let i=1;i<=remainder;i++){
-    cells.push({date:new Date(calYear,calMonth+1,i),current:false});
-  }
-
-  const monthName=new Date(calYear,calMonth).toLocaleDateString('en-GB',{month:'long',year:'numeric'});
-
-  let html=`<div class="cal-header">
-    <div class="cal-nav" onclick="calNav(-1)">‹</div>
-    <div class="cal-title">${monthName}</div>
-    <div class="cal-nav" onclick="calNav(1)">›</div>
-  </div>
-  <div class="cal-grid">
-    ${DOW.map(d=>`<div class="cal-dow">${d}</div>`).join('')}
-    ${cells.map(({date,current})=>{
-      const key=`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-      const dayEvents=eventMap[key]||[];
-      const isToday=date.getTime()===today.getTime();
-      const isSelected=calSelectedDate&&date.getTime()===calSelectedDate.getTime();
-      const cls=[
-        'cal-day',
-        !current?'other-month':'',
-        isToday?'today':'',
-        dayEvents.length?'has-events':'',
-        isSelected?'selected-day':''
-      ].filter(Boolean).join(' ');
-      const selStyle=isSelected?'outline:2px solid var(--accent);outline-offset:1px;':'';
-      const dots=dayEvents.slice(0,5).map(e=>{
-        const cat=CATS[e.category]||CATS.other;
-        return`<div class="cal-dot ${cat.color}"></div>`;
-      }).join('');
-      return`<div class="${cls}" style="${selStyle}" onclick="selectCalDay(new Date(${date.getFullYear()},${date.getMonth()},${date.getDate()}))">
-        <div class="cal-day-num">${date.getDate()}</div>
-        ${dots?('<div class="cal-dots">'+dots+'</div>'):''}
-      </div>`;
-    }).join('')}
-  </div>`;
-
-  // Selected day events
-  if(calSelectedDate){
-    const key=`${calSelectedDate.getFullYear()}-${calSelectedDate.getMonth()}-${calSelectedDate.getDate()}`;
-    const dayEvs=eventMap[key]||[];
-    const dateStr=calSelectedDate.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
-    html+=`<div class="cal-event-list">
-      <div class="cal-selected-date">📅 ${dateStr} — ${dayEvs.length?dayEvs.length+' event'+(dayEvs.length!==1?'s':''):'No events'}</div>
-      ${dayEvs.map(e=>{
-        const cat=CATS[e.category]||CATS.other;
-        const days=getEffectiveDays(e);
-        const members=Array.isArray(e.members)&&e.members.length?e.members:(e.member?[e.member]:[]);
-        return`<div class="event-row ${urgencyClass(days)}" onclick="openDetail('${e.id}')">
-          <div class="event-icon icon-${cat.color}">${cat.icon}</div>
-          <div class="event-body">
-            <div class="event-name">${esc(e.title)}</div>
-            <div class="event-detail">${cat.label}<span class="detail-sep">·</span>${repeatShort(e)}</div>
-            ${members.length?`<div class="member-chips">${members.map(m=>`<span class="member-chip">👤 ${esc(m)}</span>`).join('')}</div>`:''}
-          </div>
-          <div class="urgency-pill ${pillClass(days)}">${daysLabel(days)}<small>${calSelectedDate.toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</small></div>
-        </div>`;
-      }).join('')||'<div class="empty" style="padding:20px"><div style="color:var(--muted);font-size:13px">No events on this day</div></div>'}
-    </div>`;
-  }
-
-  el.innerHTML=html;
-}
-
-function calNav(dir){
-  calMonth+=dir;
-  if(calMonth>11){calMonth=0;calYear++;}
-  if(calMonth<0){calMonth=11;calYear--;}
-  calSelectedDate=null;
-  renderCalendar();
-}
-
-function selectCalDay(date){
-  calSelectedDate=date;
-  renderCalendar();
-}
-
-// ── BIRTHDAYS ──
-function renderBirthdays(){
-  const el=document.getElementById('birthdaysContent');
-  if(!el)return;
-  const today=new Date();today.setHours(0,0,0,0);
-  const thisYear=today.getFullYear();
-
-  // Find all birthday events
-  const bdayEvents=events.filter(e=>e.category==='birthday').map(e=>{
-    const d=getEffectiveDate(e);
-    const days=getEffectiveDays(e);
-    const origYear=new Date(e.event_date).getFullYear();
-    const age=origYear>1900?thisYear-origYear+(days<0?-1:0):null;
-    return{e,d,days,age};
-  }).sort((a,b)=>a.days-b.days);
-
-  // Find couple anniversary — look for events with both Anan and Prangkwan
-  const anniversary=events.find(e=>{
-    const m=Array.isArray(e.members)?e.members:(e.member?[e.member]:[]);
-    return m.includes('Anan')&&m.includes('Prangkwan')&&(e.category==='other'||e.category==='birthday');
-  });
-
-  // Couple section — days together from a known date (use first birthday event with both or hardcode)
-  const coupleStartDate=new Date('2010-01-01'); // placeholder — will show from earliest joint event
-  const jointEvents=events.filter(e=>{
-    const m=Array.isArray(e.members)?e.members:(e.member?[e.member]:[]);
-    return m.includes('Anan')&&m.includes('Prangkwan');
-  });
-
-  let html='';
-
-  // Couple counter card
-  const yearsCount=thisYear-coupleStartDate.getFullYear();
-  const nextBig=Math.ceil(yearsCount/5)*5;
-  html+=`<div class="couple-card">
-    <div class="couple-card-title">❤️ Anan & Prangkwan</div>
-    <div class="couple-years">${jointEvents.length>0?''+jointEvents.length+' shared events':'Family'}</div>
-    <div class="couple-sub">${jointEvents.length} events shared together</div>
-  </div>`;
-
-  // Birthday cards
-  if(!bdayEvents.length){
-    html+=`<div class="empty"><div class="empty-icon">🎂</div><div class="empty-title">No birthdays yet</div>Add birthday events with the 🎂 Birthday category</div>`;
-  } else {
-    html+=`<div class="section-label"><div class="section-label-text">🎂 Upcoming Birthdays</div><div class="section-label-line"></div><div class="section-label-count">${bdayEvents.length}</div></div>`;
-    html+=bdayEvents.map(function(item,idx){
-      var e=item.e,d=item.d,days=item.days,age=item.age;
-      var members=Array.isArray(e.members)&&e.members.length?e.members:(e.member?[e.member]:[]);
-      var name=members.length?members[0]:e.title;
-      var avatarColor=AVATAR_COLORS[idx%AVATAR_COLORS.length];
-      var initials=name.split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase();
-      var dateStr=d.toLocaleDateString('en-GB',{day:'numeric',month:'long'});
-      var daysColorClass=days===0?'today-color':days<=7?'soon-color':'ok-color';
-      var countdownDisplay=days===0?'🎉':String(days);
-      var countdownLabel=days===0?'TODAY!':days===1?'day away':'days away';
-      var ageHtml=age?('<div class="bday-age">Turning '+age+' year'+(age!==1?'s':'')+' old</div>'):'';
-      var memberHtml=members.length>1?('<div class="member-chips" style="margin-top:6px">'+members.map(function(m){return '<span class="member-chip">👤 '+esc(m)+'</span>';}).join('')+'</div>'):'';
-      return '<div class="bday-card" onclick="openDetail(\"'+e.id+'\")">'
-        +'<div class="bday-avatar" style="background:'+avatarColor+'">'+(initials||'🎂')+'</div>'
-        +'<div class="bday-info">'
-        +'<div class="bday-name">'+esc(e.title)+'</div>'
-        +'<div class="bday-date">📅 '+dateStr+'</div>'
-        +ageHtml+memberHtml
-        +'</div>'
-        +'<div class="bday-countdown">'
-        +'<div class="bday-days '+daysColorClass+'">'+countdownDisplay+'</div>'
-        +'<div class="bday-days-label">'+countdownLabel+'</div>'
-        +'</div></div>';
-    }).join('');
-  }
-
-  // Non-birthday repeating events as "milestones"
-  const milestones=events.filter(e=>e.category!=='birthday'&&(Array.isArray(e.members)?e.members:(e.member?[e.member]:[])).length>=2).slice(0,5);
-  if(milestones.length){
-    html+=`<div class="section-label" style="margin-top:8px"><div class="section-label-text">⭐ Family Milestones</div><div class="section-label-line"></div></div>`;
-    html+=milestones.map(e=>{
-      const days=getEffectiveDays(e);
-      const cat=CATS[e.category]||CATS.other;
-      return eventRowHTML(e,days);
-    }).join('');
-  }
-
-  el.innerHTML=html;
-}
+// ── CALCULATOR ──
+let calcExpr='',calcCurrent='0',calcNewNum=true,calcLastOp='';
+function calcDisplay(){document.getElementById('calcResult').textContent=parseFloat(calcCurrent).toLocaleString('en',{maximumFractionDigits:10});document.getElementById('calcExpr').textContent=calcExpr;}
+function calcNum(n){if(calcNewNum){calcCurrent=n;calcNewNum=false;}else{calcCurrent=calcCurrent==='0'?n:calcCurrent+n;}calcDisplay();}
+function calcDot(){if(calcNewNum){calcCurrent='0.';calcNewNum=false;}else if(!calcCurrent.includes('.'))calcCurrent+='.';calcDisplay();}
+function calcOp(op){if(calcExpr&&!calcNewNum){try{calcCurrent=String(eval(calcExpr+calcCurrent));}catch(e){}}calcExpr=calcCurrent+' '+op+' ';calcNewNum=true;calcDisplay();}
+function calcEquals(){if(!calcExpr)return;try{const r=eval(calcExpr+calcCurrent);calcExpr='';calcCurrent=String(r);}catch(e){calcCurrent='Error';}calcNewNum=true;calcDisplay();}
+function calcClear(){calcExpr='';calcCurrent='0';calcNewNum=true;calcDisplay();}
+function calcSign(){calcCurrent=String(parseFloat(calcCurrent)*-1);calcDisplay();}
+function calcPercent(){calcCurrent=String(parseFloat(calcCurrent)/100);calcDisplay();}
 
 init();
 </script>
