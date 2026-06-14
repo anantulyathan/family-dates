@@ -87,6 +87,16 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .mtag-4{background:#ffedd5;color:#c2410c;border-color:#fed7aa}
 .mtag-5{background:#fef9c3;color:#854d0e;border-color:#fef08a}
 
+/* MEMBER CARD BACKGROUNDS */
+.mbg-0{background:#eff6ff}
+.mbg-1{background:#fdf2f8}
+.mbg-2{background:#ecfdf5}
+.mbg-3{background:#f5f3ff}
+.mbg-4{background:#fff7ed}
+.mbg-5{background:#fefce8}
+.mbg-multi{background:#f1f5f9}
+.mbg-none{background:#f9fafb}
+
 /* EVENT ROW */
 .event-row{border:1px solid var(--border);border-left:3px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:6px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:box-shadow .15s}
 .event-row:hover{box-shadow:0 2px 12px rgba(0,0,0,0.07)}
@@ -726,6 +736,15 @@ function buildMemberColorMap() {
 }
 function memberChipClass(m) { return memberColorMap[m]||'mtag-0'; }
 
+function memberBgClass(ev) {
+  const m = membersOf(ev);
+  if(!m.length) return 'mbg-none';
+  if(m.length>1) return 'mbg-multi';
+  const members = settings.members||[];
+  const idx = members.indexOf(m[0]);
+  return idx>=0 ? 'mbg-'+( idx % 6 ) : 'mbg-none';
+}
+
 // ── INIT ──
 async function init() {
   document.getElementById('headerDate').textContent =
@@ -812,7 +831,7 @@ function eventRowHtml(ev, days) {
   const exp=parseFloat(ev.expense_estimate)||0;
   const timeStr=ev.event_time?(' · '+ev.event_time.slice(0,5)):'';
   const locHtml=ev.location?('<a class="location-chip" href="https://maps.google.com/?q='+encodeURIComponent(ev.location)+'" target="_blank">📍 '+esc(ev.location)+'</a>'):'';
-  return '<div class="event-row '+urgencyClass(days)+' '+cat.catClass+'" onclick="openDetail(\''+ev.id+'\')">'
+  return '<div class="event-row '+urgencyClass(days)+' '+memberBgClass(ev)+'" onclick="openDetail(\''+ev.id+'\')">'
     +'<div class="event-icon '+cat.catClass+'" style="border:1px solid var(--border)">'+cat.icon+'</div>'
     +'<div class="event-body">'
     +'<div class="event-name">'+esc(ev.title)+'</div>'
@@ -919,7 +938,7 @@ function renderDashboard() {
         var cat=CATS[e.category]||CATS.other;
         var dateStr=d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
         var exp=parseFloat(e.expense_estimate)||0;
-        return '<div class="event-row safe '+cat.catClass+'" onclick="openDetail(\''+e.id+'\')">'
+        return '<div class="event-row safe '+memberBgClass(e)+'" onclick="openDetail(\''+e.id+'\')">'
           +'<div class="event-icon '+cat.catClass+'">'+cat.icon+'</div>'
           +'<div class="event-body">'
           +'<div class="event-name">'+esc(e.title)+'</div>'
