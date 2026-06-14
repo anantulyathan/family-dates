@@ -334,43 +334,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-#passcodeScreen.hidden{opacity:0;pointer-events:none}
-.pc-dot.filled{background:#34d399 !important;transform:scale(1.15)}
-.pc-dot.error{background:#f87171 !important}
-.pc-shake{animation:pcshake .4s ease}
-@keyframes pcshake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
 </style>
 </head>
 <body>
-<div id="passcodeScreen" style="position:fixed;inset:0;z-index:9999;background:#111827;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;padding-bottom:calc(40px + env(safe-area-inset-bottom));transition:opacity .3s">
-  <div style="font-size:48px;margin-bottom:8px">🔐</div>
-  <div style="font-family:'DM Serif Display',serif;font-size:28px;color:#fff;margin-bottom:4px">Family Dates</div>
-  <div class="pc-sub" style="font-size:14px;color:rgba(255,255,255,0.4);margin-bottom:40px">Enter passcode to continue</div>
-  <div class="pc-dots" style="display:flex;gap:16px;margin-bottom:40px">
-    <div class="pc-dot" id="pcd0" style="width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,0.15);transition:background .15s,transform .15s"></div>
-    <div class="pc-dot" id="pcd1" style="width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,0.15);transition:background .15s,transform .15s"></div>
-    <div class="pc-dot" id="pcd2" style="width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,0.15);transition:background .15s,transform .15s"></div>
-    <div class="pc-dot" id="pcd3" style="width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,0.15);transition:background .15s,transform .15s"></div>
-  </div>
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:100%;max-width:280px">
-    <button onclick="pcTap('1')" style="background:rgba(255,255,255,0.08);border:none;border-radius:50%;width:72px;height:72px;font-size:24px;font-weight:500;color:#fff;cursor:pointer;justify-self:center">1</button>
-    <button onclick="pcTap('2')" style="background:rgba(255,255,255,0.08);border:none;border-radius:50%;width:72px;height:72px;font-size:24px;font-weight:500;color:#fff;cursor:pointer;justify-self:center">2</button>
-    <button onclick="pcTap('3')" style="background:rgba(255,255,255,0.08);border:none;border-radius:50%;width:72px;height:72px;font-size:24px;font-weight:500;color:#fff;cursor:pointer;justify-self:center">3</button>
-    <button onclick="pcTap('4')" style="background:rgba(255,255,255,0.08);border:none;border-radius:50%;width:72px;height:72px;font-size:24px;font-weight:500;color:#fff;cursor:pointer;justify-self:center">4</button>
-    <button onclick="pcTap('5')" style="background:rgba(255,255,255,0.08);border:none;border-radius:50%;width:72px;height:72px;font-size:24px;font-weight:500;color:#fff;cursor:pointer;justify-self:center">5</button>
-    <button onclick="pcTap('6')" style="background:rgba(255,255,255,0.08);border:none;border-radius:50%;width:72px;height:72px;font-size:24px;font-weight:500;color:#fff;cursor:pointer;justify-self:center">6</button>
-    <button onclick="pcTap('7')" style="background:rgba(255,255,255,0.08);border:none;border-radius:50%;width:72px;height:72px;font-size:24px;font-weight:500;color:#fff;cursor:pointer;justify-self:center">7</button>
-    <button onclick="pcTap('8')" style="background:rgba(255,255,255,0.08);border:none;border-radius:50%;width:72px;height:72px;font-size:24px;font-weight:500;color:#fff;cursor:pointer;justify-self:center">8</button>
-    <button onclick="pcTap('9')" style="background:rgba(255,255,255,0.08);border:none;border-radius:50%;width:72px;height:72px;font-size:24px;font-weight:500;color:#fff;cursor:pointer;justify-self:center">9</button>
-    <div style="justify-self:center;width:72px;height:72px"></div>
-    <button onclick="pcTap('0')" style="background:rgba(255,255,255,0.08);border:none;border-radius:50%;width:72px;height:72px;font-size:24px;font-weight:500;color:#fff;cursor:pointer;justify-self:center">0</button>
-    <button onclick="pcDel()" class="pc-key" style="background:rgba(255,255,255,0.08);border:none;border-radius:50%;width:72px;height:72px;font-size:20px;color:#fff;cursor:pointer;justify-self:center">⌫</button>
-  </div>
-  <div id="pcErrMsg" style="font-size:13px;color:#f87171;margin-top:16px;min-height:20px;text-align:center"></div>
-  <div onclick="pcForgot()" style="font-size:12px;color:rgba(255,255,255,0.25);margin-top:24px;text-decoration:underline;cursor:pointer">Forgot passcode?</div>
-</div>
-
-
 <div class="header">
   <div class="header-top">
     <div>
@@ -2083,7 +2049,7 @@ function renderSettings() {
     +'</div></div>'
     +'<div class="settings-section"><div class="settings-title">Family Members</div>'
     +'<div class="settings-card"><div class="settings-row"><div><div class="settings-row-label">👨‍👩‍👦 Members</div><div class="settings-row-sub">'+esc(members)+'</div></div><div class="settings-row-action" onclick="openMemberModal()">Edit</div></div></div></div>'
-    +'<div class="settings-section"><div class="settings-title">Security</div><div class="settings-card"><div class="settings-row"><div><div class="settings-row-label">App Passcode</div><div class="settings-row-sub">4-digit lock screen · unlocks for 12 hours</div></div><button onclick="openChangePasscode()" style="background:#1d4ed8;color:#fff;border:none;padding:8px 14px;border-radius:8px;font-size:13px;cursor:pointer;white-space:nowrap;font-family:Inter,sans-serif">Change</button></div></div></div>'
+    
     +'<div class="settings-section"><div class="settings-title">About</div>'
     +'<div class="settings-card">'
     +'<div class="settings-row"><div><div class="settings-row-label">Version</div><div class="settings-row-sub">Family Dates v2.0</div></div></div>'
@@ -2173,189 +2139,8 @@ function calcClear(){calcExpr='';calcCurrent='0';calcNewNum=true;calcDisplay();}
 function calcSign(){calcCurrent=String(parseFloat(calcCurrent)*-1);calcDisplay();}
 function calcPercent(){calcCurrent=String(parseFloat(calcCurrent)/100);calcDisplay();}
 
-// ── PASSCODE ──
-const PASSCODE_KEY = 'fd_auth';
-const PASSCODE_EXPIRY_KEY = 'fd_auth_expiry';
-const PASSCODE_HASH_KEY = 'fd_passcode';
-const LOCKOUT_KEY = 'fd_lockout';
-const FAIL_KEY = 'fd_fails';
-const DEFAULT_PASSCODE = '2468';
-const SESSION_HOURS = 12;
-const MAX_FAILS = 5;
-const LOCKOUT_MINUTES = 5;
-
-let pcEntry = '';
-let pcIsSettingNew = false;
-let pcFirstEntry = '';
-
-function getStoredHash() { return localStorage.getItem(PASSCODE_HASH_KEY) || simpleHash(DEFAULT_PASSCODE); }
-
-function simpleHash(s) {
-  let h = 0;
-  for(let i=0;i<s.length;i++){ h = ((h<<5)-h)+s.charCodeAt(i); h|=0; }
-  return 'fd_'+Math.abs(h).toString(36);
-}
-
-function getLockoutRemaining() {
-  const until = parseInt(localStorage.getItem(LOCKOUT_KEY)||'0');
-  const remaining = until - Date.now();
-  return remaining > 0 ? Math.ceil(remaining/60000) : 0;
-}
-
-function pcCheckSession() {
-  const auth = localStorage.getItem(PASSCODE_KEY);
-  const expiry = parseInt(localStorage.getItem(PASSCODE_EXPIRY_KEY)||'0');
-  if(auth === 'ok' && Date.now() < expiry) {
-    document.getElementById('passcodeScreen').style.display = 'none';
-    return true;
-  }
-  return false;
-}
-
-function pcTap(digit) {
-  if(getLockoutRemaining() > 0) return;
-  if(pcEntry.length >= 4) return;
-  pcEntry += digit;
-  pcUpdateDots();
-  if(pcEntry.length === 4) setTimeout(pcSubmit, 100);
-}
-
-function pcDel() {
-  pcEntry = pcEntry.slice(0,-1);
-  pcUpdateDots();
-  document.getElementById('pcErrMsg').textContent = '';
-}
-
-function pcUpdateDots(state) {
-  for(let i=0;i<4;i++){
-    const dot = document.getElementById('pcd'+i);
-    dot.className = 'pc-dot' + (i<pcEntry.length?' filled':'') + (state?' '+state:'');
-  }
-}
-
-function pcSubmit() {
-  if(pcIsSettingNew) { pcHandleNewPasscode(); return; }
-  if(simpleHash(pcEntry) === getStoredHash()) { pcSuccess(); } else { pcFail(); }
-}
-
-function pcSuccess() {
-  localStorage.setItem(FAIL_KEY, '0');
-  localStorage.setItem(PASSCODE_KEY, 'ok');
-  localStorage.setItem(PASSCODE_EXPIRY_KEY, String(Date.now() + SESSION_HOURS*3600*1000));
-  pcUpdateDots('');
-  document.getElementById('passcodeScreen').classList.add('hidden');
-  setTimeout(()=>{ document.getElementById('passcodeScreen').style.display='none'; },320);
-  // app already loaded at startup — no re-init needed
-}
-
-function pcFail() {
-  let fails = parseInt(localStorage.getItem(FAIL_KEY)||'0') + 1;
-  localStorage.setItem(FAIL_KEY, String(fails));
-  const remaining = MAX_FAILS - fails;
-  if(fails >= MAX_FAILS) {
-    localStorage.setItem(LOCKOUT_KEY, String(Date.now() + LOCKOUT_MINUTES*60*1000));
-    localStorage.setItem(FAIL_KEY, '0');
-    pcEntry = '';
-    pcUpdateDots('error');
-    document.getElementById('passcodeScreen').querySelector('.pc-dots').classList.add('pc-shake');
-    document.getElementById('pcErrMsg').textContent = 'Too many attempts. Locked for '+LOCKOUT_MINUTES+' minutes.';
-    pcStartLockoutTimer();
-    setTimeout(()=>{ pcUpdateDots(); document.getElementById('passcodeScreen').querySelector('.pc-dots').classList.remove('pc-shake'); },600);
-    return;
-  }
-  pcUpdateDots('error');
-  document.getElementById('passcodeScreen').querySelector('.pc-dots').classList.add('pc-shake');
-  document.getElementById('pcErrMsg').textContent = 'Incorrect passcode. '+remaining+' attempt'+(remaining===1?'':'s')+' remaining.';
-  setTimeout(()=>{ pcEntry=''; pcUpdateDots(); document.getElementById('passcodeScreen').querySelector('.pc-dots').classList.remove('pc-shake'); },600);
-}
-
-function pcStartLockoutTimer() {
-  document.querySelectorAll('.pc-key').forEach(k => k.disabled = true);
-  const interval = setInterval(()=>{
-    const mins = getLockoutRemaining();
-    if(mins <= 0) {
-      clearInterval(interval);
-      document.getElementById('pcErrMsg').textContent = '';
-      document.querySelectorAll('.pc-key').forEach(k => k.disabled = false);
-    } else {
-      document.getElementById('pcErrMsg').textContent = 'Locked. Try again in '+mins+' min'+(mins===1?'':'s')+'.';
-    }
-  }, 5000);
-}
-
-function pcCheckLockout() {
-  const mins = getLockoutRemaining();
-  if(mins > 0) {
-    document.getElementById('pcErrMsg').textContent = 'Locked. Try again in '+mins+' min'+(mins===1?'':'s')+'.';
-    document.querySelectorAll('.pc-key').forEach(k => k.disabled = true);
-    pcStartLockoutTimer();
-    return true;
-  }
-  return false;
-}
-
-function pcForgot() {
-  const ans = prompt('Enter your family name to reset:');
-  if(!ans) return;
-  if(ans.trim().toLowerCase() === 'tulyathan') {
-    localStorage.removeItem(PASSCODE_HASH_KEY);
-    localStorage.removeItem(PASSCODE_KEY);
-    pcEntry = '';
-    pcUpdateDots();
-    document.getElementById('pcErrMsg').textContent = 'Passcode reset to default: '+DEFAULT_PASSCODE;
-  } else {
-    alert('Incorrect answer.');
-  }
-}
-
-function openChangePasscode() {
-  pcIsSettingNew = true;
-  pcFirstEntry = '';
-  pcEntry = '';
-  pcUpdateDots();
-  document.getElementById('pcErrMsg').textContent = '';
-  document.querySelector('.pc-sub').textContent = 'Enter NEW passcode';
-  document.getElementById('passcodeScreen').style.display = 'flex';
-  document.getElementById('passcodeScreen').classList.remove('hidden');
-}
-
-function pcHandleNewPasscode() {
-  if(!pcFirstEntry) {
-    pcFirstEntry = pcEntry;
-    pcEntry = '';
-    pcUpdateDots();
-    document.querySelector('.pc-sub').textContent = 'Confirm new passcode';
-    document.getElementById('pcErrMsg').textContent = '';
-  } else {
-    if(pcEntry === pcFirstEntry) {
-      localStorage.setItem(PASSCODE_HASH_KEY, simpleHash(pcEntry));
-      localStorage.setItem(PASSCODE_KEY, 'ok');
-      localStorage.setItem(PASSCODE_EXPIRY_KEY, String(Date.now() + SESSION_HOURS*3600*1000));
-      pcIsSettingNew = false;
-      pcFirstEntry = '';
-      pcEntry = '';
-      document.querySelector('.pc-sub').textContent = 'Enter passcode to continue';
-      document.getElementById('passcodeScreen').classList.add('hidden');
-      setTimeout(()=>{ document.getElementById('passcodeScreen').style.display='none'; toast('Passcode updated ✓','success'); },320);
-    } else {
-      document.getElementById('pcErrMsg').textContent = 'Passcodes do not match. Try again.';
-      pcFirstEntry = '';
-      pcEntry = '';
-      pcUpdateDots('error');
-      document.querySelector('.pc-sub').textContent = 'Enter NEW passcode';
-      setTimeout(()=>{ pcUpdateDots(); },600);
-    }
-  }
-}
-
 // ── START ──
-if(!pcCheckSession()) {
-  pcCheckLockout();
-  init(); // load app behind passcode screen so it is ready on unlock
-} else {
-  document.getElementById('passcodeScreen').style.display = 'none';
-  init();
-}
+init();
 
 </script>
 </body>
