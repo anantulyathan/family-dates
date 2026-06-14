@@ -337,6 +337,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
     <div class="header-right">
       <div class="live-dot"><div class="dot" id="statusDot"></div><span id="statusText">Connecting</span></div>
       <div class="header-date" id="headerDate"></div>
+      <div id="userBadge" onclick="showIdentityModal()" style="font-size:11px;color:rgba(255,255,255,0.5);cursor:pointer;margin-top:2px">👤 Set name</div>
     </div>
   </div>
   <div class="header-stats">
@@ -395,6 +396,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
         <option value="anniversary">💍 Anniversary</option>
         <option value="document">📄 Document</option>
         <option value="other">⭐ Other</option>
+      </select>
+      <select class="form-select-inline" id="sortSelect" onchange="renderEvents()">
+        <option value="date">📅 By date</option>
+        <option value="recent">🕐 Recently added</option>
       </select>
     </div>
     <div class="member-filter-bar" id="eventsMemberBar" style="padding:0 0 8px"></div>
@@ -465,6 +470,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
     <div class="modal-handle"></div>
     <div class="modal-title" id="modalTitle">Add Event</div>
     <input type="hidden" id="editId">
+    <input type="hidden" id="fCreatedBy">
     <div class="form-group">
       <label class="form-label">Title *</label>
       <input class="form-input" id="fTitle" placeholder="e.g. Car Insurance Renewal">
@@ -617,6 +623,19 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
     <div class="btn-row">
       <button class="btn btn-secondary" onclick="closeModal('memberModal')">Cancel</button>
       <button class="btn btn-primary" onclick="saveMembers()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- WHO ARE YOU MODAL -->
+<div class="modal-overlay" id="identityModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">👋 Who are you?</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:16px">Choose your name so the app can track who added what. You only need to do this once.</div>
+    <div id="identityGrid" class="member-select-grid"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="saveIdentity()">Confirm</button>
     </div>
   </div>
 </div>
@@ -774,6 +793,7 @@ let eventsTimeFilter='all', eventsMemberFilter='all';
 let calYear=new Date().getFullYear(), calMonth=new Date().getMonth();
 let currentDetailId=null;
 let importantNumbers=[], shoppingItems=[], shoppingExpenses=[];
+let currentUser = localStorage.getItem('familyDatesUser')||null;
 
 // ── CONSTANTS ──
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -915,12 +935,38 @@ function memberBgClass(ev) {
   return idx>=0 ? 'mbg-'+(idx%6) : 'mbg-none';
 }
 
+// ── IDENTITY ──
+function showIdentityModal() {
+  const members = settings.members||['Anan','Prangkwan','Mark','Matt','Malee'];
+  document.getElementById('identityGrid').innerHTML = members.map(m=>
+    '<div class="member-toggle'+(currentUser===m?' on':'')+'" onclick="document.querySelectorAll(\'#identityGrid .member-toggle\').forEach(x=>x.classList.remove(\'on\'));this.classList.add(\'on\')">'+esc(m)+'</div>'
+  ).join('');
+  document.getElementById('identityModal').classList.add('open');
+}
+
+function saveIdentity() {
+  const sel = document.querySelector('#identityGrid .member-toggle.on');
+  if(!sel){toast('Please select your name','error');return;}
+  currentUser = sel.textContent.trim();
+  localStorage.setItem('familyDatesUser', currentUser);
+  updateUserBadge();
+  closeModal('identityModal');
+  toast('Welcome, '+currentUser+' ✓','success');
+}
+
+function updateUserBadge() {
+  const badge = document.getElementById('userBadge');
+  if(badge) badge.textContent = currentUser ? '👤 '+currentUser : '👤 Set name';
+}
+
 // ── INIT ──
 async function init() {
   document.getElementById('headerDate').textContent =
     new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
   await loadAll();
   setStatus('connected');
+  updateUserBadge();
+  if(!currentUser) setTimeout(showIdentityModal, 800);
 }
 
 async function loadAll() {
@@ -1271,6 +1317,31 @@ function renderDashboard() {
     }).join('');
   }
 
+  // Recently added — last 7 days
+  const sevenDaysAgo = new Date(); sevenDaysAgo.setDate(sevenDaysAgo.getDate()-7); sevenDaysAgo.setHours(0,0,0,0);
+  const recentlyAdded = events.filter(e=>e.created_at&&new Date(e.created_at)>=sevenDaysAgo)
+    .sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+  if(recentlyAdded.length) {
+    html+='<div class="section-label" style="margin-top:20px"><div class="section-label-text">✨ Recently Added</div><div class="section-label-line"></div><div class="section-label-count">'+recentlyAdded.length+' in last 7 days</div></div>';
+    html+=recentlyAdded.map(function(ev){
+      var cat=CATS[ev.category]||CATS.other;
+      var days=getEffectiveDays(ev);
+      var addedAt=new Date(ev.created_at);
+      var hoursAgo=Math.round((new Date()-addedAt)/3600000);
+      var timeAgo=hoursAgo<1?'Just now':hoursAgo<24?hoursAgo+'h ago':Math.floor(hoursAgo/24)+'d ago';
+      var byLabel=ev.created_by?(' · by <strong>'+esc(ev.created_by)+'</strong>'):'';
+      return '<div class="event-row '+urgencyClass(days)+' '+memberBgClass(ev)+'" onclick="openDetail(\''+ev.id+'\')">'
+        +'<div class="event-icon '+cat.catClass+'" style="border:1px solid var(--border)">'+cat.icon+'</div>'
+        +'<div class="event-body">'
+        +'<div class="event-name">'+esc(ev.title)+'</div>'
+        +'<div class="event-detail">'+timeAgo+byLabel+'</div>'
+        +memberChipsHtml(ev)
+        +'</div>'
+        +'<div class="urgency-pill '+pillClass(days)+'">'+daysLabel(days)+'<small>'+getEffectiveDate(ev).toLocaleDateString('en-GB',{day:'numeric',month:'short'})+'</small></div>'
+        +'</div>';
+    }).join('');
+  }
+
   if(!html) html='<div class="empty"><div class="empty-icon">📅</div><div class="empty-title">No events yet</div>Tap + to add one.</div>';
   document.getElementById('dashContent').innerHTML=html;
 }
@@ -1287,7 +1358,9 @@ function renderEvents() {
   buildMemberBar('eventsMemberBar',eventsMemberFilter,'setEventsMember');
   const q=(document.getElementById('searchInput')?.value||'').toLowerCase();
   const cat=document.getElementById('catFilterSelect')?.value||'all';
-  const future=events.filter(e=>{
+  const sortBy=document.getElementById('sortSelect')?.value||'date';
+
+  let future=events.filter(e=>{
     if(isPastEvent(e)) return false;
     const days=getEffectiveDays(e);
     if(eventsTimeFilter!=='all'&&days>eventsTimeFilter) return false;
@@ -1295,7 +1368,13 @@ function renderEvents() {
     if(!memberMatchFn(e,eventsMemberFilter)) return false;
     if(q&&!e.title.toLowerCase().includes(q)&&!membersOf(e).join(' ').toLowerCase().includes(q)) return false;
     return true;
-  }).map(e=>({e,days:getEffectiveDays(e)})).sort((a,b)=>a.days-b.days);
+  }).map(e=>({e,days:getEffectiveDays(e)}));
+
+  if(sortBy==='recent') {
+    future.sort((a,b)=>new Date(b.e.created_at||0)-new Date(a.e.created_at||0));
+  } else {
+    future.sort((a,b)=>a.days-b.days);
+  }
 
   const past=events.filter(e=>{
     if(!isPastEvent(e)) return false;
@@ -1305,7 +1384,29 @@ function renderEvents() {
     return true;
   }).sort((a,b)=>new Date(b.event_date)-new Date(a.event_date));
 
-  let html=future.map(x=>eventRowHtml(x.e,x.days)).join('');
+  let html='';
+  if(sortBy==='recent'&&future.length) {
+    html+='<div class="section-label"><div class="section-label-text">✨ Recently Added</div><div class="section-label-line"></div><div class="section-label-count">'+future.length+'</div></div>';
+    html+=future.map(function(x){
+      var e=x.e, days=x.days;
+      var cat2=CATS[e.category]||CATS.other;
+      var addedAt=e.created_at?new Date(e.created_at):null;
+      var hoursAgo=addedAt?Math.round((new Date()-addedAt)/3600000):null;
+      var timeAgo=!addedAt?'':hoursAgo<1?'Just now':hoursAgo<24?hoursAgo+'h ago':Math.floor(hoursAgo/24)+'d ago';
+      var byLabel=e.created_by?' · by <strong>'+esc(e.created_by)+'</strong>':'';
+      return '<div class="event-row '+urgencyClass(days)+' '+memberBgClass(e)+'" onclick="openDetail(\''+e.id+'\')">'
+        +'<div class="event-icon '+cat2.catClass+'" style="border:1px solid var(--border)">'+cat2.icon+'</div>'
+        +'<div class="event-body">'
+        +'<div class="event-name">'+esc(e.title)+'</div>'
+        +'<div class="event-detail">'+timeAgo+byLabel+'</div>'
+        +memberChipsHtml(e)
+        +'</div>'
+        +'<div class="urgency-pill '+pillClass(days)+'">'+daysLabel(days)+'<small>'+getEffectiveDate(e).toLocaleDateString('en-GB',{day:'numeric',month:'short'})+'</small></div>'
+        +'</div>';
+    }).join('');
+  } else {
+    html=future.map(x=>eventRowHtml(x.e,x.days)).join('');
+  }
   if(past.length) {
     html+='<div class="section-label" style="margin-top:14px"><div class="section-label-text" style="color:var(--muted)">🕰 Past Events</div><div class="section-label-line"></div><div class="section-label-count">'+past.length+'</div></div>';
     html+=past.map(function(ev){
@@ -1514,7 +1615,8 @@ function openDetail(id) {
     +(ev.location?'<div class="detail-field"><div class="detail-field-label">Location</div>'+locHtml+'</div>':'')
     +(exp>0?'<div class="detail-field"><div class="detail-field-label">Estimated Expense</div><div class="detail-field-value" style="color:var(--teal)">'+fmtMoney(exp)+' <span style="font-size:11px;color:var(--muted)">(≈ '+fmtMoney(annualExpense(ev))+'/yr)</span></div></div>':'')
     +(ev.notes?'<div class="detail-field"><div class="detail-field-label">Notes</div><div class="detail-field-value" style="font-size:13px;color:var(--sub)">'+esc(ev.notes)+'</div></div>':'')
-    +'<div class="detail-field"><div class="detail-field-label">Recurrence</div><div class="detail-field-value">'+repeatLabel(ev)+'</div></div>';
+    +'<div class="detail-field"><div class="detail-field-label">Recurrence</div><div class="detail-field-value">'+repeatLabel(ev)+'</div></div>'
+    +(ev.created_by?'<div class="detail-field"><div class="detail-field-label">Added by</div><div class="detail-field-value" style="font-size:13px;color:var(--sub)">'+esc(ev.created_by)+(ev.created_at?' · '+new Date(ev.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):'')+'</div></div>':'');
 
   document.getElementById('detailModal').classList.add('open');
 }
@@ -1559,6 +1661,7 @@ function openAddModal() {
   document.getElementById('fCustomDate').value='';
   document.getElementById('fExpense').value='';
   document.getElementById('fYears').value='2';
+  document.getElementById('fCreatedBy').value = currentUser||'';
   document.getElementById('deleteBtn').style.display='none';
   selectRepeat('yearly');
   buildMemberGrid([]);
@@ -1605,6 +1708,7 @@ async function saveEvent() {
   const expense_estimate=parseFloat(document.getElementById('fExpense').value)||null;
   const repeat_yearly=repeat_type==='yearly';
   const members=getSelectedMembers();
+  const created_by=document.getElementById('fCreatedBy').value||currentUser||null;
 
   if(!title){toast('Please enter a title','error');return;}
   if(!date){toast('Please select a date','error');return;}
@@ -1612,6 +1716,7 @@ async function saveEvent() {
   if(repeat_type==='customdate'&&!custom_date){toast('Please select the next occurrence date','error');return;}
 
   const payload={title,event_date:date,event_time:time,location,category,notes,repeat_yearly,repeat_type,repeat_days,repeat_years,custom_date,expense_estimate,members,updated_at:new Date().toISOString()};
+  if(!document.getElementById('editId').value) payload.created_by=created_by;
 
   try {
     if(id){const{error}=await db.from('family_events').update(payload).eq('id',id);if(error)throw error;toast('Event updated ✓','success');}
@@ -1896,6 +2001,7 @@ async function saveShopItem() {
   const members=getSelectedMembers2('shopMemberGrid');
   if(!item_name){toast('Please enter an item name','error');return;}
   const payload={item_name,category,price,quantity,notes,members,purchased:false,updated_at:new Date().toISOString()};
+  if(!id) payload.created_by=currentUser||null;
   try {
     if(id){const{error}=await db.from('shopping_items').update(payload).eq('id',id);if(error)throw error;toast('Updated ✓','success');}
     else{const{error}=await db.from('shopping_items').insert(payload);if(error)throw error;toast('Added ✓','success');}
