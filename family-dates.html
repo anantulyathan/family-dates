@@ -1309,7 +1309,7 @@ function renderDashboard() {
       var hoursAgo=Math.round((new Date()-addedAt)/3600000);
       var timeAgo=hoursAgo<1?'Just now':hoursAgo<24?hoursAgo+'h ago':Math.floor(hoursAgo/24)+'d ago';
       var byLabel=ev.created_by?(' · by <strong>'+esc(ev.created_by)+'</strong>'):'';
-      return '<div class="event-row '+urgencyClass(days)+' '+memberBgClass(ev)+'" onclick="openDetail(''+ev.id+'')">'
+      return '<div class="event-row '+urgencyClass(days)+' '+memberBgClass(ev)+'" onclick="openDetail(\''+ev.id+'\')">'
         +'<div class="event-icon '+cat.catClass+'" style="border:1px solid var(--border)">'+cat.icon+'</div>'
         +'<div class="event-body">'
         +'<div class="event-name">'+esc(ev.title)+'</div>'
