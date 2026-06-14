@@ -744,7 +744,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 // ── CONFIG ──
 const SUPABASE_URL  = 'https://fkcjjprewnjrwobyaglb.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZrY2pqcHJld25qcndvYnlhZ2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzNTc4OTAsImV4cCI6MjA5NjkzMzg5MH0.VANzCQDqqSeLIbVbTx30eN53P2rdwtKRNv2b2MlxZDg';
-const RESEND_KEY    = 're_afX9rcCP_J84MXFCkpXeRSMkuvurcj9vG';
 const EDGE_FN_URL   = 'https://fkcjjprewnjrwobyaglb.supabase.co/functions/v1/swift-function';
 const {createClient} = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON);
@@ -1604,7 +1603,7 @@ function buildMemberGrid(selected) {
   const sel=Array.isArray(selected)?selected:(selected?[selected]:[]);
   document.getElementById('memberSelectGrid').innerHTML=members.map(m=>'<div class="member-toggle'+(sel.includes(m)?' on':'')+'" onclick="this.classList.toggle(\'on\')">'+esc(m)+'</div>').join('');
 }
-function getSelectedMembers(){return Array.from(document.querySelectorAll('.member-toggle.on')).map(el=>el.textContent.trim());}
+function getSelectedMembers(){return Array.from(document.querySelectorAll('#memberSelectGrid .member-toggle.on')).map(el=>el.textContent.trim());}
 
 // ── ADD / EDIT ──
 function openAddModal() {
@@ -2077,6 +2076,15 @@ function renderSettings() {
 // ── SEND REMINDERS ──
 async function sendRemindersNow() {
   const btn=document.getElementById('sendNowBtn'); if(!btn) return;
+  // Cooldown — max 1 send per 5 minutes to protect Resend quota
+  const lastSent=parseInt(localStorage.getItem('fd_last_sent')||'0');
+  const cooldownMs=5*60*1000;
+  const elapsed=Date.now()-lastSent;
+  if(elapsed<cooldownMs){
+    const secsLeft=Math.ceil((cooldownMs-elapsed)/1000);
+    toast('Please wait '+secsLeft+'s before sending again','error');
+    return;
+  }
   btn.disabled=true;btn.innerHTML='<div class="spinner" style="border-color:rgba(255,255,255,0.3);border-top-color:#fff;width:16px;height:16px"></div> Sending…';
   try {
     const recipients=settings.notify_emails||[];
@@ -2088,6 +2096,7 @@ async function sendRemindersNow() {
     if(!res.ok){const err=await res.json();throw new Error(JSON.stringify(err.error)||'Send failed');}
     const logEntries=due.map(x=>({event_id:x.e.id,days_before:x.days,email_to:recipients.join(', '),status:'sent'}));
     await db.from('family_notifications_log').insert(logEntries);
+    localStorage.setItem('fd_last_sent', String(Date.now()));
     toast('✓ Reminder sent for '+due.length+' event'+(due.length!==1?'s':''),'success');
   } catch(e){toast('Error: '+e.message,'error');}
   btn.disabled=false;btn.innerHTML='📧 Send Reminder Email Now';
