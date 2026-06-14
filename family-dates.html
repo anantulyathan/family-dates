@@ -407,7 +407,13 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
         <option value="other">⭐ Other</option>
       </select>
     </div>
-    <div class="member-filter-bar" id="eventsMemberBar" style="padding:0 0 8px"></div>
+    <div style="display:flex;gap:8px;margin-bottom:6px;align-items:center">
+      <div class="member-filter-bar" id="eventsMemberBar" style="padding:0;flex:1"></div>
+      <select class="form-select-inline" id="sortSelect" onchange="renderEvents()" style="flex-shrink:0;width:auto">
+        <option value="date">Sort: Date</option>
+        <option value="recent">Sort: Recently Added</option>
+      </select>
+    </div>
     <div id="eventsContent"><div class="loading"><div class="spinner"></div>Loading…</div></div>
   </div>
 
