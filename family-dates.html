@@ -1297,7 +1297,7 @@ function renderDashboard() {
 
   // Recently added — last 7 days
   const sevenDaysAgo = new Date(); sevenDaysAgo.setDate(sevenDaysAgo.getDate()-7); sevenDaysAgo.setHours(0,0,0,0);
-  const recentlyAdded = events.filter(e=>e.created_at&&new Date(e.created_at)>=sevenDaysAgo)
+  const recentlyAdded = events.filter(e=>e.created_at&&new Date(e.created_at)>=sevenDaysAgo&&memberMatchFn(e,dashMemberFilter))
     .sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
   if(recentlyAdded.length) {
     html+='<div class="section-label" style="margin-top:20px"><div class="section-label-text">✨ Recently Added</div><div class="section-label-line"></div><div class="section-label-count">'+recentlyAdded.length+' in last 7 days</div></div>';
@@ -1574,7 +1574,16 @@ function openDetail(id) {
     +(ev.location?'<div class="detail-field"><div class="detail-field-label">Location</div>'+locHtml+'</div>':'')
     +(exp>0?'<div class="detail-field"><div class="detail-field-label">Estimated Expense</div><div class="detail-field-value" style="color:var(--teal)">'+fmtMoney(exp)+' <span style="font-size:11px;color:var(--muted)">(≈ '+fmtMoney(annualExpense(ev))+'/yr)</span></div></div>':'')
     +(ev.notes?'<div class="detail-field"><div class="detail-field-label">Notes</div><div class="detail-field-value" style="font-size:13px;color:var(--sub)">'+esc(ev.notes)+'</div></div>':'')
-    +'<div class="detail-field"><div class="detail-field-label">Recurrence</div><div class="detail-field-value">'+repeatLabel(ev)+'</div></div>';
+    +'<div class="detail-field"><div class="detail-field-label">Recurrence</div><div class="detail-field-value">'+repeatLabel(ev)+'</div></div>'
+    +'<div class="detail-field" style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border-lt)">'
+    +'<div class="detail-field-label" style="color:var(--muted)">Audit</div>'
+    +'<div style="font-size:12px;color:var(--muted);line-height:1.8">'
+    +(ev.created_by?'➕ Added by <strong style="color:var(--text)">'+esc(ev.created_by)+'</strong>':'➕ Added by unknown')
+    +(ev.created_at?' on '+new Date(ev.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'')
+    +'<br>'
+    +(ev.updated_by?'✏️ Last edited by <strong style="color:var(--text)">'+esc(ev.updated_by)+'</strong>':'✏️ Not yet edited')
+    +(ev.updated_at&&ev.updated_by?' on '+new Date(ev.updated_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'')
+    +'</div></div>';
 
   document.getElementById('detailModal').classList.add('open');
 }
@@ -1671,7 +1680,8 @@ async function saveEvent() {
   if(repeat_type==='custom'&&(!repeat_days||repeat_days<1)){toast('Please enter number of days','error');return;}
   if(repeat_type==='customdate'&&!custom_date){toast('Please select the next occurrence date','error');return;}
 
-  const payload={title,event_date:date,event_time:time,location,category,notes,repeat_yearly,repeat_type,repeat_days,repeat_years,custom_date,expense_estimate,members,updated_at:new Date().toISOString()};
+  const payload={title,event_date:date,event_time:time,location,category,notes,repeat_yearly,repeat_type,repeat_days,repeat_years,custom_date,expense_estimate,members,updated_at:new Date().toISOString(),updated_by:currentUser||null};
+  if(!id) payload.created_by=currentUser||null;
 
   try {
     if(id){const{error}=await db.from('family_events').update(payload).eq('id',id);if(error)throw error;toast('Event updated ✓','success');}
