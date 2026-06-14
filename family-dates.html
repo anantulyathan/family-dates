@@ -1785,7 +1785,9 @@ if(!pcCheckSession()) {
   // Show passcode screen — check if currently locked out
   pcCheckLockout();
 } else {
-  // Session valid — load app immediately
+  // Session valid — hide passcode screen and load app immediately
+  document.getElementById('passcodeScreen').style.display = 'none';
+  init();
 }
 
 </script>
